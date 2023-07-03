@@ -1,0 +1,113 @@
+﻿
+@model MentorApplication;
+@{
+    ViewData["Title"] = "Mentor Application";
+}
+
+<h1>Mentor Application</h1>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="form-group">
+        <label asp-for="ActorName"></label>
+        <input asp-for="ActorName" class="form-control" />
+        <span asp-validation-for="ActorName" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Gender"></label>
+        <select asp-for="Gender" class="form-control">
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+            <option value="Other">Other</option>
+        </select>
+        <span asp-validation-for="Gender" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="Email"></label>
+        <input asp-for="Email" class="form-control" />
+        <span asp-validation-for="Email" class="text-danger"></span>
+    </div>
+
+
+
+    <div class="form-group">
+        <label asp-for="Phone"></label>
+        <input asp-for="Phone" class="form-control" />
+        <span asp-validation-for="Phone" class="text-danger"></span>
+    </div>
+
+
+
+    <div class="form-group">
+        <label asp-for="Skills"></label>
+        <input asp-for="Skills" class="form-control" />
+        <span asp-validation-for="Skills" class="text-danger"></span>
+    </div>
+
+
+
+    <div class="form-group">
+        <label asp-for="age"></label>
+        <input asp-for="age" class="form-control" />
+        <span asp-validation-for="age" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="AcademicQualification"></label>
+        <input asp-for="AcademicQualification" class="form-control" />
+        <span asp-validation-for="AcademicQualification" class="text-danger"></span>
+    </div>
+
+
+    <div class="form-group">
+        <label asp-for="CurrentProfession"></label>
+        <input asp-for="CurrentProfession" class="form-control" />
+        <span asp-validation-for="CurrentProfession" class="text-danger"></span>
+    </div>
+
+
+
+
+    <div class="form-group">
+        <label asp-for="Address"></label>
+        <input asp-for="Address" class="form-control" />
+        <span asp-validation-for="Address" class="text-danger"></span>
+    </div>
+
+
+
+    <div class="form-group">
+        <label asp-for="About"></label>
+        <input asp-for="About" class="form-control" />
+        <span asp-validation-for="About" class="text-danger"></span>
+    </div>
+
+
+    <!-- Add other input fields for Phone, Skills, Gender, age, AcademicQualification, CurrentProfession, Address, About -->
+
+    <div class="form-group">
+        
+        <label asp-for="cv"></label>
+        <br />
+        <input asp-for="cv" type="file" class="form-control-file" />
+        <span asp-validation-for="cv" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="ProfilePhoto"></label><br />
+        <input asp-for="ProfilePhoto" type="file" class="form-control-file" />
+        <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
+    </div>
+
+    <div class="form-group">
+        <label asp-for="Certificates"></label>
+        <br />
+        <input asp-for="Certificates" type="file" class="form-control-file" multiple />
+        <span asp-validation-for="Certificates" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>

@@ -1,4 +1,6 @@
 using CarrierPortal.Models;
+using CarrierPortal.Repository;
+using CarrierPortal.Services.PhotoServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Authorization;
@@ -21,9 +23,12 @@ builder.Services.AddControllersWithViews();
 var ConnectionString = config.GetConnectionString("PortalDB");
 builder.Services.AddDbContext<AppDbContext>(options => options.UseSqlServer(config.GetConnectionString("PortalDB")));
 
+builder.Services.AddScoped<DbContext, AppDbContext>();
 
-
-
+builder.Services.AddScoped(typeof(IGenericRepository<>), typeof(GenericRepository<>));
+builder.Services.AddScoped<IPhotoService, PhotoService>();
+builder.Services.AddScoped<IPhotoListService, PhotoListService>();
+builder.Services.AddScoped<IActorRepository, ActorRepository>();
 
 
 

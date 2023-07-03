@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
+﻿using CarrierPortal.Models.DataModel;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarrierPortal.Models
@@ -7,6 +8,11 @@ namespace CarrierPortal.Models
     {
         public AppDbContext(DbContextOptions options) : base(options)
         {
+
         }
+      
+
+        public DbSet<Actor> Actors { get; set; }
+
     }
 }

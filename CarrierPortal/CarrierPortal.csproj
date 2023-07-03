@@ -20,6 +20,10 @@
 
   <ItemGroup>
     <Folder Include="wwwroot\lib\" />
+    <Folder Include="wwwroot\CV\" />
+    <Folder Include="wwwroot\Certificates\" />
+    <Folder Include="wwwroot\NewFolder\" />
+    <Folder Include="wwwroot\Photo\" />
   </ItemGroup>
 
 </Project>

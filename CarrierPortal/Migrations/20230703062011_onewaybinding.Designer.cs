@@ -4,6 +4,7 @@ using CarrierPortal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230703062011_onewaybinding")]
+    partial class onewaybinding
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -144,7 +146,6 @@ namespace CarrierPortal.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("UserId")
-                        .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
                     b.Property<int>("age")
@@ -165,8 +166,7 @@ namespace CarrierPortal.Migrations
 
                     b.HasKey("ActorId");
 
-                    b.HasIndex("UserId")
-                        .IsUnique();
+                    b.HasIndex("UserId");
 
                     b.ToTable("Actors");
                 });
@@ -307,10 +307,8 @@ namespace CarrierPortal.Migrations
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Actor", b =>
                 {
                     b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
-                        .WithOne("Mentor")
-                        .HasForeignKey("CarrierPortal.Models.DataModel.Actor", "UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });
@@ -363,12 +361,6 @@ namespace CarrierPortal.Migrations
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("CarrierPortal.Models.ApplicationUser", b =>
-                {
-                    b.Navigation("Mentor")
                         .IsRequired();
                 });
 #pragma warning restore 612, 618
