@@ -9,6 +9,7 @@ namespace CarrierPortal.Models
         public string City { get; set; }
 
         public Actor Mentor { get; set; }
-
+        public ICollection<Question> Questions { get; set; }
+        public ICollection<Answer> Answers { get; set; }
     }
 }

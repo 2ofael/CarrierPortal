@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230703052900_addedbooltoprofile")]
-    partial class addedbooltoprofile
+    [Migration("20230706110950_NewUpdated")]
+    partial class NewUpdated
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -145,7 +145,7 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<string>("UserID")
+                    b.Property<string>("UserId")
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
@@ -167,10 +167,78 @@ namespace CarrierPortal.Migrations
 
                     b.HasKey("ActorId");
 
-                    b.HasIndex("UserID")
+                    b.HasIndex("UserId")
                         .IsUnique();
 
                     b.ToTable("Actors");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreationDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<bool>("IsApproved")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("Questions");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -309,9 +377,39 @@ namespace CarrierPortal.Migrations
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Actor", b =>
                 {
                     b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
-                        .WithOne("ActorUser")
-                        .HasForeignKey("CarrierPortal.Models.DataModel.Actor", "UserID")
+                        .WithOne("Mentor")
+                        .HasForeignKey("CarrierPortal.Models.DataModel.Actor", "UserId")
                         .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.Question", "Question")
+                        .WithMany("Answers")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
+                        .WithMany("Answers")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
+                    b.Navigation("Question");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
+                        .WithMany("Questions")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("User");
@@ -370,8 +468,17 @@ namespace CarrierPortal.Migrations
 
             modelBuilder.Entity("CarrierPortal.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("ActorUser")
+                    b.Navigation("Answers");
+
+                    b.Navigation("Mentor")
                         .IsRequired();
+
+                    b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
+                {
+                    b.Navigation("Answers");
                 });
 #pragma warning restore 612, 618
         }

@@ -1,0 +1,30 @@
+﻿@model Actor
+
+@{
+    ViewData["Title"] = "View Profile";
+    Layout = "_LayoutMentor"; // Assuming you have a shared layout for your project
+}
+
+<div class="container">
+    <div class="card mt-4">
+        <div class="card-body">
+            <div class="row">
+                <div class="col-md-4">
+                    <img src="~/Photo/@Model.ProfilePhoto" alt="Profile Photo" class="card-img">
+                </div>
+                <div class="col-md-8">
+                    <h5 class="card-title">@Model.ActorName</h5>
+                    <p class="card-text">Email: @Model.Email</p>
+                    <p class="card-text">Phone: @Model.Phone</p>
+                    <p class="card-text">Skills: @Model.Skills</p>
+                    <p class="card-text">Academic Qualification: @Model.AcademicQualification</p>
+                    <p class="card-text">About: @Model.About</p>
+                    <p class="card-text">Age: @Model.age</p>
+                    <p class="card-text">Gender: @Model.Gender</p>
+                    <p class="card-text">Current Profession: @Model.CurrentProfession</p>
+                    <p class="card-text">Address: @Model.Address</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

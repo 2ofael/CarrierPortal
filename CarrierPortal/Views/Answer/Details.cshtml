@@ -1,0 +1,21 @@
+﻿@model Answer // Replace with your project's Answer model namespace
+
+<h1>Answer Details</h1>
+
+<div>
+    <h4>Answer</h4>
+    <div>Content: @Model.Content</div>
+    <div>Creation Date: @Model.CreationDate</div>
+    <div>Votes: @Model.Votes</div>
+    <div>Is Approved: @Model.IsApproved</div>
+</div>
+
+@if (User.Identity.Name == Model.User.UserName)
+{
+    <div>
+        <a asp-action="Edit" asp-controller="Answer" asp-route-id="@Model.Id" class="btn btn-primary">Edit Answer</a>
+        <a asp-action="Delete" asp-controller="Answer" asp-route-id="@Model.Id" class="btn btn-danger">Delete Answer</a>
+    </div>
+}
+
+<a asp-action="Index" asp-controller="Answer" class="btn btn-secondary">Back to Answers</a>

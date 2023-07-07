@@ -1,1 +1,29 @@
-﻿<h1>This is index</h1>
+﻿
+@model List<Actor>
+
+<div class="container">
+    <div class="row">
+        @foreach (var actor in Model)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="~/Photo/@actor.ProfilePhoto" alt="Profile Photo" class="card-img">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@actor.ActorName</h5>
+                                <p class="card-text">Skills: @actor.Skills</p>
+                                <p class="card-text">Academic Qualification: @actor.AcademicQualification</p>
+                                <p class="card-text">About: @actor.About</p>
+                                <p class="card-text">Age: @actor.age</p>
+                                <a asp-action="ViewProfile" asp-route-actorId="@actor.ActorId" class="btn btn-primary">View Profile</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>

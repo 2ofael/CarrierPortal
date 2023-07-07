@@ -35,10 +35,23 @@ namespace CarrierPortal.Controllers
 
 
 
-        public IActionResult Index()
-        {
-            return View();
+        public async Task<IActionResult> Index() { 
+
+
+            List<Actor> allActors = await _actorRepository.GetAllActors();
+            return View(allActors);
         }
+
+        [HttpGet]
+        public async Task<IActionResult> ViewProfile(string actorId)
+        {
+
+            var actor = await _actorRepository.GetActorById(actorId);
+            return View(actor);
+
+        }
+
+
 
         [HttpGet]
         public IActionResult ApplyAsMentor()
@@ -128,9 +141,7 @@ namespace CarrierPortal.Controllers
             
             return View();
         }
-
-
-
+    
 
     }
 }

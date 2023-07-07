@@ -1,0 +1,16 @@
+﻿@model AnswerViewModel
+
+<h1>Create Answer</h1>
+
+<form asp-action="Create" method="post">
+    <input type="hidden" asp-for="QuestionId" />
+
+    <div class="form-group">
+        <label asp-for="Content">Content</label>
+        <textarea class="form-control" asp-for="Content"></textarea>
+        <span asp-validation-for="Content" class="text-danger"></span>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Submit</button>
+    <a asp-controller="QnA" asp-action="Details" asp-route-id="@Model.QuestionId" class="btn btn-secondary">Cancel</a>
+</form>
