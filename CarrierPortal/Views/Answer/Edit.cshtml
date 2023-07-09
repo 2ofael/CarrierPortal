@@ -1,0 +1,17 @@
+﻿@model AnswerViewModel // Replace with your project's AnswerViewModel namespace
+
+<div class="container">
+    <h1>Edit Answer</h1>
+
+    <form asp-action="Edit" asp-controller="Answer">
+        <input type="hidden" asp-for="Id" />
+
+        <div class="form-group">
+            <label for="Content">Content</label>
+            <textarea class="form-control" id="Content" name="Content" rows="5" required>@Model.Content</textarea>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a asp-action="Details" asp-controller="Answer" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
