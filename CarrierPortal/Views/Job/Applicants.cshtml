@@ -1,0 +1,36 @@
+﻿@model List<Applicant>
+
+<h2>Applicant List</h2>
+
+<table class="table table-striped">
+    <thead>
+        <tr>
+            <th scope="col">Title</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone</th>
+            <th scope="col">Applied Date</th>
+            <th scope="col">CV/Resume</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var applicant in Model)
+        {
+            <tr>
+                <td>@applicant.Name</td>
+                <td>@applicant.Email</td>
+                <td>@applicant.Phone</td>
+                <td>@applicant.AppliedDate.ToString("yyyy-MM-dd")</td>
+                <td>
+                    @if (!string.IsNullOrEmpty(applicant.Resume.FilePath))
+                    {
+                        <a href="@Url.Action("DownloadResume", "Job", new { resumeId = applicant.Resume.Id })" target="_blank" class="btn btn-link">Open CV/Resume</a>
+                    }
+                    else
+                    {
+                        <span class="text-muted">No CV/Resume</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>

@@ -1,0 +1,30 @@
+﻿@model Job
+
+<h2>Apply for Job</h2>
+
+<div class="card">
+    <div class="card-body">
+        @if (TempData["ApplySuccess"] != null)
+        {
+            <div class="alert alert-success alert-dismissible fade show" role="alert">
+                @TempData["ApplySuccess"]
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+        <h4 class="card-title">Job Title: @Model.Title</h4>
+        <p class="card-text">Job Description: @Model.Description</p>
+
+        <form asp-controller="Job" asp-action="Apply" method="post" enctype="multipart/form-data">
+            <input type="hidden" name="jobId" value="@Model.Id" />
+
+            <div class="form-group">
+                <label for="Resume">Upload Resume (PDF format)</label>
+                <input type="file" id="Resume" name="resume" accept=".pdf" class="form-control-file" />
+                <small class="form-text text-muted">Please upload your resume in PDF format.</small>
+            </div>
+
+            <button type="submit" class="btn btn-primary">Apply</button>
+            <a asp-controller="Job" asp-action="Details" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+        </form>
+    </div>
+</div>

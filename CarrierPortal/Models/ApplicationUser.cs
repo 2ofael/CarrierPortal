@@ -1,5 +1,6 @@
 ﻿using CarrierPortal.Models.DataModel;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarrierPortal.Models
 {
@@ -11,5 +12,8 @@ namespace CarrierPortal.Models
         public Actor Mentor { get; set; }
         public ICollection<Question> Questions { get; set; }
         public ICollection<Answer> Answers { get; set; }
+        public ICollection<Job> PostedJobs { get; set; }
+        public ICollection<Applicant> AppliedJobs { get; set; }
+       // 
     }
 }

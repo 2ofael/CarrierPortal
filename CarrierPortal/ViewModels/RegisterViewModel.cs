@@ -23,5 +23,7 @@ namespace CarrierPortal.ViewModels
         public string ConfirmPassword { get; set; }
 
         public string City { get; set; }
+
+        public string Phone { get; set; }
     }
 }

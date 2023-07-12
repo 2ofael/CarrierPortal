@@ -32,12 +32,44 @@ namespace CarrierPortal.Models
                 .WithMany(q => q.Answers)
                 .HasForeignKey(a => a.QuestionId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+
+
+
+
+            modelBuilder.Entity<Job>()
+           .HasMany(j => j.Applicants)
+           .WithOne(a => a.Job)
+           .HasForeignKey(a => a.JobId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Applicant>()
+                .HasOne(a => a.Resume)
+                .WithOne(r => r.Applicant)
+                .HasForeignKey<Resume>(r => r.ApplicantId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+            // Configure ApplicationUser entity
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.PostedJobs)
+                .WithOne(j => j.PostedByUser)
+                .HasForeignKey(j => j.PostedByUserId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<ApplicationUser>()
+                .HasMany(u => u.AppliedJobs)
+                .WithOne(a => a.ApplicantUser)
+                .HasForeignKey(a => a.ApplicantUserId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
 
 
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Question> Questions { get; set; }
         public DbSet<Answer> Answers { get; set; }
+        public DbSet<Job> Jobs { get; set; }
+        public DbSet<Applicant> Applicants { get; set; }
+        public DbSet<Resume> Resumes { get; set; }
 
 
     }

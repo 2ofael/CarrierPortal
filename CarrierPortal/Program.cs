@@ -31,7 +31,7 @@ builder.Services.AddScoped<IPhotoService, PhotoService>();
 builder.Services.AddScoped<IPhotoListService, PhotoListService>();
 builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IQnARepository, QnARepository>();
-
+builder.Services.AddScoped<IJobRepository, JobRepository>();
 
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>

@@ -1,0 +1,48 @@
+﻿@model PaginatedList<Job>
+
+@{
+    ViewData["Title"] = "Job Index";
+}
+
+<div class="container">
+    <h1>Job Listings</h1>
+    <div class="row">
+        @foreach (var job in Model.Items)
+        {
+            <div class="col-md-4">
+                <a href="@Url.Action("Details", "Job", new { id = job.Id })" class="text-decoration-none">
+                    <div class="card mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title">@job.Title</h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">@job.Description</p>
+                            <p class="card-text">Salary: $@job.Salary</p>
+                            <p class="card-text">Location: @job.Location</p>
+                        </div>
+                        <div class="card-footer bg-info">
+                            <p class="text-white">Posted Date: @job.PostedDate.ToShortDateString()</p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+    <nav aria-label="Job pagination">
+        <ul class="pagination">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("Index", "Job", new { page = Model.PageIndex - 1 })">Previous</a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", "Job", new { page = i })">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("Index", "Job", new { page = Model.PageIndex + 1 })">Next</a>
+            </li>
+        </ul>
+    </nav>
+</div>
