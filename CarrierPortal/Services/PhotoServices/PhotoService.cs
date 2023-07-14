@@ -9,7 +9,7 @@
             _environment = environment;
         }
 
-        public string SavePhoto(IFormFile photoFile, string folderName)
+        public string SavePhoto(IFormFile photoFile, string folderName , bool isfilePath = false)
         {
             // Generate a unique file name
             string uniqueFileName = $"{Guid.NewGuid().ToString()}_{photoFile.FileName}";
@@ -27,6 +27,7 @@
             }
 
             // Return the file name
+            if (isfilePath) return filePath;
             return uniqueFileName;
         }
 

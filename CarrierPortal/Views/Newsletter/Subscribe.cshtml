@@ -1,0 +1,38 @@
+﻿@model bool
+
+@{
+    ViewData["Title"] = "Subscribe";
+   
+}
+
+@*@section Styles {
+   
+    <style>
+        .center-content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+    </style>
+}*@
+
+<div class="center-content">
+    @if (Model)
+    {
+        <h2>You are subscribed!</h2>
+        <button class="btn btn-danger" id="unsubscribeBtn" style="display:none;">Unsubscribe</button>
+    }
+    else
+    {
+        <h2>Subscribe to our Newsletter</h2>
+        <form method="post" asp-action="Subscribed" >
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-primary">Subscribe</button>
+        </form>
+        <form method="post" asp-action="unsubscribe">
+            @Html.AntiForgeryToken()
+            <button type="submit" class="btn btn-danger" id="unsubscribeBtn" style="display:none;">Unsubscribe</button>
+        </form>
+    }
+</div>

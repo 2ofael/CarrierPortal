@@ -1,5 +1,6 @@
 using CarrierPortal.Models;
 using CarrierPortal.Repository;
+using CarrierPortal.Services.EmailServices;
 using CarrierPortal.Services.PhotoServices;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
@@ -32,7 +33,7 @@ builder.Services.AddScoped<IPhotoListService, PhotoListService>();
 builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IQnARepository, QnARepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
-
+builder.Services.AddScoped<IEmailService, EmailService>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {

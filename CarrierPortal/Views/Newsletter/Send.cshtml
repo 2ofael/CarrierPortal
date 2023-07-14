@@ -1,0 +1,11 @@
+﻿<form method="post"  asp-action="Send" enctype="multipart/form-data">
+    @Html.AntiForgeryToken()
+
+    <div class="form-group">
+        <label for="pdfFile">Upload PDF:</label>
+        <input type="file" class="form-control-file" id="pdfFile" name="pdfFile" required>
+    </div>
+
+    <button type="submit" class="btn btn-primary">Subscribe</button>
+</form>
+

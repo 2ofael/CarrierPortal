@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace CarrierPortal.Services.EmailServices
 {
-    public class EmailService
+    public class EmailService : IEmailService
     {
         private readonly string _smtpServer;
         private readonly int _smtpPort;
@@ -20,8 +20,8 @@ namespace CarrierPortal.Services.EmailServices
 
         public EmailService()
         {
-          
-            
+
+
             _smtpServer = "sandbox.smtp.mailtrap.io";
             _smtpPort = 25;
             _smtpUsername = "47a0e33ffc9376";
@@ -33,7 +33,7 @@ namespace CarrierPortal.Services.EmailServices
             _emailSettings.SmtpPassword = _smtpPassword;
             _emailSettings.SenderName = _smtpUsername;
             _emailSettings.SenderEmail = "Hello";
-            
+
 
         }
 
@@ -41,7 +41,7 @@ namespace CarrierPortal.Services.EmailServices
         {
             var message = new MimeMessage();
             message.From.Add(new MailboxAddress(_emailSettings.SenderName, _emailSettings.SenderEmail));
-            message.To.Add(new MailboxAddress("hello",recipientEmail));
+            message.To.Add(new MailboxAddress("hello", recipientEmail));
             message.Subject = subject;
 
             var builder = new BodyBuilder();

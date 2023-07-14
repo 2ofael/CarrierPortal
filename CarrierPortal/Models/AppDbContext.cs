@@ -70,6 +70,7 @@ namespace CarrierPortal.Models
         public DbSet<Job> Jobs { get; set; }
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Resume> Resumes { get; set; }
+        public DbSet<NewsletterSubscription> NewsletterSubscriptions { get; set; }
 
 
     }

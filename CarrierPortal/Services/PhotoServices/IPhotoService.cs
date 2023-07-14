@@ -2,6 +2,6 @@
 {
     public interface IPhotoService
     {
-        string SavePhoto(IFormFile photoFile, string folderName);
+        string SavePhoto(IFormFile photoFile, string folderName, bool isFilePath = false);
     }
 }
