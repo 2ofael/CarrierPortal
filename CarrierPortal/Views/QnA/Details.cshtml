@@ -51,6 +51,8 @@ else
         @if (Model.UserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
         {
             <a href="@Url.Action("Edit", "QnA", new { id = Model.Id })" class="btn btn-secondary">Edit</a>
+
+          
             <a href="@Url.Action("Delete", "QnA", new { id = Model.Id })" class="btn btn-danger">Delete</a>
         }
     </div>

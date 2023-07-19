@@ -34,6 +34,7 @@ builder.Services.AddScoped<IActorRepository, ActorRepository>();
 builder.Services.AddScoped<IQnARepository, QnARepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
+builder.Services.AddScoped<IBlogRepository, BlogRepository>();
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {

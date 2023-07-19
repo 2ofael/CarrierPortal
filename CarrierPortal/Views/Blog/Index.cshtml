@@ -1,0 +1,73 @@
+﻿@model PaginatedList<BlogPost>
+
+@{
+    ViewData["Title"] = "All Blogs";
+}
+
+<h1>All Blogs</h1>
+
+<div class="row">
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="form-inline mb-3">
+            <div class="form-group">
+                <input type="text" name="searchTerm" class="form-control mr-2" placeholder="Search..." value="@ViewBag.SearchTerm" />
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>
+</div>
+
+<div class="row">
+    @foreach (var blogPost in Model.Items)
+    {
+        <div class="col-md-12">
+            <div class="card mb-3">
+                <div class="card-body">
+                    <h3 class="card-title">@blogPost.Title</h3>
+                    <div class="card-text">@Html.Raw(TruncateText(blogPost.Content, 200))</div>
+                </div>
+                <div class="card-footer bg-secondary text-light">
+                    Posted: @blogPost.CreatedAt.ToString("MMM dd, yyyy")
+                </div>
+                <div class="card-body">
+                    <a href="@Url.Action("Details", new { id = blogPost.Id })" class="btn btn-primary">Read More</a>
+                </div>
+            </div>
+        </div>
+    }
+</div>
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <nav>
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })">Previous</a></li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")"><a class="page-link" href="@Url.Action("Index", new { page = i, searchTerm = ViewBag.SearchTerm })">@i</a></li>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+@functions {
+    string TruncateText(string text, int maxLength)
+    {
+        if (text.Length > maxLength)
+        {
+            return text.Substring(0, maxLength) + "...";
+        }
+
+        return text;
+    }
+}

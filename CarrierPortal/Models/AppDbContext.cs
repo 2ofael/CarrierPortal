@@ -6,9 +6,8 @@ namespace CarrierPortal.Models
 {
     public class AppDbContext : IdentityDbContext<ApplicationUser>
     {
-        public AppDbContext(DbContextOptions options) : base(options)
+        public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
         {
-
         }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -33,15 +32,11 @@ namespace CarrierPortal.Models
                 .HasForeignKey(a => a.QuestionId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-
-
-
-
             modelBuilder.Entity<Job>()
-           .HasMany(j => j.Applicants)
-           .WithOne(a => a.Job)
-           .HasForeignKey(a => a.JobId)
-           .OnDelete(DeleteBehavior.Cascade);
+                .HasMany(j => j.Applicants)
+                .WithOne(a => a.Job)
+                .HasForeignKey(a => a.JobId)
+                .OnDelete(DeleteBehavior.Cascade);
 
             modelBuilder.Entity<Applicant>()
                 .HasOne(a => a.Resume)
@@ -49,7 +44,6 @@ namespace CarrierPortal.Models
                 .HasForeignKey<Resume>(r => r.ApplicantId)
                 .OnDelete(DeleteBehavior.Cascade);
 
-            // Configure ApplicationUser entity
             modelBuilder.Entity<ApplicationUser>()
                 .HasMany(u => u.PostedJobs)
                 .WithOne(j => j.PostedByUser)
@@ -61,8 +55,15 @@ namespace CarrierPortal.Models
                 .WithOne(a => a.ApplicantUser)
                 .HasForeignKey(a => a.ApplicantUserId)
                 .OnDelete(DeleteBehavior.Restrict);
-        }
 
+            modelBuilder.Entity<BlogPost>()
+                .HasOne(bp => bp.ApplicationUser)
+                .WithMany(u => u.BlogPosts)
+                .HasForeignKey(bp => bp.ApplicationUserId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+        }
 
         public DbSet<Actor> Actors { get; set; }
         public DbSet<Question> Questions { get; set; }
@@ -71,7 +72,7 @@ namespace CarrierPortal.Models
         public DbSet<Applicant> Applicants { get; set; }
         public DbSet<Resume> Resumes { get; set; }
         public DbSet<NewsletterSubscription> NewsletterSubscriptions { get; set; }
-
-
+        public DbSet<BlogPost> BlogPosts { get; set; }
+    
     }
 }

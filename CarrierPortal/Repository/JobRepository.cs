@@ -103,5 +103,42 @@ namespace CarrierPortal.Repository
             await _dbContext.SaveChangesAsync();
         }
 
+
+
+
+
+
+        public async Task<List<Job>> GetPostsAsync(string searchTerm, int page, int pageSize)
+        {
+            var query = _dbContext.Jobs.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(b => b.Title.Contains(searchTerm) || b.Description.Contains(searchTerm)|| b.Salary.ToString().Contains(searchTerm) || b.Location.Contains(searchTerm));
+            }
+
+            var skip = (page - 1) * pageSize;
+
+            return await query.OrderByDescending(b => b.PostedDate)
+                .Skip(skip)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPostsCountAsync(string searchTerm)
+        {
+            var query = _dbContext.Jobs.AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(b => b.Title.Contains(searchTerm) || b.Description.Contains(searchTerm) || b.Salary.ToString().Contains(searchTerm) || b.Location.Contains(searchTerm));
+            }
+
+            return await query.CountAsync();
+        }
+
+
+
+
     }
 }

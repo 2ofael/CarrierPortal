@@ -5,7 +5,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 namespace CarrierPortal.Migrations
 {
-    public partial class NewUpdated : Migration
+    public partial class addedblog : Migration
     {
         protected override void Up(MigrationBuilder migrationBuilder)
         {
@@ -48,6 +48,19 @@ namespace CarrierPortal.Migrations
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AspNetUsers", x => x.Id);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "NewsletterSubscriptions",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_NewsletterSubscriptions", x => x.Id);
                 });
 
             migrationBuilder.CreateTable(
@@ -191,6 +204,52 @@ namespace CarrierPortal.Migrations
                 });
 
             migrationBuilder.CreateTable(
+                name: "BlogPosts",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Content = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApplicationUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_BlogPosts", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_BlogPosts_AspNetUsers_ApplicationUserId",
+                        column: x => x.ApplicationUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Jobs",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Title = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Description = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Salary = table.Column<int>(type: "int", nullable: false),
+                    Location = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    PostedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    PostedByUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Jobs", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Jobs_AspNetUsers_PostedByUserId",
+                        column: x => x.PostedByUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                });
+
+            migrationBuilder.CreateTable(
                 name: "Questions",
                 columns: table => new
                 {
@@ -210,6 +269,36 @@ namespace CarrierPortal.Migrations
                         column: x => x.UserId,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id");
+                });
+
+            migrationBuilder.CreateTable(
+                name: "Applicants",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    Name = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Email = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Phone = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    AppliedDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    JobId = table.Column<int>(type: "int", nullable: false),
+                    ApplicantUserId = table.Column<string>(type: "nvarchar(450)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Applicants", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Applicants_AspNetUsers_ApplicantUserId",
+                        column: x => x.ApplicantUserId,
+                        principalTable: "AspNetUsers",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Restrict);
+                    table.ForeignKey(
+                        name: "FK_Applicants_Jobs_JobId",
+                        column: x => x.JobId,
+                        principalTable: "Jobs",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
                 });
 
             migrationBuilder.CreateTable(
@@ -239,6 +328,28 @@ namespace CarrierPortal.Migrations
                         principalColumn: "Id");
                 });
 
+            migrationBuilder.CreateTable(
+                name: "Resumes",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("SqlServer:Identity", "1, 1"),
+                    FileName = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    FilePath = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    UploadDate = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    ApplicantId = table.Column<int>(type: "int", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_Resumes", x => x.Id);
+                    table.ForeignKey(
+                        name: "FK_Resumes_Applicants_ApplicantId",
+                        column: x => x.ApplicantId,
+                        principalTable: "Applicants",
+                        principalColumn: "Id",
+                        onDelete: ReferentialAction.Cascade);
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_Actors_UserId",
                 table: "Actors",
@@ -254,6 +365,16 @@ namespace CarrierPortal.Migrations
                 name: "IX_Answers_UserId",
                 table: "Answers",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applicants_ApplicantUserId",
+                table: "Applicants",
+                column: "ApplicantUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Applicants_JobId",
+                table: "Applicants",
+                column: "JobId");
 
             migrationBuilder.CreateIndex(
                 name: "IX_AspNetRoleClaims_RoleId",
@@ -295,9 +416,25 @@ namespace CarrierPortal.Migrations
                 filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
+                name: "IX_BlogPosts_ApplicationUserId",
+                table: "BlogPosts",
+                column: "ApplicationUserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Jobs_PostedByUserId",
+                table: "Jobs",
+                column: "PostedByUserId");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Questions_UserId",
                 table: "Questions",
                 column: "UserId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Resumes_ApplicantId",
+                table: "Resumes",
+                column: "ApplicantId",
+                unique: true);
         }
 
         protected override void Down(MigrationBuilder migrationBuilder)
@@ -324,10 +461,25 @@ namespace CarrierPortal.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
+                name: "BlogPosts");
+
+            migrationBuilder.DropTable(
+                name: "NewsletterSubscriptions");
+
+            migrationBuilder.DropTable(
+                name: "Resumes");
+
+            migrationBuilder.DropTable(
                 name: "Questions");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");
+
+            migrationBuilder.DropTable(
+                name: "Applicants");
+
+            migrationBuilder.DropTable(
+                name: "Jobs");
 
             migrationBuilder.DropTable(
                 name: "AspNetUsers");

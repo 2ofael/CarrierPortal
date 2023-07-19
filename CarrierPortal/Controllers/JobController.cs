@@ -48,23 +48,51 @@ namespace CarrierPortal.Controllers
         //    return View(jobs);
         //}
 
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
+        //public async Task<IActionResult> Index(int page = 1, int pageSize = 6)
+        //{
+        //    // Retrieve paginated job listings from the database
+        //    var allJobs =  await _jobRepository.GetAllJobsAsync();
+        //    var jobs =allJobs// _dbContext.Jobs
+        //        .OrderByDescending(j => j.PostedDate)
+        //        .Skip((page - 1) * pageSize)
+        //        .Take(pageSize)
+        //        .ToList();
+
+        //    // Calculate total number of jobs and pages
+        //    var totalJobs = allJobs.Count;// _jobRepository.GetAllJobsAsync() .Jobs.Count();
+        //    var totalPages = (int)Math.Ceiling((double)totalJobs / pageSize);
+
+        //    // Pass the paginated jobs and pagination information to the view
+        //    var model = new PaginatedList<Job>(jobs, page, pageSize, totalJobs, totalPages);
+        //    return View(model);
+        //}
+
+
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
-            // Retrieve paginated job listings from the database
-            var allJobs =  await _jobRepository.GetAllJobsAsync();
-            var jobs =allJobs// _dbContext.Jobs
-                .OrderByDescending(j => j.PostedDate)
-                .Skip((page - 1) * pageSize)
-                .Take(pageSize)
-                .ToList();
+            // Set the search term in ViewBag to display in the search bar
+            ViewBag.SearchTerm = searchTerm;
 
-            // Calculate total number of jobs and pages
-            var totalJobs = allJobs.Count;// _jobRepository.GetAllJobsAsync() .Jobs.Count();
-            var totalPages = (int)Math.Ceiling((double)totalJobs / pageSize);
+            // Get all blog posts paginated
+            var pageSize = 10; // Number of items per page
+            var totalItems = await _jobRepository.GetTotalPostsCountAsync(searchTerm);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            // Pass the paginated jobs and pagination information to the view
-            var model = new PaginatedList<Job>(jobs, page, pageSize, totalJobs, totalPages);
-            return View(model);
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            var jobPosts = await _jobRepository.GetPostsAsync(searchTerm, page, pageSize);
+
+            // Create a PaginatedList instance
+            var paginatedList = new PaginatedList<Job>(jobPosts, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
         }
 
 

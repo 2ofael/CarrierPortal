@@ -84,6 +84,36 @@ namespace CarrierPortal.Repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<List<Question>> GetPostsAsync(string searchTerm, int page, int pageSize)
+        {
+            var query = _context.Questions.Include(a=>a.Answers).Include(q=>q.User).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(b => b.Title.Contains(searchTerm) || b.Content.Contains(searchTerm));
+            }
+
+            var skip = (page - 1) * pageSize;
+
+            return await query.OrderByDescending(b => b.CreationDate)
+                .Skip(skip)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPostsCountAsync(string searchTerm)
+        {
+            var query = _context.Questions.Include(q=>q.Answers).Include(q=>q.User).AsQueryable();
+
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(b => b.Title.Contains(searchTerm) || b.Content.Contains(searchTerm));
+            }
+
+            return await query.CountAsync();
+        }
+
 
 
 

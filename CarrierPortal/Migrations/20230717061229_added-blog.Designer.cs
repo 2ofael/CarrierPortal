@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230710103305_addedJobPortal")]
-    partial class addedJobPortal
+    [Migration("20230717061229_added-blog")]
+    partial class addedblog
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -247,6 +247,36 @@ namespace CarrierPortal.Migrations
                     b.ToTable("Applicants");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.BlogPost", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ApplicationUserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("Content")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Title")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ApplicationUserId");
+
+                    b.ToTable("BlogPosts");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Job", b =>
                 {
                     b.Property<int>("Id")
@@ -282,6 +312,23 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("PostedByUserId");
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.NewsletterSubscription", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("Email")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("NewsletterSubscriptions");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
@@ -529,6 +576,17 @@ namespace CarrierPortal.Migrations
                     b.Navigation("Job");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.BlogPost", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("BlogPosts")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Job", b =>
                 {
                     b.HasOne("CarrierPortal.Models.ApplicationUser", "PostedByUser")
@@ -618,6 +676,8 @@ namespace CarrierPortal.Migrations
                     b.Navigation("Answers");
 
                     b.Navigation("AppliedJobs");
+
+                    b.Navigation("BlogPosts");
 
                     b.Navigation("Mentor")
                         .IsRequired();

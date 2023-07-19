@@ -1,4 +1,5 @@
-﻿using CarrierPortal.Models.DataModel;
+﻿using CarrierPortal.Models;
+using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -17,11 +18,38 @@ namespace CarrierPortal.Controllers
         }
 
         // GET: Questions
-        public async Task<IActionResult> Index()
+        //public async Task<IActionResult> Index()
+        //{
+        //    var questions = await _qnaRepository.GetAllQuestionsAsync();
+        //    return View(questions);
+        //}
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
         {
-            var questions = await _qnaRepository.GetAllQuestionsAsync();
-            return View(questions);
+            // Set the search term in ViewBag to display in the search bar
+            ViewBag.SearchTerm = searchTerm;
+
+            // Get all blog posts paginated
+            var pageSize = 10; // Number of items per page
+            var totalItems = await _qnaRepository.GetTotalPostsCountAsync(searchTerm);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            var QnAPosts = await _qnaRepository.GetPostsAsync(searchTerm, page, pageSize);
+
+            // Create a PaginatedList instance
+            var paginatedList = new PaginatedList<Question>(QnAPosts, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
         }
+
 
         // GET: Questions/Details/5
         public async Task<IActionResult> Details(string id)

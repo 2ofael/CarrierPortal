@@ -14,6 +14,8 @@ namespace CarrierPortal.Models
         public ICollection<Answer> Answers { get; set; }
         public ICollection<Job> PostedJobs { get; set; }
         public ICollection<Applicant> AppliedJobs { get; set; }
-       // 
+        public ICollection<BlogPost> BlogPosts { get; set; }
+ 
+        // 
     }
 }

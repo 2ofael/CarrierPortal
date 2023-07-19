@@ -19,5 +19,7 @@ namespace CarrierPortal.Repository
         Task UpdateApplicantAsync(Applicant applicant);
         Task UpdateJobAsync(Job job);
         Task UpdateResumeAsync(Resume resume);
+        Task<List<Job>> GetPostsAsync(string searchTerm, int page, int pageSize);
+        Task<int> GetTotalPostsCountAsync(string searchTerm);
     }
 }
