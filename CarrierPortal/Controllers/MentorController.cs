@@ -35,12 +35,35 @@ namespace CarrierPortal.Controllers
 
 
 
-        public async Task<IActionResult> Index() { 
+        public async Task<IActionResult> Index(string searchTerm, int page = 1)
+        {
+            // Set the search term in ViewBag to display in the search bar
+            ViewBag.SearchTerm = searchTerm;
 
+            // Get all blog posts paginated
+            var pageSize = 10; // Number of items per page
+            var totalItems = await _actorRepository.GetTotalPostsCountAsync(searchTerm);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            List<Actor> allActors = await _actorRepository.GetAllActors();
-            return View(allActors);
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            var ActorPosts = await _actorRepository.GetPostsAsync(searchTerm, page, pageSize);
+
+            // Create a PaginatedList instance
+            var paginatedList = new PaginatedList<Actor>(ActorPosts, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
         }
+
+
+
 
         [HttpGet]
         public async Task<IActionResult> ViewProfile(string actorId)

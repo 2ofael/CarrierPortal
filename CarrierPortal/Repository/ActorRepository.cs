@@ -1,6 +1,7 @@
 ﻿using CarrierPortal.Models.DataModel;
 using CarrierPortal.Models;
 using Microsoft.EntityFrameworkCore;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace CarrierPortal.Repository
 {
@@ -41,6 +42,58 @@ namespace CarrierPortal.Repository
             await _dbContext.SaveChangesAsync();
         }
 
+        public async Task<List<Actor>> GetPostsAsync(string searchTerm, int page, int pageSize)
+        {
+            var query = _dbContext.Actors.Include(a=>a.User).AsQueryable();
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(b => b.Skills.Contains(searchTerm) ||
+                b.About.Contains(searchTerm)||
+                b.ActorName.Contains(searchTerm)||
+                b.CurrentProfession.Contains(searchTerm)||
+                b.age.ToString().Contains(searchTerm)||
+                b.Address.Contains(searchTerm)||
+                b.AcademicQualification.Contains(searchTerm)
+                
+
+                );
+            }
+
+            var skip = (page - 1) * pageSize;
+
+            if (!query.Any())
+            {
+                return new List<Actor>();
+            }
+
+            return await query.OrderByDescending(b => b.age)
+                .Skip(skip)
+                .Take(pageSize)
+                .ToListAsync();
+        }
+
+        public async Task<int> GetTotalPostsCountAsync(string searchTerm)
+        {
+            var query = _dbContext.Actors.Include(a => a.User).AsQueryable();
+          
+
+
+
+
+            if (!string.IsNullOrWhiteSpace(searchTerm))
+            {
+                query = query.Where(b => b.Skills.Contains(searchTerm) ||
+             b.About.Contains(searchTerm) ||
+             b.ActorName.Contains(searchTerm) ||
+             b.CurrentProfession.Contains(searchTerm) ||
+             b.age.ToString().Contains(searchTerm) ||
+             b.Address.Contains(searchTerm) ||
+             b.AcademicQualification.Contains(searchTerm));
+
+            }
+            return await query.CountAsync();
+        }
 
     }
 }

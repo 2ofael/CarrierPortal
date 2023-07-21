@@ -9,5 +9,7 @@ namespace CarrierPortal.Repository
         Task<Actor> GetActorById(string id);
         Task<List<Actor>> GetAllActors();
         Task UpdateActor(Actor actor);
+        Task<List<Actor>> GetPostsAsync(string searchTerm, int page, int pageSize);
+        Task<int> GetTotalPostsCountAsync(string searchTerm);
     }
 }

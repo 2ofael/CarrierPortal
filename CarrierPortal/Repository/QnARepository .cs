@@ -95,6 +95,11 @@ namespace CarrierPortal.Repository
 
             var skip = (page - 1) * pageSize;
 
+            if (!query.Any())
+            {
+                return new List<Question>();
+            }
+
             return await query.OrderByDescending(b => b.CreationDate)
                 .Skip(skip)
                 .Take(pageSize)

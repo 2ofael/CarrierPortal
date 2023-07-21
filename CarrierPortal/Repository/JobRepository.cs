@@ -119,6 +119,11 @@ namespace CarrierPortal.Repository
 
             var skip = (page - 1) * pageSize;
 
+            if (!query.Any())
+            {
+                return new List<Job>();
+            }
+
             return await query.OrderByDescending(b => b.PostedDate)
                 .Skip(skip)
                 .Take(pageSize)

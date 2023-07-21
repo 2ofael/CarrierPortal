@@ -46,6 +46,7 @@ namespace CarrierPortal.Repository
         }
         public async Task<List<BlogPost>> GetPostsAsync(string searchTerm, int page, int pageSize)
         {
+   
             var query = _dbContext.BlogPosts.AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
@@ -53,9 +54,22 @@ namespace CarrierPortal.Repository
                 query = query.Where(b => b.Title.Contains(searchTerm) || b.Content.Contains(searchTerm));
             }
 
-            var skip = (page - 1) * pageSize;
+            var totalItems = await query.CountAsync();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
-            return await query.OrderByDescending(b => b.CreatedAt)
+            // Validate page to ensure it's within the range of 1 to totalPages
+           // page = Math.Max(1, Math.Min(page, totalPages));
+
+            // Calculate the correct skip value to ensure it's non-negative
+            var skip = (page - 1) * pageSize;
+            //skip = Math.Max(0, skip);
+
+            if(!query.Any())
+            {
+                return new List<BlogPost>();
+            }
+
+            return await query
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();
