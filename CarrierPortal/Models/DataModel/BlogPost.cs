@@ -10,6 +10,7 @@
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
+        public bool IsApproved { get; set; }
 
     }
 }

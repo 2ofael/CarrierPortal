@@ -13,7 +13,7 @@ namespace CarrierPortal.Models.DataModel
 
         public int Votes { get; set; }
 
-        public bool IsApproved { get; set; }
+
 
         // Relationship properties
         public string QuestionId { get; set; }
@@ -21,6 +21,9 @@ namespace CarrierPortal.Models.DataModel
 
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
+
+        public bool IsApproved { get; set; }
+        public List<AnswerVote> AnswerVotes { get; set; }
 
 
     }

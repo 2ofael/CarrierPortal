@@ -16,13 +16,17 @@ namespace CarrierPortal.Models.DataModel
 
         public int Votes { get; set; }
 
-        public bool IsApproved { get; set; }
+     
 
         // Relationship properties
         public string UserId { get; set; }
         public ApplicationUser User { get; set; }
 
         public List<Answer> Answers { get; set; }
+
+
+        public bool IsApproved { get; set; }
+        public List<QuestionVote> QuestionVotes { get; set; }
 
     }
 }

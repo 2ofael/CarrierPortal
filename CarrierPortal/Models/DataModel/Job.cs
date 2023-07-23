@@ -19,5 +19,8 @@ namespace CarrierPortal.Models.DataModel
         public string PostedByUserId { get; set; } // Reference to the user who posted the job
         public ApplicationUser PostedByUser { get; set; }
 
+        public bool IsApproved { get; set; }
+
+
     }
 }

@@ -62,6 +62,31 @@ namespace CarrierPortal.Models
                 .HasForeignKey(bp => bp.ApplicationUserId)
                 .OnDelete(DeleteBehavior.Cascade);
 
+            modelBuilder.Entity<ApplicationUser>()
+               .HasMany(u => u.AnswerVotes)
+               .WithOne(v => v.User)
+               .HasForeignKey(v => v.UserId)
+               .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<ApplicationUser>()
+            .HasMany(u => u.QuestionVotes)
+            .WithOne(v => v.User)
+            .HasForeignKey(v => v.UserId)
+            .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Question>()
+           .HasMany(q => q.QuestionVotes)
+           .WithOne(v => v.Question)
+           .HasForeignKey(v => v.QuestionId)
+           .OnDelete(DeleteBehavior.Cascade);
+
+            modelBuilder.Entity<Answer>()
+              .HasMany(a => a.AnswerVotes)
+              .WithOne(v => v.Answer)
+              .HasForeignKey(v => v.AnswerId)
+              .OnDelete(DeleteBehavior.Cascade);
+
 
         }
 
@@ -73,6 +98,9 @@ namespace CarrierPortal.Models
         public DbSet<Resume> Resumes { get; set; }
         public DbSet<NewsletterSubscription> NewsletterSubscriptions { get; set; }
         public DbSet<BlogPost> BlogPosts { get; set; }
-    
+        public DbSet<QuestionVote> QuestionVotes { get; set; }
+        public DbSet<AnswerVote> AnswerVotes { get; set; }
+
+
     }
 }

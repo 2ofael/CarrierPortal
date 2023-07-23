@@ -4,6 +4,7 @@ using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
+using System.Linq;
 using System.Security.Claims;
 
 namespace CarrierPortal.Controllers
@@ -231,52 +232,144 @@ namespace CarrierPortal.Controllers
         //    return View(question);
         //}
 
-        [HttpPost]
-     
-        public async Task<IActionResult> Upvote(string questionId)
-        {
-            var question = await _qnaRepository.GetQuestionByIdAsync(questionId);
-            if (question == null)
-            {
-                return NotFound();
-            }
-
-            // Perform upvote logic here
-            question.Votes++;
-
-            // Save the updated question
-            await _qnaRepository.UpdateQuestionAsync(question);
-
-            // Return the updated vote count
-            return Json(new { voteCount = question.Votes });
-        }
-        
       
-        [HttpPost]
-       
 
-        public async Task<IActionResult> Downvote(string questionId)
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveQuestion(string Id)
         {
+            var job = await _qnaRepository.GetQuestionByIdAsync(Id);
+            if (job == null)
+            {
+                return NotFound();
+            }
+
+            job.IsApproved = true;
+            await _qnaRepository.UpdateQuestionAsync(job);
+
+            // Redirect back to the ActorsList action after approval
+            return RedirectToAction(nameof(Index));
+        }
+
+
+
+        [HttpPost]
+        public async Task<IActionResult> UpvoteQuestion(string questionId)
+        {
+            var userId = GetCurrentUserId();
             var question = await _qnaRepository.GetQuestionByIdAsync(questionId);
+
             if (question == null)
             {
                 return NotFound();
             }
 
-            // Perform downvote logic here
-            question.Votes--;
+            if (!HasUserVotedQuestion(userId, questionId))
+            {
+                question.Votes++;
+                await _qnaRepository.UpdateQuestionAsync(question);
 
-            // Save the updated question
-            await _qnaRepository.UpdateQuestionAsync(question);
+                var vote = new QuestionVote { QuestionId = questionId, UserId = userId, IsUpvote = true };
+                await _qnaRepository.CreateQuestionVoteAsync(vote);
+            }
 
-            // Return the updated vote count
-            return Json(new { voteCount = question.Votes });
+            return RedirectToAction("Index");
         }
+
         [HttpPost]
-        public async Task<IActionResult> hello(string Id)
+        public async Task<IActionResult> DownvoteQuestion(string questionId)
         {
-            return Json("hello "+Id);
+            var userId = GetCurrentUserId();
+            var question = await _qnaRepository.GetQuestionByIdAsync(questionId);
+
+            if (question == null)
+            {
+                return NotFound();
+            }
+
+            if (!HasUserVotedQuestion(userId, questionId))
+            {
+                question.Votes--;
+                await _qnaRepository.UpdateQuestionAsync(question);
+
+                var vote = new QuestionVote { QuestionId = questionId, UserId = userId, IsUpvote = false };
+                await _qnaRepository.CreateQuestionVoteAsync(vote);
+            }
+
+            return RedirectToAction("Index");
         }
+
+        [HttpPost]
+        public async Task<IActionResult> UpvoteAnswer(string answerId)
+        {
+            var userId = GetCurrentUserId();
+            var answer = await _qnaRepository.GetAnswerByIdAsync(answerId);
+
+            if (answer == null)
+            {
+                return NotFound();
+            }
+
+            if (!HasUserVotedAnswer(userId, answerId))
+            {
+                answer.Votes++;
+                await _qnaRepository.UpdateAnswerAsync(answer);
+
+                var vote = new AnswerVote { AnswerId = answerId, UserId = userId, IsUpvote = true };
+                await _qnaRepository.CreateAnswerVoteAsync(vote);
+            }
+
+            return RedirectToAction("QuestionDetails", new { questionId = answer.QuestionId });
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> DownvoteAnswer(string answerId)
+        {
+            var userId = GetCurrentUserId();
+            var answer = await _qnaRepository.GetAnswerByIdAsync(answerId);
+
+            if (answer == null)
+            {
+                return NotFound();
+            }
+
+            if (!HasUserVotedAnswer(userId, answerId))
+            {
+                answer.Votes--;
+                await _qnaRepository.UpdateAnswerAsync(answer);
+
+                var vote = new AnswerVote { AnswerId = answerId, UserId = userId, IsUpvote = false };
+                await _qnaRepository.CreateAnswerVoteAsync(vote);
+            }
+
+            return RedirectToAction("QuestionDetails", new { questionId = answer.QuestionId });
+        }
+
+        private bool HasUserVotedQuestion(string userId, string questionId)
+        {
+            return _qnaRepository.HasUserVotedQuestion(userId, questionId);
+        }
+
+        private bool HasUserVotedAnswer(string userId, string answerId)
+        {
+            return _qnaRepository.HasUserVotedAnswer(userId, answerId);
+        }
+
+        private string GetCurrentUserId()
+        {
+            var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return userIdClaim?.Value;
+        }
+
+
+
+
+
+
+
+
+
+
 
 
     }

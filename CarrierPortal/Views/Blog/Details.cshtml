@@ -31,6 +31,16 @@
                         <div class="btn-group" role="group" aria-label="Vote Buttons">
                             <button type="button" class="btn btn-primary" id="upvote">Upvote</button>
                             <button type="button" class="btn btn-primary" id="downvote">Downvote</button>
+
+                            @if (User.IsInRole("Admin") && !Model.IsApproved)
+                            {
+                                <form method="post" asp-action="ApproveBlog">
+                                    @Html.AntiForgeryToken()
+                                    <input type="hidden" asp-for="Id" value="@Model.Id" />
+                                    <button type="submit" class="btn btn-success">Approve Blog</button>
+                                </form>
+                            }
+
                         </div>
                     </div>
                 </div>

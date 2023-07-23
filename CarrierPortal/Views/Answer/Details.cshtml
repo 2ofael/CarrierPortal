@@ -1,4 +1,4 @@
-﻿@model Answer // Replace with your project's Answer model namespace
+﻿@*@model Answer // Replace with your project's Answer model namespace
 
 
 <div class="container">
@@ -21,6 +21,62 @@
             <a asp-action="Delete" asp-controller="Answer" asp-route-id="@Model.Id" class="btn btn-danger">Delete Answer</a>
         </div>
     }
+    @if (User.IsInRole("Admin") && !Model.IsApproved)
+    {
+        <form method="post" asp-action="ApproveAnswer">
+            @Html.AntiForgeryToken()
+            <input type="hidden" asp-for="Id" value="@Model.Id" />
+            <button type="submit" class="btn btn-success">Approve Answer</button>
+        </form>
+    }
+
+    <a asp-action="Index" asp-controller="QnA" class="btn btn-secondary mt-3">Back to Answers</a>
+</div>*@
+
+
+@using System.Security.Claims;
+@model Answer
+
+<div class="container">
+    <h1>Answer Details</h1>
+
+    <div class="card">
+        <div class="card-body">
+            <h4 class="card-title">Answer</h4>
+            <div class="card-text">Content: @Model.Content</div>
+            <div class="card-text">Creation Date: @Model.CreationDate</div>
+            <div class="card-text">Votes: @Model.Votes</div>
+            <div class="card-text">Is Approved: @Model.IsApproved</div>
+        </div>
+    </div>
+
+    <div class="vote-buttons mt-3">
+        @if (User.Identity.IsAuthenticated)
+        {
+            var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            var answerVote = Model.AnswerVotes.FirstOrDefault(v => v.UserId == userId);
+
+            if (answerVote == null)
+            {
+                <form asp-action="UpvoteAnswer" asp-controller="QnA" asp-route-answerId="@Model.Id">
+                    <button type="submit" class="btn btn-outline-success"><i class="bi bi-arrow-up"></i> Upvote</button>
+                </form>
+
+                <form asp-action="DownvoteAnswer" asp-controller="QnA" asp-route-answerId="@Model.Id">
+                    <button type="submit" class="btn btn-outline-danger"><i class="bi bi-arrow-down"></i> Downvote</button>
+                </form>
+            }
+            else
+            {
+                var isUpvote = answerVote.IsUpvote;
+                var voteText = isUpvote ? "Upvoted" : "Downvoted";
+                var buttonColor = isUpvote ? "btn-success" : "btn-danger";
+                var buttonIcon = isUpvote ? "bi-arrow-up" : "bi-arrow-down";
+
+                <button type="button" class="btn @buttonColor" disabled><i class="bi @buttonIcon"></i> @voteText</button>
+            }
+        }
+    </div>
 
     <a asp-action="Index" asp-controller="QnA" class="btn btn-secondary mt-3">Back to Answers</a>
 </div>

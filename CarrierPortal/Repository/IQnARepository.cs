@@ -16,5 +16,9 @@ namespace CarrierPortal.Repository
         Task UpdateQuestionAsync(Question question);
         Task<List<Question>>GetPostsAsync(string searchTerm, int page, int pageSize);
         Task<int> GetTotalPostsCountAsync(string searchTerm);
+        Task CreateQuestionVoteAsync(QuestionVote vote);
+        Task CreateAnswerVoteAsync(AnswerVote vote);
+        bool HasUserVotedQuestion(string userId, string questionId);
+        bool HasUserVotedAnswer(string userId, string answerId);
     }
 }

@@ -56,5 +56,14 @@
         {
             <a asp-controller="Job" asp-action="Applicants" asp-route-id="@Model.Id" class="btn btn-secondary mb-3" data-action="view-applicants"><i class="fas fa-users"></i> View Applicants (@Model.Applicants.Count)</a>
         }
+
+        @if (User.IsInRole("Admin") && !Model.IsApproved)
+        {
+            <form method="post" asp-action="ApproveJob">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                <button type="submit" class="btn btn-success">Approve Job</button>
+            </form>
+        }
     </div>
 </div>

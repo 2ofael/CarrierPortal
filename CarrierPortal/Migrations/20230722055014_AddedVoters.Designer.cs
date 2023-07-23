@@ -4,6 +4,7 @@ using CarrierPortal.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20230722055014_AddedVoters")]
+    partial class AddedVoters
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -206,31 +208,6 @@ namespace CarrierPortal.Migrations
                     b.ToTable("Answers");
                 });
 
-            modelBuilder.Entity("CarrierPortal.Models.DataModel.AnswerVote", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("AnswerId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsUpvote")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AnswerId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("AnswerVotes");
-                });
-
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
                 {
                     b.Property<int>("Id")
@@ -391,31 +368,6 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Questions");
-                });
-
-            modelBuilder.Entity("CarrierPortal.Models.DataModel.QuestionVote", b =>
-                {
-                    b.Property<string>("Id")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<bool>("IsUpvote")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("QuestionId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("QuestionId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("QuestionVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Resume", b =>
@@ -611,25 +563,6 @@ namespace CarrierPortal.Migrations
                     b.Navigation("User");
                 });
 
-            modelBuilder.Entity("CarrierPortal.Models.DataModel.AnswerVote", b =>
-                {
-                    b.HasOne("CarrierPortal.Models.DataModel.Answer", "Answer")
-                        .WithMany("AnswerVotes")
-                        .HasForeignKey("AnswerId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
-                        .WithMany("AnswerVotes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Answer");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
                 {
                     b.HasOne("CarrierPortal.Models.ApplicationUser", "ApplicantUser")
@@ -678,25 +611,6 @@ namespace CarrierPortal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
-
-                    b.Navigation("User");
-                });
-
-            modelBuilder.Entity("CarrierPortal.Models.DataModel.QuestionVote", b =>
-                {
-                    b.HasOne("CarrierPortal.Models.DataModel.Question", "Question")
-                        .WithMany("QuestionVotes")
-                        .HasForeignKey("QuestionId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
-                        .WithMany("QuestionVotes")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Question");
 
                     b.Navigation("User");
                 });
@@ -765,8 +679,6 @@ namespace CarrierPortal.Migrations
 
             modelBuilder.Entity("CarrierPortal.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("AnswerVotes");
-
                     b.Navigation("Answers");
 
                     b.Navigation("AppliedJobs");
@@ -778,14 +690,7 @@ namespace CarrierPortal.Migrations
 
                     b.Navigation("PostedJobs");
 
-                    b.Navigation("QuestionVotes");
-
                     b.Navigation("Questions");
-                });
-
-            modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
-                {
-                    b.Navigation("AnswerVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
@@ -802,8 +707,6 @@ namespace CarrierPortal.Migrations
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
                 {
                     b.Navigation("Answers");
-
-                    b.Navigation("QuestionVotes");
                 });
 #pragma warning restore 612, 618
         }

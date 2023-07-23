@@ -158,5 +158,23 @@ namespace CarrierPortal.Controllers
             return RedirectToAction("Details", "QnA", new { id = questionId });
         }
 
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveAnswer(string Id)
+        {
+            var ans = await _qnaRepository.GetAnswerByIdAsync(Id);
+            if (ans == null)
+            {
+                return NotFound();
+            }
+
+            ans.IsApproved = true;
+            await _qnaRepository.UpdateAnswerAsync(ans);
+
+            // Redirect back to the ActorsList action after approval
+            return RedirectToAction(nameof(Question),nameof(Index));
+         
+        }
+
     }
 }

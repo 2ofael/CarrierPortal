@@ -16,14 +16,14 @@ namespace CarrierPortal.Repository
         public async Task<List<Question>> GetAllQuestionsAsync()
         {
             return await _context.Questions
-                .Include(q => q.User).Include(q=>q.Answers)
+                .Include(q => q.User).Include(q=>q.Answers).Include(q=>q.QuestionVotes)
                 .ToListAsync();
         }
 
         public async Task<Question> GetQuestionByIdAsync(string questionId)
         {
             return await _context.Questions
-                .Include(q => q.User)
+                .Include(q => q.User).Include(q => q.QuestionVotes)
                 .FirstOrDefaultAsync(q => q.Id == questionId);
         }
 
@@ -32,6 +32,7 @@ namespace CarrierPortal.Repository
             return await _context.Answers
                 .Where(a => a.QuestionId == questionId)
                 .Include(a => a.User)
+                .Include(a=>a.AnswerVotes)
                 .ToListAsync();
         }
 
@@ -39,6 +40,7 @@ namespace CarrierPortal.Repository
         {
             return await _context.Answers
                 .Include(a => a.User)
+                .Include(a=>a.AnswerVotes)
                 .FirstOrDefaultAsync(a => a.Id == answerId);
         }
 
@@ -119,7 +121,29 @@ namespace CarrierPortal.Repository
             return await query.CountAsync();
         }
 
+        public async Task CreateQuestionVoteAsync(QuestionVote vote)
+        {
+            vote.Id = Guid.NewGuid().ToString();
+            _context.QuestionVotes.Add(vote);
+            await _context.SaveChangesAsync();
+        }
 
+        public async Task CreateAnswerVoteAsync(AnswerVote vote)
+        {
+            vote.Id = Guid.NewGuid().ToString();
+            _context.AnswerVotes.Add(vote);
+            await _context.SaveChangesAsync();
+        }
+
+        public bool HasUserVotedQuestion(string userId, string questionId)
+        {
+            return _context.QuestionVotes.Any(v => v.UserId == userId && v.QuestionId == questionId);
+        }
+
+        public bool HasUserVotedAnswer(string userId, string answerId)
+        {
+            return _context.AnswerVotes.Any(v => v.UserId == userId && v.AnswerId == answerId);
+        }
 
 
     }

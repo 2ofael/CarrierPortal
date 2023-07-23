@@ -153,5 +153,24 @@ namespace CarrierPortal.Controllers
             await _blogRepository.DeletePostAsync(id);
             return RedirectToAction(nameof(Index));
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveBlog(int Id)
+        {
+            var ans = await _blogRepository.GetPostByIdAsync(Id);
+            if (ans == null)
+            {
+                return NotFound();
+            }
+
+            ans.IsApproved = true;
+            await _blogRepository.UpdatePostAsync(ans);
+
+            // Redirect back to the ActorsList action after approval
+            return RedirectToAction( nameof(Index), nameof(Question));
+
+        }
+
+
     }
 }

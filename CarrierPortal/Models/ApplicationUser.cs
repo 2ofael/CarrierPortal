@@ -15,7 +15,10 @@ namespace CarrierPortal.Models
         public ICollection<Job> PostedJobs { get; set; }
         public ICollection<Applicant> AppliedJobs { get; set; }
         public ICollection<BlogPost> BlogPosts { get; set; }
- 
+
+        public List<QuestionVote> QuestionVotes { get; set; }
+        public List<AnswerVote> AnswerVotes { get; set; }
+
         // 
     }
 }

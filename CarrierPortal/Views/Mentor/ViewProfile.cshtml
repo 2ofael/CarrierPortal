@@ -23,8 +23,35 @@
                     <p class="card-text">Gender: @Model.Gender</p>
                     <p class="card-text">Current Profession: @Model.CurrentProfession</p>
                     <p class="card-text">Address: @Model.Address</p>
+
+                    @if (User.IsInRole("Admin") && !Model.isMentor)
+                    {
+                        @if (!string.IsNullOrEmpty(Model.Certificates))
+                        {
+                            <h3 class="mt-4">Certificates</h3>
+                            <div>
+                                <a href="~/Certificates/@Model.Certificates" download>Download Certificate</a>
+                            </div>
+                        }
+
+                        @if (!string.IsNullOrEmpty(Model.cv))
+                        {
+                            <h3 class="mt-4">CV</h3>
+                            <div>
+                                <a href="~/CV/@Model.cv" download>Download CV</a>
+                            </div>
+                        }
+
+                        <form method="post" asp-action="ApproveActor">
+                            @Html.AntiForgeryToken()
+                            <input type="hidden" name="actorId" value="@Model.ActorId" />
+                            <button type="submit" class="btn btn-success">Approve Actor</button>
+                        </form>
+                    }
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+

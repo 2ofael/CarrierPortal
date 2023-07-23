@@ -1,6 +1,10 @@
 ﻿@using System.Security.Claims;
 @model Question
 
+@{
+    ViewData["Title"] = "Question Details";
+}
+
 <h1>Question Details</h1>
 
 <div class="card">
@@ -13,8 +17,37 @@
             <br />
             <small class="text-muted">Posted On: @Model.CreationDate.ToString("yyyy-MM-dd")</small>
         </p>
+
+        <div class="vote-buttons">
+            @if (User.Identity.IsAuthenticated)
+            {
+                var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var votedQuestion = Model.QuestionVotes.FirstOrDefault(v => v.UserId == userId);
+
+                if (votedQuestion == null)
+                {
+                    <form asp-action="UpvoteQuestion" asp-route-questionId="@Model.Id">
+                        <button type="submit" class="btn btn-outline-success"><i class="bi bi-arrow-up"></i> Upvote (@Model.Votes)</button>
+                    </form>
+
+                    <form asp-action="DownvoteQuestion" asp-route-questionId="@Model.Id">
+                        <button type="submit" class="btn btn-outline-danger"><i class="bi bi-arrow-down"></i> Downvote (@Model.Votes)</button>
+                    </form>
+                }
+                else
+                {
+                    var isUpvote = votedQuestion.IsUpvote;
+                    var voteText = isUpvote ? "Upvoted" : "Downvoted";
+                    var buttonColor = isUpvote ? "btn-success" : "btn-danger";
+                    var buttonIcon = isUpvote ? "bi-arrow-up" : "bi-arrow-down";
+
+                    <button type="button" class="btn @buttonColor" disabled><i class="bi @buttonIcon"></i> @voteText (@Model.Votes)</button>
+                }
+            }
+        </div>
     </div>
 </div>
+
 @if (Model.Answers != null && Model.Answers.Any())
 {
     <h2>Answers</h2>
@@ -38,7 +71,6 @@
         }
     </div>
 }
-
 else
 {
     <p>No answers available.</p>
@@ -51,8 +83,6 @@ else
         @if (Model.UserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
         {
             <a href="@Url.Action("Edit", "QnA", new { id = Model.Id })" class="btn btn-secondary">Edit</a>
-
-          
             <a href="@Url.Action("Delete", "QnA", new { id = Model.Id })" class="btn btn-danger">Delete</a>
         }
     </div>
@@ -71,7 +101,6 @@ else
         }
     }
 }
-
 @section Scripts {
-    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.16.0/dist/icons/bootstrap-icons.min.js"></script>
 }

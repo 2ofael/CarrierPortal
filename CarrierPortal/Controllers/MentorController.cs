@@ -165,7 +165,24 @@ namespace CarrierPortal.Controllers
             
             return View();
         }
-    
+
+
+        [HttpPost]
+        public async Task<IActionResult> ApproveActor(string actorId)
+        {
+            var actor = await _actorRepository.GetActorById(actorId);
+            if (actor == null)
+            {
+                return NotFound();
+            }
+
+            actor.isMentor = true;
+            await _actorRepository.UpdateActor(actor);
+
+            // Redirect back to the ActorsList action after approval
+            return RedirectToAction("ActorsList");
+        }
+
 
     }
 }

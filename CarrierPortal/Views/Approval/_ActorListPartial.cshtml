@@ -1,0 +1,54 @@
+﻿@model PaginatedList<Actor>
+
+<table class="table mt-3">
+    <thead>
+        <tr>
+            <th>Actor Name</th>
+            <th>Email</th>
+            <th>Skills</th>
+            <th>Current Profession</th>
+            <th>Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var actor in Model.Items)
+        {
+            <tr>
+                <td>@actor.ActorName</td>
+                <td>@actor.Email</td>
+                <td>@actor.Skills</td>
+                <td>@actor.CurrentProfession</td>
+                <td>
+                    @if (!actor.isMentor)
+                    {
+                        <form method="post" asp-action="ApproveActor" asp-route-actorId="@actor.ActorId">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-success">Approve</button>
+                        </form>
+                    }
+                    else
+                    {
+                        <span class="text-success">Approved</span>
+                    }
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+<div class="d-flex justify-content-between mt-3">
+    <div>
+        Page @(Model.PageIndex) of @Model.TotalPages
+    </div>
+    <div>
+        @if (Model.HasPreviousPage)
+        {
+            <a href="#" class="btn btn-sm btn-outline-primary" onclick="loadPage(@Model.PageIndex - 1)">Previous</a>
+        }
+
+        @if (Model.HasNextPage)
+        {
+            <a href="#" class="btn btn-sm btn-outline-primary" onclick="loadPage(@Model.PageIndex + 1)">Next</a>
+        }
+    </div>
+</div>

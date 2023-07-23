@@ -287,7 +287,21 @@ namespace CarrierPortal.Controllers
             return File(fileBytes, "application/pdf", resume.FileName);
         }
 
+        [HttpPost]
+        public async Task<IActionResult> ApproveJob(int Id)
+        {
+            var job = await _jobRepository.GetJobByIdAsync(Id);
+            if (job == null)
+            {
+                return NotFound();
+            }
 
+            job.IsApproved = true;
+            await _jobRepository.UpdateJobAsync(job);
+
+            // Redirect back to the ActorsList action after approval
+            return RedirectToAction(nameof(Index));
+        }
 
 
     }
