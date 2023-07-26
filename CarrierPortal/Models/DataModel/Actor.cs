@@ -43,6 +43,9 @@ namespace CarrierPortal.Models.DataModel
 
         public string Certificates { get; set; }
 
+        public int Votes { get; set; }
+        public List<ActorLoved> Loved { get; set; }
+
 
 
 

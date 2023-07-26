@@ -75,6 +75,14 @@ namespace CarrierPortal.Models
             .OnDelete(DeleteBehavior.Cascade);
 
 
+         //   modelBuilder.Entity<ApplicationUser>()
+         //.HasMany(u => u.BlogPostsVotes)
+         //.WithOne(v => v.User)
+         //.HasForeignKey(v => v.UserId)
+         //.OnDelete(DeleteBehavior.Cascade);
+
+
+
             modelBuilder.Entity<Question>()
            .HasMany(q => q.QuestionVotes)
            .WithOne(v => v.Question)
@@ -86,6 +94,28 @@ namespace CarrierPortal.Models
               .WithOne(v => v.Answer)
               .HasForeignKey(v => v.AnswerId)
               .OnDelete(DeleteBehavior.Cascade);
+    
+            modelBuilder.Entity<BlogPost>()
+                .HasMany(b=>b.Loved)
+                .WithOne(L=>L.BlogPost)
+                .HasForeignKey(b=>b.BlogId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
+            modelBuilder.Entity<Actor>()
+                .HasMany(a => a.Loved)
+                .WithOne(l => l.Actor)
+                .HasForeignKey(l => l.ActorId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+                
+          
+
+      //      modelBuilder.Entity<BlogPost>()
+      //.HasMany(p => p.BlogPostVotes)
+      //.WithOne(v => v.BlogPost)
+      //.HasForeignKey(v => v.BlogPostId)
+      //.OnDelete(DeleteBehavior.Cascade);
 
 
         }
@@ -100,6 +130,8 @@ namespace CarrierPortal.Models
         public DbSet<BlogPost> BlogPosts { get; set; }
         public DbSet<QuestionVote> QuestionVotes { get; set; }
         public DbSet<AnswerVote> AnswerVotes { get; set; }
+      //  public DbSet<BlogPostVote> BlogPostVotes { get; set; }
+
 
 
     }

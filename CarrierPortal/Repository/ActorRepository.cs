@@ -16,12 +16,14 @@ namespace CarrierPortal.Repository
 
         public async Task<List<Actor>> GetAllActors()
         {
-            return await _dbContext.Actors.ToListAsync();
+            return await _dbContext.Actors.Include(m=>m.Loved).ToListAsync();
         }
 
         public async Task<Actor> GetActorById(string id)
         {
-            return await _dbContext.Actors.FindAsync(id);
+            return await _dbContext.Actors
+        .Include(m => m.Loved)
+        .FirstOrDefaultAsync(a => a.ActorId == id);
         }
 
         public async Task AddActor(Actor actor)
@@ -44,7 +46,7 @@ namespace CarrierPortal.Repository
 
         public async Task<List<Actor>> GetPostsAsync(string searchTerm, int page, int pageSize)
         {
-            var query = _dbContext.Actors.Include(a=>a.User).AsQueryable();
+            var query = _dbContext.Actors.Include(a=>a.User).Include(a=>a.Loved).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -75,7 +77,7 @@ namespace CarrierPortal.Repository
 
         public async Task<int> GetTotalPostsCountAsync(string searchTerm)
         {
-            var query = _dbContext.Actors.Include(a => a.User).AsQueryable();
+            var query = _dbContext.Actors.Include(a => a.User).Include(a=>a.Loved).AsQueryable();
           
 
 

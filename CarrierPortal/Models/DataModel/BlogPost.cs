@@ -1,4 +1,6 @@
-﻿namespace CarrierPortal.Models.DataModel
+﻿using Microsoft.EntityFrameworkCore;
+
+namespace CarrierPortal.Models.DataModel
 {
     public class BlogPost
     {
@@ -10,7 +12,12 @@
         public string ApplicationUserId { get; set; }
         public ApplicationUser ApplicationUser { get; set; }
 
+        public int Votes { get; set; }
+
         public bool IsApproved { get; set; }
 
+
+        public List<Love> Loved { get; set; }
+     
     }
 }

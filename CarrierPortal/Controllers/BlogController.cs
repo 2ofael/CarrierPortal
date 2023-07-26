@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using System.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarrierPortal.Controllers
 {
@@ -169,6 +171,128 @@ namespace CarrierPortal.Controllers
             // Redirect back to the ActorsList action after approval
             return RedirectToAction( nameof(Index), nameof(Question));
 
+        }
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize]
+        //public async Task<IActionResult> UpvoteBlogPost(int id)
+        //{
+        //    // Check if the user is authenticated
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+        //        return RedirectToAction("Login", "Account"); // Redirect to login page or display an error message
+        //    }
+
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //    var blogPost = await _blogRepository.GetPostByIdAsync(id);
+
+        //    if (blogPost == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var existingVote = await _blogRepository.GetBlogPostVoteAsync(userId, id);
+
+        //    if (existingVote == null)
+        //    {
+        //        // Create a new upvote
+        //        var newVote = new BlogPostVote
+        //        {
+        //            UserId = userId,
+        //            BlogPostId = id,
+        //            IsUpvote = true
+        //        };
+
+        //        blogPost.Votes++;
+        //        await _blogRepository.CreateBlogPostVoteAsync(newVote);
+        //        await _blogRepository.UpdatePostAsync(blogPost);
+        //    }
+        //    else if (!existingVote.IsUpvote)
+        //    {
+        //        // Switch from downvote to upvote
+        //        existingVote.IsUpvote = true;
+        //        blogPost.Votes += 2; // Increment by 2 since we're changing from downvote to upvote
+        //        await _blogRepository.UpdatePostAsync(blogPost);
+        //    }
+
+        //    return RedirectToAction("Details", new { id = id });
+        //}
+
+        //// POST: Blog/DownvoteBlogPost/5
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //[Authorize]
+        //public async Task<IActionResult> DownvoteBlogPost(int id)
+        //{
+        //    // Check if the user is authenticated
+        //    if (!User.Identity.IsAuthenticated)
+        //    {
+        //        return RedirectToAction("Login", "Account"); // Redirect to login page or display an error message
+        //    }
+
+        //    var userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+        //    var blogPost = await _blogRepository.GetPostByIdAsync(id);
+
+        //    if (blogPost == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    var existingVote = await _blogRepository.GetBlogPostVoteAsync(userId, id);
+
+        //    if (existingVote == null)
+        //    {
+        //        // Create a new downvote
+        //        var newVote = new BlogPostVote
+        //        {
+        //            UserId = userId,
+        //            BlogPostId = id,
+        //            IsUpvote = false
+        //        };
+
+        //        blogPost.Votes--;
+        //        await _blogRepository.CreateBlogPostVoteAsync(newVote);
+        //        await _blogRepository.UpdatePostAsync(blogPost);
+        //    }
+        //    else if (existingVote.IsUpvote)
+        //    {
+        //        // Switch from upvote to downvote
+        //        existingVote.IsUpvote = false;
+        //        blogPost.Votes -= 2; // Decrement by 2 since we're changing from upvote to downvote
+        //        await _blogRepository.UpdatePostAsync(blogPost);
+        //    }
+
+        //    return RedirectToAction("Details", new { id = id });
+        //}
+
+
+        [HttpPost]
+        public async Task<IActionResult> LovePost(int postId)
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Implement a method to get the current logged-in user's Id
+            var post = await _blogRepository.GetPostByIdAsync(postId);
+            var isLoved = post.Loved.Select(l => l.UserNameIdentifier == userId).FirstOrDefault();
+            if (post != null)
+            {
+                if (isLoved)
+                {
+                    var curLoved = post.Loved.Select(l => l).Where(l => l.UserNameIdentifier == userId).FirstOrDefault();
+                    post.Loved.Remove(curLoved); // Remove the user's Id from the Loved list
+                    post.Votes--; // Decrease the total number of votes/loves for the post
+                }
+                else
+                {
+                    post.Loved.Add(new Love { UserNameIdentifier= userId}); // Add the user's Id to the Loved list
+                    post.Votes++; // Increment the total number of votes/loves for the post
+                }
+
+               await  _blogRepository.UpdatePostAsync(post);
+            }
+
+            return RedirectToAction("Details", new { id = postId });
         }
 
 

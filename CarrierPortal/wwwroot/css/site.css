@@ -6,3 +6,25 @@
     height: 200px;
     width: auto;
 }
+
+
+
+
+
+
+
+.love-icon {
+    color: #ccc; /* Default color for the love icon */
+    text-decoration: none;
+}
+
+.love-icon:hover {
+    color: #f00; /* Color for the love icon on hover */
+}
+
+.love-icon-filled {
+    color: #f00; /* Color for the filled love icon */
+}
+
+
+

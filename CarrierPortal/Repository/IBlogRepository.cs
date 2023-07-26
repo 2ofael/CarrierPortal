@@ -1,4 +1,5 @@
 ﻿using CarrierPortal.Models.DataModel;
+using Microsoft.EntityFrameworkCore;
 
 namespace CarrierPortal.Repository
 {
@@ -11,6 +12,10 @@ namespace CarrierPortal.Repository
         Task UpdatePostAsync(BlogPost post);
         Task<List<BlogPost>> GetPostsAsync(string searchTerm, int page, int pageSize);
         Task<int> GetTotalPostsCountAsync(string searchTerm);
+        //Task CreateBlogPostVoteAsync(BlogPostVote vote);
 
+
+        //Task<BlogPostVote> GetBlogPostVoteAsync(string userId, int blogPostId);
+       
     }
 }

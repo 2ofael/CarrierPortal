@@ -18,6 +18,7 @@ namespace CarrierPortal.Models
 
         public List<QuestionVote> QuestionVotes { get; set; }
         public List<AnswerVote> AnswerVotes { get; set; }
+      ///  public List<BlogPostVote> BlogPostsVotes { get; set;}
 
         // 
     }

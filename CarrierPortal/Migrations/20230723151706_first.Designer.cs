@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230723055230_addedVotringToQnA")]
-    partial class addedVotringToQnA
+    [Migration("20230723151706_first")]
+    partial class first
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -220,11 +220,17 @@ namespace CarrierPortal.Migrations
                     b.Property<bool>("IsUpvote")
                         .HasColumnType("bit");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("AnswerId");
 
-                    b.ToTable("AnswerVote");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AnswerVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
@@ -291,6 +297,9 @@ namespace CarrierPortal.Migrations
                     b.Property<string>("Title")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
 
                     b.HasKey("Id");
 
@@ -401,11 +410,17 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("QuestionId");
 
-                    b.ToTable("QuestionVote");
+                    b.HasIndex("UserId");
+
+                    b.ToTable("QuestionVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Resume", b =>
@@ -609,7 +624,15 @@ namespace CarrierPortal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
+                        .WithMany("AnswerVotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Answer");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
@@ -672,7 +695,15 @@ namespace CarrierPortal.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
+                        .WithMany("QuestionVotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
                     b.Navigation("Question");
+
+                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Resume", b =>
@@ -739,6 +770,8 @@ namespace CarrierPortal.Migrations
 
             modelBuilder.Entity("CarrierPortal.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("AnswerVotes");
+
                     b.Navigation("Answers");
 
                     b.Navigation("AppliedJobs");
@@ -749,6 +782,8 @@ namespace CarrierPortal.Migrations
                         .IsRequired();
 
                     b.Navigation("PostedJobs");
+
+                    b.Navigation("QuestionVotes");
 
                     b.Navigation("Questions");
                 });

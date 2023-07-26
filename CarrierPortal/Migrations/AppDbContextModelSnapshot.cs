@@ -147,6 +147,9 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
                     b.Property<int>("age")
                         .HasColumnType("int");
 
@@ -169,6 +172,29 @@ namespace CarrierPortal.Migrations
                         .IsUnique();
 
                     b.ToTable("Actors");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.ActorLoved", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserNameIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorId");
+
+                    b.ToTable("ActorLoved");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
@@ -296,6 +322,9 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
@@ -341,6 +370,28 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("PostedByUserId");
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Love", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserNameIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Love");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.NewsletterSubscription", b =>
@@ -592,6 +643,17 @@ namespace CarrierPortal.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.ActorLoved", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.Actor", "Actor")
+                        .WithMany("Loved")
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Actor");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
                 {
                     b.HasOne("CarrierPortal.Models.DataModel.Question", "Question")
@@ -669,6 +731,17 @@ namespace CarrierPortal.Migrations
                         .IsRequired();
 
                     b.Navigation("PostedByUser");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Love", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.BlogPost", "BlogPost")
+                        .WithMany("Loved")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BlogPost");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
@@ -783,6 +856,11 @@ namespace CarrierPortal.Migrations
                     b.Navigation("Questions");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Actor", b =>
+                {
+                    b.Navigation("Loved");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
                 {
                     b.Navigation("AnswerVotes");
@@ -792,6 +870,11 @@ namespace CarrierPortal.Migrations
                 {
                     b.Navigation("Resume")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.BlogPost", b =>
+                {
+                    b.Navigation("Loved");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Job", b =>

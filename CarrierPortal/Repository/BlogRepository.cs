@@ -20,7 +20,7 @@ namespace CarrierPortal.Repository
 
         public async Task<BlogPost> GetPostByIdAsync(int id)
         {
-            return await _dbContext.BlogPosts.FirstOrDefaultAsync(p => p.Id == id);
+            return await _dbContext.BlogPosts.Include(b=>b.Loved).FirstOrDefaultAsync (p => p.Id == id);
         }
 
         public async Task CreatePostAsync(BlogPost post)
@@ -47,7 +47,7 @@ namespace CarrierPortal.Repository
         public async Task<List<BlogPost>> GetPostsAsync(string searchTerm, int page, int pageSize)
         {
    
-            var query = _dbContext.BlogPosts.AsQueryable();
+            var query = _dbContext.BlogPosts.Include(b=>b.Loved).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -77,7 +77,7 @@ namespace CarrierPortal.Repository
 
         public async Task<int> GetTotalPostsCountAsync(string searchTerm)
         {
-            var query = _dbContext.BlogPosts.AsQueryable();
+            var query = _dbContext.BlogPosts.Include(b=>b.Loved).AsQueryable();
 
             if (!string.IsNullOrWhiteSpace(searchTerm))
             {
@@ -86,6 +86,17 @@ namespace CarrierPortal.Repository
 
             return await query.CountAsync();
         }
+        //public async Task CreateBlogPostVoteAsync(BlogPostVote vote)
+        //{
+        //    _dbContext.BlogPostVotes.Add(vote);
+        //    await _dbContext.SaveChangesAsync();
+        //}
+
+        //public async Task<BlogPostVote> GetBlogPostVoteAsync(string userId, int blogPostId)
+        //{
+        //    return await _dbContext.BlogPostVotes
+        //        .FirstOrDefaultAsync(v => v.UserId == userId && v.BlogPostId == blogPostId);
+        //}
 
         //public async Task CreatePostAsync(BlogPost blogPost)
         //{

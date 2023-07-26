@@ -1,4 +1,5 @@
-﻿@model Actor
+﻿@using System.Security.Claims;
+@model Actor
 
 @{
     ViewData["Title"] = "View Profile";
@@ -23,7 +24,20 @@
                     <p class="card-text">Gender: @Model.Gender</p>
                     <p class="card-text">Current Profession: @Model.CurrentProfession</p>
                     <p class="card-text">Address: @Model.Address</p>
+                    <h4>Vote @Model.Loved.Count()</h4>
+                    <div class="btn-group" role="group" aria-label="Vote Buttons">
+                        @if (User.Identity.IsAuthenticated)
+                        {
+                            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+                            var isLoved = Model.Loved.Select(l => l.UserNameIdentifier == userId).FirstOrDefault();
 
+                            <form asp-controller="Mentor" asp-action="LovePost" method="post">
+                                <input type="hidden" asp-for="ActorId" name="ActorId" value="@Model.ActorId" />
+                                <button type="submit" class="btn @Html.Raw(isLoved ? "btn-danger" : "btn-outline-danger")">
+                                    <i class="fas @Html.Raw(isLoved ? "fa-heart" : "fa-heart-o")"></i> @Html.Raw(isLoved ? "Loved" : "Love") (@Model.Loved.Count())
+                                </button>
+                            </form>
+                        }
                     @if (User.IsInRole("Admin") && !Model.isMentor)
                     {
                         @if (!string.IsNullOrEmpty(Model.Certificates))

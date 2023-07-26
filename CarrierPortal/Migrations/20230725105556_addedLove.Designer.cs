@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230723061215_addedUserToQnAVote")]
-    partial class addedUserToQnAVote
+    [Migration("20230725105556_addedLove")]
+    partial class addedLove
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -298,6 +298,9 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
@@ -343,6 +346,28 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("PostedByUserId");
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Love", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserNameIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Love");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.NewsletterSubscription", b =>
@@ -673,6 +698,17 @@ namespace CarrierPortal.Migrations
                     b.Navigation("PostedByUser");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Love", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.BlogPost", "BlogPost")
+                        .WithMany("Loved")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BlogPost");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
                 {
                     b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
@@ -794,6 +830,11 @@ namespace CarrierPortal.Migrations
                 {
                     b.Navigation("Resume")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.BlogPost", b =>
+                {
+                    b.Navigation("Loved");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Job", b =>

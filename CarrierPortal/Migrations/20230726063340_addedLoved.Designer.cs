@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CarrierPortal.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230721095212_addedAproved")]
-    partial class addedAproved
+    [Migration("20230726063340_addedLoved")]
+    partial class addedLoved
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -149,6 +149,9 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(450)");
 
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
                     b.Property<int>("age")
                         .HasColumnType("int");
 
@@ -171,6 +174,29 @@ namespace CarrierPortal.Migrations
                         .IsUnique();
 
                     b.ToTable("Actors");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.ActorLoved", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<string>("ActorId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserNameIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ActorId");
+
+                    b.ToTable("ActorLoved");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
@@ -206,6 +232,31 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Answers");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.AnswerVote", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("AnswerId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsUpvote")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AnswerId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("AnswerVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
@@ -273,6 +324,9 @@ namespace CarrierPortal.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int>("Votes")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.HasIndex("ApplicationUserId");
@@ -318,6 +372,28 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("PostedByUserId");
 
                     b.ToTable("Jobs");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Love", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
+
+                    b.Property<int>("BlogId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("UserNameIdentifier")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("BlogId");
+
+                    b.ToTable("Love");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.NewsletterSubscription", b =>
@@ -368,6 +444,31 @@ namespace CarrierPortal.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Questions");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.QuestionVote", b =>
+                {
+                    b.Property<string>("Id")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<bool>("IsUpvote")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("QuestionId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<string>("UserId")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(450)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("QuestionId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("QuestionVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Resume", b =>
@@ -544,6 +645,17 @@ namespace CarrierPortal.Migrations
                     b.Navigation("User");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.ActorLoved", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.Actor", "Actor")
+                        .WithMany("Loved")
+                        .HasForeignKey("ActorId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Actor");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
                 {
                     b.HasOne("CarrierPortal.Models.DataModel.Question", "Question")
@@ -559,6 +671,25 @@ namespace CarrierPortal.Migrations
                         .IsRequired();
 
                     b.Navigation("Question");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.AnswerVote", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.Answer", "Answer")
+                        .WithMany("AnswerVotes")
+                        .HasForeignKey("AnswerId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
+                        .WithMany("AnswerVotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Answer");
 
                     b.Navigation("User");
                 });
@@ -604,6 +735,17 @@ namespace CarrierPortal.Migrations
                     b.Navigation("PostedByUser");
                 });
 
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Love", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.BlogPost", "BlogPost")
+                        .WithMany("Loved")
+                        .HasForeignKey("BlogId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("BlogPost");
+                });
+
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
                 {
                     b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
@@ -611,6 +753,25 @@ namespace CarrierPortal.Migrations
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.QuestionVote", b =>
+                {
+                    b.HasOne("CarrierPortal.Models.DataModel.Question", "Question")
+                        .WithMany("QuestionVotes")
+                        .HasForeignKey("QuestionId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("CarrierPortal.Models.ApplicationUser", "User")
+                        .WithMany("QuestionVotes")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("Question");
 
                     b.Navigation("User");
                 });
@@ -679,6 +840,8 @@ namespace CarrierPortal.Migrations
 
             modelBuilder.Entity("CarrierPortal.Models.ApplicationUser", b =>
                 {
+                    b.Navigation("AnswerVotes");
+
                     b.Navigation("Answers");
 
                     b.Navigation("AppliedJobs");
@@ -690,13 +853,30 @@ namespace CarrierPortal.Migrations
 
                     b.Navigation("PostedJobs");
 
+                    b.Navigation("QuestionVotes");
+
                     b.Navigation("Questions");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Actor", b =>
+                {
+                    b.Navigation("Loved");
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.Answer", b =>
+                {
+                    b.Navigation("AnswerVotes");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Applicant", b =>
                 {
                     b.Navigation("Resume")
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("CarrierPortal.Models.DataModel.BlogPost", b =>
+                {
+                    b.Navigation("Loved");
                 });
 
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Job", b =>
@@ -707,6 +887,8 @@ namespace CarrierPortal.Migrations
             modelBuilder.Entity("CarrierPortal.Models.DataModel.Question", b =>
                 {
                     b.Navigation("Answers");
+
+                    b.Navigation("QuestionVotes");
                 });
 #pragma warning restore 612, 618
         }
