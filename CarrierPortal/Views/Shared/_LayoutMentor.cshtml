@@ -84,16 +84,7 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">About</a>
                         </li>
-                        <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-                            <div class="dropdown-menu">
-                                <a class="dropdown-item" href="#">Action</a>
-                                <a class="dropdown-item" href="#">Another action</a>
-                                <a class="dropdown-item" href="#">Something else here</a>
-                                <div class="dropdown-divider"></div>
-                                <a class="dropdown-item" href="#">Separated link</a>
-                            </div>
-                        </li>
+                       
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         @if (signInManager.IsSignedIn(User))
@@ -102,7 +93,7 @@
                                 <form method="post" asp-action="logout" asp-controller="account">
                                     <button type="submit" class="nav-link btn btn-link py-0"
                                             style="width:auto">
-                                        Logout @User.Identity.Name
+                                        Logout <i class="fa-solid fa-user"></i> @User.Identity.Name
                                     </button>
                                 </form>
                             </li>
@@ -142,48 +133,56 @@
     
       
         <div class="row">
-            <div class="col-2">
+            <div class="col-3">
                 <div class="container">
                     <ul class="list-group">
+
+                 
+
+
+
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Search" asp-controller="Job" class="text-decoration-none">
+                        <a asp-action="Search" asp-controller="Mentor" class="text-decoration-none">
                             <i class="fas fa-search"></i> Search
                         </a>
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Create" asp-controller="Job" class="text-decoration-none">
-                            <i class="fas fa-plus"></i> Post Job
+                        <a asp-action="ApplyAsMentor" asp-controller="Mentor" class="text-decoration-none">
+                            <i class="fa-solid fa-user-plus"></i>Apply
                         </a>
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Job" class="text-decoration-none">
-                            <i class="fas fa-list"></i> All Jobs
+                        <a asp-action="Index" asp-controller="Mentor" class="text-decoration-none">
+                            <i class="fa-solid fa-person-chalkboard"></i> All Mentor
                         </a>
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Job" class="text-decoration-none">
+                        <a asp-action="Index" asp-controller="Mentor" class="text-decoration-none">
                             <i class="fas fa-user"></i> All Posted By You
                         </a>
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Job" class="text-decoration-none">
+                        <a asp-action="Index" asp-controller="Mentor" class="text-decoration-none">
                             <i class="fas fa-user"></i>Applied By You
                         </a>
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
+                
+                   
+
                     </ul>
                 </div>
             
             </div>
-            <div class="col-10">
+            <div class="col-9">
 
                 <div class="container">
                     <main role="main" class="pb-3">
@@ -192,6 +191,15 @@
                 </div>
 
             </div>
+
+
+
+        
+
+
+
+
+
   
         </div>
     

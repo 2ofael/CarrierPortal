@@ -21,7 +21,10 @@ namespace CarrierPortal.Models.DataModel
 
         public string Skills { get; set; }
         public string Gender { get; set; }
-        public int age { get; set; }
+
+        public DateTime DateOfBirth { get; set; }
+
+        public int age  => CalculateAge(DateOfBirth);
 
         public string AcademicQualification { get; set; }
 
@@ -47,7 +50,14 @@ namespace CarrierPortal.Models.DataModel
         public List<ActorLoved> Loved { get; set; }
 
 
-
+        private int CalculateAge(DateTime birthDate)
+        {
+            var today = DateTime.Today;
+            var age = today.Year - birthDate.Year;
+            if (birthDate > today.AddYears(-age))
+                age--;
+            return age;
+        }
 
 
     }

@@ -69,7 +69,7 @@ namespace CarrierPortal.Repository
                 return new List<Actor>();
             }
 
-            return await query.OrderByDescending(b => b.age)
+            return await query.OrderByDescending(b => b.DateOfBirth)
                 .Skip(skip)
                 .Take(pageSize)
                 .ToListAsync();

@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using CarrierPortal.CoustomValidations;
+using System.ComponentModel.DataAnnotations;
 
 namespace CarrierPortal.AppViewModel
 {
@@ -20,8 +21,13 @@ namespace CarrierPortal.AppViewModel
         public string Skills { get; set; }
         [Required]
         public string Gender { get; set; }
+
+
+        [Display(Name = "Date of Birth")]
+        [DataType(DataType.Date)]
+        [DateOfBirth]
         [Required]
-        public int age { get; set; }
+        public DateTime DateOfBirth { get; set; }
         [Required]
 
         [Display(Name = "Academic Qualification")]

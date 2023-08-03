@@ -3,6 +3,8 @@ using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.Services.PhotoServices;
+using CarrierPortal.ViewModels;
+using MailKit.Search;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -31,6 +33,7 @@ namespace CarrierPortal.Controllers
             _userManager = userManager;
             this.appDbContext = appDbContext;
             _actorRepository = actorRepository;
+            
         }
 
 
@@ -105,7 +108,7 @@ namespace CarrierPortal.Controllers
                         ActorName = mentorApplication.ActorName,
                         About = mentorApplication.About,
                         Address = mentorApplication.Address,
-                        age = mentorApplication.age,
+                        DateOfBirth = mentorApplication.DateOfBirth,
                         Skills = mentorApplication.Skills,
                         AcademicQualification = mentorApplication.AcademicQualification,
                         CurrentProfession = mentorApplication.CurrentProfession,
@@ -138,7 +141,7 @@ namespace CarrierPortal.Controllers
                     CurrMentor.ActorName = mentorApplication.ActorName;
                     CurrMentor.About = mentorApplication.About;
                     CurrMentor.Address = mentorApplication.Address;
-                    CurrMentor.age = mentorApplication.age;
+                    CurrMentor.DateOfBirth = mentorApplication.DateOfBirth;
                     CurrMentor.Skills = mentorApplication.Skills;
                     CurrMentor.AcademicQualification = mentorApplication.AcademicQualification;
                     CurrMentor.CurrentProfession = mentorApplication.CurrentProfession;
@@ -209,6 +212,104 @@ namespace CarrierPortal.Controllers
 
             return RedirectToAction("ViewProfile", new { actorId = ActorId });
         }
+
+
+
+
+        public async Task<IActionResult> Filter(string searchTerm="", int page = 1)
+        {
+            ViewBag.SearchTerm = searchTerm;
+
+            // Get all blog posts paginated
+            var pageSize = 10; // Number of items per page
+            var totalItems = await _actorRepository.GetTotalPostsCountAsync(searchTerm);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            var ActorPosts = await _actorRepository.GetPostsAsync(searchTerm, page, pageSize);
+
+            // Create a PaginatedList instance
+            var paginatedList = new PaginatedList<Actor>(ActorPosts, page, pageSize, totalItems, totalPages);
+
+
+            return View(new FilterAndPaginationModel {paginatedList = paginatedList, mentorFilter =new MentorFilter() });
+        }
+
+
+
+
+
+
+        [HttpPost]
+        public IActionResult Filter(MentorFilter mentorFilter, int page = 1)
+        {
+            const int pageSize = 10; // Number of items per page
+
+            IQueryable<Actor> filteredActors = appDbContext.Actors; // Assuming you have an Actor DbSet in ApplicationDbContext
+
+            // Apply filtering based on the form inputs
+            if (!string.IsNullOrEmpty(mentorFilter.Name))
+                filteredActors = filteredActors.Where(a => a.ActorName.ToLower().Contains(mentorFilter.Name.ToLower()));
+
+            //if (!string.IsNullOrEmpty(mentorFilter.Skills))
+            //    filteredActors = filteredActors.Where(a => a.Skills.Contains(mentorFilter.Skills));
+
+            //if (!string.IsNullOrEmpty(mentorFilter.Gender))
+            //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
+
+
+            //if (!string.IsNullOrEmpty(mentorFilter.Gender))
+            //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
+
+
+            //if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
+            //    filteredActors = filteredActors.Where(a => a.CurrentProfession == mentorFilter.CurrentProfession);
+
+
+            //if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
+            //    filteredActors = filteredActors.Where(a => a.AcademicQualification == mentorFilter.AcademicQualification);
+            if (!string.IsNullOrEmpty(mentorFilter.Skills))
+                filteredActors = filteredActors.Where(a => a.Skills.ToLower().Contains(mentorFilter.Skills.ToLower()));
+
+            if (!string.IsNullOrEmpty(mentorFilter.Gender))
+                filteredActors = filteredActors.Where(a => a.Gender.ToLower() == mentorFilter.Gender.ToLower());
+
+            if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
+                filteredActors = filteredActors.Where(a => a.CurrentProfession.ToLower() == mentorFilter.CurrentProfession.ToLower());
+
+            if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
+                filteredActors = filteredActors.Where(a => a.AcademicQualification.ToLower() == mentorFilter.AcademicQualification.ToLower());
+
+            if (!string.IsNullOrEmpty(mentorFilter.Name))
+                filteredActors = filteredActors.Where(a => a.ActorName.ToLower().Contains(mentorFilter.Name.ToLower()));
+
+
+
+
+            int totalItems = filteredActors.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            // Apply pagination using PaginatedList<T>
+            List<Actor> pagedActors = filteredActors.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            var paginatedList = new PaginatedList<Actor>(pagedActors, page, pageSize, totalItems, totalPages);
+
+            return View(new FilterAndPaginationModel { paginatedList= paginatedList, mentorFilter=mentorFilter});
+        }
+
+
+
+
+
+        
+
 
     }
 }
