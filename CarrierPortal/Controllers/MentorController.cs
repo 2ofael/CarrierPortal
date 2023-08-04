@@ -288,9 +288,17 @@ namespace CarrierPortal.Controllers
             if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
                 filteredActors = filteredActors.Where(a => a.AcademicQualification.ToLower() == mentorFilter.AcademicQualification.ToLower());
 
-            if (!string.IsNullOrEmpty(mentorFilter.Name))
-                filteredActors = filteredActors.Where(a => a.ActorName.ToLower().Contains(mentorFilter.Name.ToLower()));
+            if (mentorFilter.age != null && mentorFilter.EndAge != null)
+            {
 
+                DateTime currentDate = DateTime.Now;
+                DateTime maxAgeDateOfBirth = currentDate.AddYears(-mentorFilter.age);
+                DateTime minAgeDateOfBirth = currentDate.AddYears(-mentorFilter.EndAge);
+
+
+                filteredActors = filteredActors.Where(a => a.DateOfBirth >= minAgeDateOfBirth && a.DateOfBirth <= maxAgeDateOfBirth);
+
+            }
 
 
 
@@ -299,6 +307,7 @@ namespace CarrierPortal.Controllers
 
             // Apply pagination using PaginatedList<T>
             List<Actor> pagedActors = filteredActors.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+           // pagedActors = pagedActors.Where(a => a.age >= mentorFilter.age && a.age <= mentorFilter.age).ToList();
             var paginatedList = new PaginatedList<Actor>(pagedActors, page, pageSize, totalItems, totalPages);
 
             return View(new FilterAndPaginationModel { paginatedList= paginatedList, mentorFilter=mentorFilter});

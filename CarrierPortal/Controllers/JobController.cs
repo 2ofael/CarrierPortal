@@ -1,9 +1,11 @@
 ﻿using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
+using CarrierPortal.ViewModels;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 
 namespace CarrierPortal.Controllers
 {
@@ -11,11 +13,13 @@ namespace CarrierPortal.Controllers
     {
         private readonly IJobRepository _jobRepository;
         private readonly UserManager<ApplicationUser> _userManager;
+        private readonly AppDbContext _appDbContext;
 
-        public JobController(IJobRepository jobRepository, UserManager<ApplicationUser> userManager)
+        public JobController(AppDbContext appDbContext, IJobRepository jobRepository, UserManager<ApplicationUser> userManager)
         {
             _jobRepository = jobRepository;
             _userManager = userManager;
+            _appDbContext = appDbContext;
         }
 
         // Job Actions
@@ -302,7 +306,85 @@ namespace CarrierPortal.Controllers
             // Redirect back to the ActorsList action after approval
             return RedirectToAction(nameof(Index));
         }
+        public async Task<IActionResult> Filter(string searchTerm="", int page = 1)
+        {
+            // Set the search term in ViewBag to display in the search bar
+            ViewBag.SearchTerm = searchTerm;
 
+            // Get all blog posts paginated
+            var pageSize = 10; // Number of items per page
+            var totalItems = await _jobRepository.GetTotalPostsCountAsync(searchTerm);
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+
+            var jobPosts = await _jobRepository.GetPostsAsync(searchTerm, page, pageSize);
+
+            // Create a PaginatedList instance
+            var paginatedList = new PaginatedList<Job>(jobPosts, page, pageSize, totalItems, totalPages);
+
+            return View(new JobAndPagination { Paginations=paginatedList,Filter=new JobFilterModel()});
+        }
+
+        [HttpPost]
+        public IActionResult Filter(JobFilterModel jobFilter, int page = 1)
+        {
+            const int pageSize = 10; // Number of items per page
+
+            IQueryable<Job> filteredActors = _appDbContext.Jobs.Include(j=>j.Applicants); // Assuming you have an Actor DbSet in ApplicationDbContext
+
+            // Apply filtering based on the form inputs
+            if (!string.IsNullOrEmpty(jobFilter.Title))
+                filteredActors = filteredActors.Where(a => a.Title.ToLower().Contains(jobFilter.Title.ToLower()));
+
+            //if (!string.IsNullOrEmpty(mentorFilter.Skills))
+            //    filteredActors = filteredActors.Where(a => a.Skills.Contains(mentorFilter.Skills));
+
+            //if (!string.IsNullOrEmpty(mentorFilter.Gender))
+            //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
+
+
+            //if (!string.IsNullOrEmpty(mentorFilter.Gender))
+            //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
+
+
+            //if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
+            //    filteredActors = filteredActors.Where(a => a.CurrentProfession == mentorFilter.CurrentProfession);
+
+
+            //if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
+            //    filteredActors = filteredActors.Where(a => a.AcademicQualification == mentorFilter.AcademicQualification);
+            if (!string.IsNullOrEmpty(jobFilter.Description))
+                filteredActors = filteredActors.Where(a => a.Description.ToLower().Contains(jobFilter.Description.ToLower()));
+
+            if (!string.IsNullOrEmpty(jobFilter.Location))
+                filteredActors = filteredActors.Where(a => a.Location.ToLower() == jobFilter.Location.ToLower());
+
+            if (jobFilter.MaxSalary!=0 && jobFilter.MinSalary!=0)
+                filteredActors = filteredActors.Where(j => j.Salary<= jobFilter.MaxSalary && j.Salary>=jobFilter.MinSalary);
+
+            if (jobFilter.PostedAfterDate !=null)
+                filteredActors = filteredActors.Where(j => j.PostedDate>=jobFilter.PostedAfterDate);
+            if (jobFilter.MaxApplicants >= 0 && jobFilter.MinApplicants >= 0) ;
+                filteredActors = filteredActors.Where(j => j.Applicants.Count()>=jobFilter.MinApplicants && j.Applicants.Count()<=jobFilter.MaxApplicants);
+
+            int totalItems = filteredActors.Count();
+            int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            // Apply pagination using PaginatedList<T>
+            List<Job> pagedActors = filteredActors.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+            // pagedActors = pagedActors.Where(a => a.age >= mentorFilter.age && a.age <= mentorFilter.age).ToList();
+            var paginatedList = new PaginatedList<Job>(pagedActors, page, pageSize, totalItems, totalPages);
+
+            return View(new JobAndPagination { Paginations = paginatedList , Filter = jobFilter });
+        }
 
     }
 }

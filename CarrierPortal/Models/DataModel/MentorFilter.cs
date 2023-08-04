@@ -9,6 +9,8 @@
         public string Gender { get; set; }
         public int age { get; set; }
 
+        public int EndAge { get; set; }
+
         public string AcademicQualification { get; set; }
 
         public string CurrentProfession { get; set; }

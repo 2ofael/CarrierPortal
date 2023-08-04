@@ -1,5 +1,5 @@
 ﻿@inject SignInManager<ApplicationUser> signInManager;
-@model FilterAndPaginationModel ;
+@model JobAndPagination;
 <!DOCTYPE html>
 <html>
 <head>
@@ -13,51 +13,6 @@
 </head>
 <body>
 
-    <!--Main Navigation-->
-    @* <header>
-    <nav class="navbar navbar-expand-lg bg-primary" data-bs-theme="dark">
-    <div class="container-fluid">
-    <a class="navbar-brand" href="#">Navbar</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarColor01" aria-controls="navbarColor01" aria-expanded="false" aria-label="Toggle navigation">
-    <span class="navbar-toggler-icon"></span>
-    </button>
-    <div class="collapse navbar-collapse" id="navbarColor01">
-    <ul class="navbar-nav me-auto">
-    <li class="nav-item">
-    <a class="nav-link active" href="#">
-    Home
-    <span class="visually-hidden">(current)</span>
-    </a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link" href="#">Features</a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link" href="#">Pricing</a>
-    </li>
-    <li class="nav-item">
-    <a class="nav-link" href="#">About</a>
-    </li>
-    <li class="nav-item dropdown">
-    <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
-    <div class="dropdown-menu">
-    <a class="dropdown-item" href="#">Action</a>
-    <a class="dropdown-item" href="#">Another action</a>
-    <a class="dropdown-item" href="#">Something else here</a>
-    <div class="dropdown-divider"></div>
-    <a class="dropdown-item" href="#">Separated link</a>
-    </div>
-    </li>
-    </ul>
-    <form class="d-flex">
-    <input class="form-control me-sm-2" type="search" placeholder="Search">
-    <button class="btn btn-secondary my-2 my-sm-0" type="submit">Search</button>
-    </form>
-    </div>
-    </div>
-    </nav>
-
-    </header>*@
 
 
     <header>
@@ -84,7 +39,16 @@
                         <li class="nav-item">
                             <a class="nav-link" href="#">About</a>
                         </li>
-
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#" role="button" aria-haspopup="true" aria-expanded="false">Dropdown</a>
+                            <div class="dropdown-menu">
+                                <a class="dropdown-item" href="#">Action</a>
+                                <a class="dropdown-item" href="#">Another action</a>
+                                <a class="dropdown-item" href="#">Something else here</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" href="#">Separated link</a>
+                            </div>
+                        </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         @if (signInManager.IsSignedIn(User))
@@ -93,7 +57,7 @@
                                 <form method="post" asp-action="logout" asp-controller="account">
                                     <button type="submit" class="nav-link btn btn-link py-0"
                                             style="width:auto">
-                                        Logout <i class="fa-solid fa-user"></i> @User.Identity.Name
+                                        Logout <i class="fa-solid fa-user"></i>  @User.Identity.Name
                                     </button>
                                 </form>
                             </li>
@@ -126,73 +90,64 @@
 
 
 
+
+
     <div class="row">
-        <div class="col-3">
+        <div class="col-2 m-10">
             <div class="container">
-                <ul class="list-group">
-
+                <ul class="list-group" m-10>
                     <li>
-                        <form asp-action="Filter" asp-controller="Mentor" method="post" class="container">
+                        <form asp-controller="Job" asp-action="Filter" method="post">
+
                             <div class="form-group">
-                                <label for="Name">Name:</label>
-                                <input asp-for="@Model.mentorFilter.Name" class="form-control" />
+                                <label>Title</label>
+                                <input class="form-control" asp-for="@Model.Filter.Title" />
                             </div>
-                          
-                           
+
                             <div class="form-group">
-                                <label for="Skills">Skills:</label>
-                                <input asp-for="@Model.mentorFilter.Skills" class="form-control" />
+                                <label>Description</label>
+                                <input class="form-control" asp-for="@Model.Filter.Description" />
                             </div>
+
                             <div class="form-group">
-                                <label for="Gender">Gender:</label>
-                                <select asp-for="@Model.mentorFilter.Gender" class="form-select" id="exampleSelect1">
-                                    <option value="">--Select--</option>
-                                    <option value="Male">Male</option>
-                                    <option value="Female">Female</option>
-                                    <option value="Other">Other</option>
-                                </select>
+                                <label>Min Salary</label>
+                                <input type="number" class="form-control" asp-for="@Model.Filter.MinSalary" />
                             </div>
+
                             <div class="form-group">
-                                <label for="Age">Min Age:</label>
-                                <input asp-for="@Model.mentorFilter.age" type="number" class="form-control" />
-                                <label for="EndAge">Max Age:</label>
-                                <input asp-for="@Model.mentorFilter.EndAge" type="number" class="form-control" />
+                                <label>Max Salary</label>
+                                <input type="number" class="form-control" asp-for="@Model.Filter.MaxSalary" />
                             </div>
+
                             <div class="form-group">
-                                <label for="AcademicQualification">Academic Qualification:</label>
-                                <input asp-for="@Model.mentorFilter.AcademicQualification" class="form-control" />
+                                <label>Location</label>
+                                <input class="form-control" asp-for="@Model.Filter.Location" />
                             </div>
+
                             <div class="form-group">
-                                <label for="CurrentProfession">Current Profession:</label>
-                                <input asp-for="@Model.mentorFilter.CurrentProfession" class="form-control" />
+                                <label>Posted After Date</label>
+                                <input type="date" class="form-control" asp-for="@Model.Filter.PostedAfterDate" />
                             </div>
+
                             <div class="form-group">
-                                <label for="Address">Address:</label>
-                                <input asp-for="@Model.mentorFilter.Address" class="form-control" />
+                                <label>Min Applicants</label>
+                                <input type="number" class="form-control" asp-for="@Model.Filter.MinApplicants" />
                             </div>
+
                             <div class="form-group">
-                                <button type="submit" class="btn btn-primary">Filter Mentors</button>
+                                <label>Max Applicants</label>
+                                <input type="number" class="form-control" asp-for="@Model.Filter.MaxApplicants" />
                             </div>
+
+                            <button type="submit" class="btn btn-primary">Apply Filter</button>
+
                         </form>
-                    </li>
-
-
-
-
-
-
-
-
-
-
-
-
-
+                </li>
                 </ul>
             </div>
 
         </div>
-        <div class="col-9">
+        <div class="col-10">
 
             <div class="container">
                 <main role="main" class="pb-3">
@@ -201,15 +156,6 @@
             </div>
 
         </div>
-
-
-
-
-
-
-
-
-
 
     </div>
 
