@@ -8,6 +8,7 @@ using MailKit.Search;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
+using Microsoft.Build.ObjectModelRemoting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
@@ -314,7 +315,12 @@ namespace CarrierPortal.Controllers
         }
 
 
+        [HttpGet]
+        public IActionResult Info(string ActorId)
+        {
+            return View();
 
+        }
 
 
         

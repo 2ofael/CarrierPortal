@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Org.BouncyCastle.Asn1.Iana;
+using Stripe;
 using System;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -35,6 +36,18 @@ builder.Services.AddScoped<IQnARepository, QnARepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod();
+        });
+});
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
 {

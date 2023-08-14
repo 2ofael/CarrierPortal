@@ -1,0 +1,138 @@
+﻿@*@{
+    ViewData["Title"] = "Make Payment";
+    Layout = "_LayoutMentor";
+}
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const stripe = Stripe('pk_test_51Neu2iIuE0SL7TqEna6mCHhJ3vVU50JdazmljiJXp90Dj4C6bT6A3Zzgqfa9nKWL4DF757FJxr4yWM7ZRDybk5V000E7STFMEU'); // Your Stripe public key
+            const elements = stripe.elements(); // Create the elements object
+
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element'); // Mount the card element to the container
+
+            const checkoutButton = document.getElementById('checkout-button');
+
+            checkoutButton.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('@Url.Action("CreatePaymentIntent", "Payments")', {
+                        method: 'POST',
+                    });
+
+                    const data = await response.json();
+
+                    const result = await stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: {
+                            card: cardElement, // Use the Stripe card element
+                        },
+                    });
+
+                    if (result.error) {
+                        // Handle payment error
+                        console.error(result.error.message);
+                    } else {
+                        // Payment successful, process payment on the server
+                        const paymentIntentId = result.paymentIntent.id;
+                        const processResponse = await fetch('@Url.Action("ProcessPayment", "Payments")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ paymentIntentId }),
+                        });
+
+                        const processResult = await processResponse.json();
+
+                        if (processResult.success) {
+                            // Redirect to the success page (index)
+                            window.location.href = '@Url.Action("Index", "Home")';
+                        } else {
+                            // Redirect to the error page
+                            window.location.href = '@Url.Action("Error", "Home")';
+                        }
+                    }
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+            });
+        });
+    </script>
+}
+
+<h2>Make Payment</h2>
+
+<button id="checkout-button">Pay Now</button>
+
+<div id="card-element">
+    <!-- The card element will be inserted here -->
+</div>
+*@
+
+
+@{
+    ViewData["Title"] = "Make Payment";
+    Layout = "_LayoutMentor";
+}
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const stripe = Stripe('pk_test_51Neu2iIuE0SL7TqEna6mCHhJ3vVU50JdazmljiJXp90Dj4C6bT6A3Zzgqfa9nKWL4DF757FJxr4yWM7ZRDybk5V000E7STFMEU'); // Replace with your Stripe public key
+            const elements = stripe.elements();
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element');
+
+            const checkoutButton = document.getElementById('checkout-button');
+
+            checkoutButton.addEventListener('click', async () => {
+                try {
+                    const response = await fetch('@Url.Action("CreatePaymentIntent", "Payments")', {
+                        method: 'POST',
+                    });
+
+                    const data = await response.json();
+
+                    const result = await stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: {
+                            card: cardElement,
+                        },
+                    });
+
+                    if (result.error) {
+                        console.error(result.error.message);
+                    } else {
+                        const paymentIntentId = result.paymentIntent.id;
+                        const processResponse = await fetch('@Url.Action("ProcessPayment", "Payments")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ paymentIntentId }), // Pass paymentIntentId in JSON format
+                        });
+
+                        const processResult = await processResponse.json();
+
+                        if (processResult.success) {
+                            window.location.href = '@Url.Action("Index", "Home")';
+                        } else {
+                            window.location.href = '@Url.Action("Error", "Home")';
+                        }
+                    }
+                } catch (error) {
+                    console.error('An error occurred:', error);
+                }
+            });
+        });
+    </script>
+}
+
+<h2>Make Payment</h2>
+
+<div id="card-element">
+    <!-- The card element will be inserted here -->
+</div>
+
+<button id="checkout-button">Pay Now</button>

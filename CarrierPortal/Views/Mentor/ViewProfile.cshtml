@@ -15,8 +15,8 @@
                 </div>
                 <div class="col-md-8">
                     <h5 class="card-title">@Model.ActorName</h5>
-                    <p class="card-text">Email: @Model.Email</p>
-                    <p class="card-text">Phone: @Model.Phone</p>
+                    @*<p class="card-text">Email: @Model.Email</p>
+                    <p class="card-text">Phone: @Model.Phone</p>*@
                     <p class="card-text">Skills: @Model.Skills</p>
                     <p class="card-text">Academic Qualification: @Model.AcademicQualification</p>
                     <p class="card-text">About: @Model.About</p>
@@ -24,6 +24,7 @@
                     <p class="card-text">Gender: @Model.Gender</p>
                     <p class="card-text">Current Profession: @Model.CurrentProfession</p>
                     <p class="card-text">Address: @Model.Address</p>
+                    <a  class="btn btn-info" asp-action="Info" >View Email Or Phone</a>
                     <h4>Vote @Model.Loved.Count()</h4>
                     <div class="btn-group" role="group" aria-label="Vote Buttons">
                         @if (User.Identity.IsAuthenticated)
