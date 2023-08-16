@@ -24,7 +24,7 @@
                     <p class="card-text">Gender: @Model.Gender</p>
                     <p class="card-text">Current Profession: @Model.CurrentProfession</p>
                     <p class="card-text">Address: @Model.Address</p>
-                    <a  class="btn btn-info" asp-action="Info" >View Email Or Phone</a>
+                    <a  class="btn btn-info" asp-action="Index" asp-controller="Payments" asp-route-mentorId="@Model.ActorId">View Email Or Phone</a>
                     <h4>Vote @Model.Loved.Count()</h4>
                     <div class="btn-group" role="group" aria-label="Vote Buttons">
                         @if (User.Identity.IsAuthenticated)

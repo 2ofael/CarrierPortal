@@ -1,4 +1,10 @@
-﻿using CarrierPortal.ViewModels;
+﻿using CarrierPortal.Models;
+using CarrierPortal.Models.DataModel;
+using CarrierPortal.Repository;
+using CarrierPortal.Services.EmailServices;
+using CarrierPortal.ViewModels;
+using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
@@ -6,8 +12,27 @@ namespace CarrierPortal.Controllers
 {
     public class PaymentsController : Controller
     {
-        public IActionResult Index()
+        public string TempEmail;
+        public string actorId;
+        private readonly IActorRepository _actorRepository;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IEmailService _emailService;
+
+        public PaymentsController(IActorRepository actorRepository, UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
+
+            _actorRepository = actorRepository;
+            _userManager = userManager;
+            _emailService = emailService;
+
+        }
+
+
+
+        public async Task<IActionResult> Index(string actorId)
+        {
+            Actor RequestedActor = await _actorRepository.GetActorById(actorId);
+            TempEmail = (await _userManager.GetUserAsync(User)).Email;
             return View();
         }
 
@@ -36,7 +61,7 @@ namespace CarrierPortal.Controllers
         }
 
         [HttpPost]
-        public IActionResult ProcessPayment([FromBody] ProcessPaymentModel model)
+        public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentModel model)
         {
             StripeConfiguration.ApiKey = "sk_test_51Neu2iIuE0SL7TqEtXVVnRTiZ5uHAsJgZBsMl9oUE8TZQeGUqcZ6xPBKXS9b3g23I2suY3NopmaC8GUc365x6CHU005yfcGuf6"; // Replace with your Stripe secret key
 
@@ -48,6 +73,7 @@ namespace CarrierPortal.Controllers
                 if (paymentIntent.Status == "succeeded")
                 {
                     // Payment already succeeded, return a JSON response
+                    _emailService.SendEmailAsync("tofrom@gmail.com", "hello", "<h1>Ok</h1>");
                     return Json(new { success = true });
                 }
                 else if (paymentIntent.Status == "requires_payment_method")
@@ -57,6 +83,7 @@ namespace CarrierPortal.Controllers
 
                     if (paymentIntent.Status == "succeeded")
                     {
+                       _emailService.SendEmailAsync("tofrom@gmail.com", "hello", "<h1>Ok</h1>");
                         // Payment successfully confirmed, return a JSON response
                         return Json(new { success = true });
                     }
