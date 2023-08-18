@@ -33,7 +33,7 @@ namespace CarrierPortal.Controllers
         public async Task<IActionResult> Index(string mentorId)
         {
              RequestedActor = await _actorRepository.GetActorById(mentorId);
-            TempEmail = (await _userManager.GetUserAsync(User)).Email;
+             TempEmail = (await _userManager.GetUserAsync(User)).Email;
             return View();
         }
 
@@ -134,8 +134,17 @@ namespace CarrierPortal.Controllers
             return emailTemplate;
         }
 
+        [HttpGet]
+        public IActionResult PaymentSuccessfull()
+        {
+            return View();
+        }
 
-
+        [HttpGet]
+        public IActionResult PaymentError()
+        {
+            return View();
+        }
 
 
     }
