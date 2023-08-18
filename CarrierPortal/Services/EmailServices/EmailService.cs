@@ -23,9 +23,9 @@ namespace CarrierPortal.Services.EmailServices
 
 
             _smtpServer = "sandbox.smtp.mailtrap.io";
-            _smtpPort = 25;
-            _smtpUsername = "47a0e33ffc9376";
-            _smtpPassword = "cec45c399b9e72";
+            _smtpPort = 465;
+            _smtpUsername = "c9e62558b590f4";
+            _smtpPassword = "6b32bdf1eb3b19";
 
             _emailSettings.SmtpServer = _smtpServer;
             _emailSettings.SmtpPort = _smtpPort;
@@ -45,7 +45,7 @@ namespace CarrierPortal.Services.EmailServices
             message.Subject = subject;
 
             var builder = new BodyBuilder();
-            builder.TextBody = body;
+            builder.HtmlBody = body;
 
             if (!string.IsNullOrEmpty(attachmentFilePath))
             {

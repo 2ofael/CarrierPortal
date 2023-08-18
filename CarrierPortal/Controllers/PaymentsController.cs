@@ -12,8 +12,9 @@ namespace CarrierPortal.Controllers
 {
     public class PaymentsController : Controller
     {
-        public string TempEmail;
+        public static string TempEmail;
         public string actorId;
+        public static Actor RequestedActor;
         private readonly IActorRepository _actorRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
@@ -29,9 +30,9 @@ namespace CarrierPortal.Controllers
 
 
 
-        public async Task<IActionResult> Index(string actorId)
+        public async Task<IActionResult> Index(string mentorId)
         {
-            Actor RequestedActor = await _actorRepository.GetActorById(actorId);
+             RequestedActor = await _actorRepository.GetActorById(mentorId);
             TempEmail = (await _userManager.GetUserAsync(User)).Email;
             return View();
         }
@@ -61,7 +62,7 @@ namespace CarrierPortal.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> ProcessPayment([FromBody] ProcessPaymentModel model)
+        public  IActionResult ProcessPayment([FromBody] ProcessPaymentModel model)
         {
             StripeConfiguration.ApiKey = "sk_test_51Neu2iIuE0SL7TqEtXVVnRTiZ5uHAsJgZBsMl9oUE8TZQeGUqcZ6xPBKXS9b3g23I2suY3NopmaC8GUc365x6CHU005yfcGuf6"; // Replace with your Stripe secret key
 
@@ -72,8 +73,9 @@ namespace CarrierPortal.Controllers
             {
                 if (paymentIntent.Status == "succeeded")
                 {
+                    SendInfo();
                     // Payment already succeeded, return a JSON response
-                    _emailService.SendEmailAsync("tofrom@gmail.com", "hello", "<h1>Ok</h1>");
+                    // _emailService.SendEmailAsync(TempEmail,"Mentor Info", RequestedActor.ActorName );
                     return Json(new { success = true });
                 }
                 else if (paymentIntent.Status == "requires_payment_method")
@@ -83,7 +85,8 @@ namespace CarrierPortal.Controllers
 
                     if (paymentIntent.Status == "succeeded")
                     {
-                       _emailService.SendEmailAsync("tofrom@gmail.com", "hello", "<h1>Ok</h1>");
+                        SendInfo();
+                      //_emailService.SendEmailAsync("tofrom@gmail.com", "hello", "<h1>Ok</h1>");
                         // Payment successfully confirmed, return a JSON response
                         return Json(new { success = true });
                     }
@@ -106,6 +109,30 @@ namespace CarrierPortal.Controllers
             }
         }
 
+
+        private void SendInfo()
+        {
+            string emailBody = GenerateActorProfileEmail(RequestedActor);
+
+            // Send the email using your email service
+             _emailService.SendEmailAsync(TempEmail, "Your Actor Profile", emailBody);
+        }
+
+
+
+        private string GenerateActorProfileEmail(Actor actor)
+        {
+            var emailTemplate = System.IO.File.ReadAllText("EmailTemplates/ActorProfileEmail.html");
+
+            emailTemplate = emailTemplate.Replace("{ActorName}", actor.ActorName)
+                                         .Replace("{Skills}", actor.Skills)
+                                         .Replace("{CurrentProfession}", actor.CurrentProfession)
+                                         .Replace("{AcademicQualification}", actor.AcademicQualification)
+                                         .Replace("{Email}", actor.Email)
+                                         .Replace("{Phone}", actor.Phone);
+
+            return emailTemplate;
+        }
 
 
 

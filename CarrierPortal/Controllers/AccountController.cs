@@ -13,14 +13,16 @@ namespace CarrierPortal.Controllers
         private readonly UserManager<ApplicationUser> userManager;
         private readonly SignInManager<ApplicationUser> signInManager;
         private readonly ILogger<AccountController> logger;
+        private readonly IEmailService emailService;
 
         public AccountController(UserManager<ApplicationUser> userManager,
             SignInManager<ApplicationUser> signInManager,
-            ILogger<AccountController> logger)
+            ILogger<AccountController> logger, IEmailService emailService)
         {
             this.userManager = userManager;
             this.signInManager = signInManager;
             this.logger = logger;
+            this.emailService = emailService;
         }
 
         [HttpGet]
@@ -176,8 +178,16 @@ namespace CarrierPortal.Controllers
                     var passwordResetLink = Url.Action("ResetPassword", "Account",
                             new { email = model.Email, token = token }, Request.Scheme);
 
-                    logger.Log(LogLevel.Warning, passwordResetLink);
-                    await  new EmailService().SendEmailAsync(model.Email, "forget password your mail ", passwordResetLink);
+
+
+                    var emailBody = GetForgotPasswordEmailBody(user.UserName, passwordResetLink);
+                    await emailService.SendEmailAsync(user.Email, "Password Reset", emailBody.ToString());
+
+
+
+
+                   // logger.Log(LogLevel.Warning, passwordResetLink);
+                    //await  new EmailService().SendEmailAsync(model.Email, "forget password your mail ", passwordResetLink);
 
                     return View("ForgotPasswordConfirmation");
                 }
@@ -187,6 +197,17 @@ namespace CarrierPortal.Controllers
 
             return View(model);
         }
+
+        private string GetForgotPasswordEmailBody(string userName, string resetLink)
+        {
+            var emailTemplate = System.IO.File.ReadAllText("EmailTemplates/ForgotPassword.html");
+            emailTemplate = emailTemplate.Replace("{UserName}", userName);
+            emailTemplate = emailTemplate.Replace("{ResetLink}", resetLink);
+            return emailTemplate;
+        }
+
+
+
 
         [HttpPost]
         public async Task<IActionResult> Logout()
@@ -240,9 +261,15 @@ namespace CarrierPortal.Controllers
 
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
                                             new { userId = user.Id, token = token }, Request.Scheme);
-                    var to = new List<string>();
-                    to.Add(model.Email);
-                    await new EmailService().SendEmailAsync(model.Email, "Confirm your mail ", confirmationLink);
+
+
+                    var emailBody = GetConfirmationEmailBody(user.UserName, confirmationLink);
+                    await emailService.SendEmailAsync(user.Email, "Email Confirmation", emailBody);
+
+
+                    // var to = new List<string>();
+                    //to.Add(model.Email);
+                    //await new EmailService().SendEmailAsync(model.Email, "Confirm your mail ", confirmationLink);
 
                     logger.Log(LogLevel.Warning, confirmationLink);
 
@@ -265,6 +292,20 @@ namespace CarrierPortal.Controllers
 
             return View(model);
         }
+
+
+
+
+        private string GetConfirmationEmailBody(string userName, string confirmationLink)
+        {
+            var emailTemplate = System.IO.File.ReadAllText("EmailTemplates/ConfirmationEmail.html");
+            emailTemplate = emailTemplate.Replace("{UserName}", userName);
+            emailTemplate = emailTemplate.Replace("{ConfirmationLink}", confirmationLink);
+            return emailTemplate;
+        }
+
+
+
 
         [HttpGet]
         [AllowAnonymous]

@@ -1,0 +1,60 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <style>
+        /* Add your CSS styles here */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f6f6f6;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            color: #333;
+            margin-top: 0;
+        }
+
+        p {
+            margin-bottom: 15px;
+            color: #555;
+        }
+
+        a {
+            color: #007BFF;
+            text-decoration: none;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-size: 12px;
+            color: #888;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Registration Confirmation</h2>
+        <p>Hello {UserName},</p>
+        <p>Thank you for registering with our website. To confirm your email address, please click the link below:</p>
+        <p><a href="{ConfirmationLink}">Confirm Email</a></p>
+        <p>If you didn't register on our website, you can ignore this email.</p>
+        <p>Best regards,<br>Your Application Team</p>
+    </div>
+    <div class="container signature">
+        <p>If you have any questions, please contact us at:</p>
+        <p>Email: support@example.com</p>
+        <p>Phone: +1234567890</p>
+    </div>
+</body>
+</html>
