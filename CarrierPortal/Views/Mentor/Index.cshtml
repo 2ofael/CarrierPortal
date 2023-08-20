@@ -1,14 +1,30 @@
 ﻿
 @model PaginatedList<Actor>
 <div class="row">
-    <div class="col-md-12">
+ @*   <div class="col-md-12">
         <form asp-action="Index" method="get" class="form-inline mb-3">
             <div class="form-group">
                 <input type="text" name="searchTerm" class="form-control mr-2" placeholder="Search..." value="@ViewBag.SearchTerm" />
             </div>
             <button type="submit" class="btn btn-primary">Search</button>
         </form>
+    </div>*@
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="form-inline mt-1">
+            <div class="form-group mb-2">
+                <label class="sr-only">Search</label>
+                <div class="input-group custom-search-box">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search..." value="@ViewBag.SearchTerm" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
     </div>
+
+
+
 </div>
 <div class="container">
     <div class="row">

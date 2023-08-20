@@ -47,7 +47,7 @@ namespace CarrierPortal.Controllers
 
             var options = new PaymentIntentCreateOptions
             {
-                Amount = 2000, // Amount in cents
+                Amount = 1000, // Amount in cents
                 Currency = "usd",
                 PaymentMethodTypes = new List<string>
         {

@@ -1,1 +1,17 @@
-﻿
+﻿.custom-search-box {
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    overflow: hidden;
+}
+
+    .custom-search-box input[type="text"] {
+        border: none;
+        padding: 10px;
+        width: 80%;
+    }
+
+    .custom-search-box button {
+        border: none;
+        border-radius: 0 5px 5px 0;
+        padding: 10px 15px;
+    }
