@@ -71,7 +71,7 @@
 *@
 
 
-@{
+@*@{
     ViewData["Title"] = "Make Payment";
     Layout = "_LayoutMentor";
 }
@@ -117,9 +117,12 @@
                         const processResult = await processResponse.json();
 
                         if (processResult.success) {
-                            window.location.href = '@Url.Action("PaymentSuccefull", "Payments")';
+                        
+
+                          
+                           window.location.href = '@Url.Action("PaymentSuccessfull", "Payments")';
                         } else {
-                            window.location.href = '@Url.Action("Error", "Payments")';
+                            window.location.href = '@Url.Action("PaymentError", "Payments")';
                         }
                     }
                 } catch (error) {
@@ -139,7 +142,7 @@
 
 <button id="checkout-button">Pay Now</button>*@
 
-
+@*
 <style>
     #payment-form {
         min-width: 380px !important;
@@ -162,6 +165,183 @@
                 <i class="fas fa-credit-card"></i> <!-- Font Awesome icon for credit card -->
                 Pay Now
             </button>
+        </div>
+    </div>
+</div>
+
+*@
+@*@{
+    ViewData["Title"] = "Make Payment";
+    Layout = "_LayoutMentor";
+}*@
+
+
+@{
+    ViewData["Title"] = "Make Payment";
+    Layout = "_LayoutMentor";
+}
+
+@section Scripts {
+    <script src="https://js.stripe.com/v3/"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', async () => {
+            const stripe = Stripe('pk_test_51Neu2iIuE0SL7TqEna6mCHhJ3vVU50JdazmljiJXp90Dj4C6bT6A3Zzgqfa9nKWL4DF757FJxr4yWM7ZRDybk5V000E7STFMEU'); // Replace with your Stripe public key
+            const elements = stripe.elements();
+            const cardElement = elements.create('card');
+            cardElement.mount('#card-element');
+
+            const checkoutButton = document.getElementById('checkout-button');
+
+            checkoutButton.addEventListener('click', async () => {
+                try {
+                    // Disable the button and show the loading animation when payment button is clicked
+                    checkoutButton.disabled = true;
+                    document.getElementById('loading-animation').style.display = 'block';
+
+                    const response = await fetch('@Url.Action("CreatePaymentIntent", "Payments")', {
+                        method: 'POST',
+                    });
+
+                    const data = await response.json();
+
+                    const result = await stripe.confirmCardPayment(data.clientSecret, {
+                        payment_method: {
+                            card: cardElement,
+                        },
+                    });
+
+                    if (result.error) {
+                        // Hide the loading animation and enable the button if there's an error
+                        document.getElementById('loading-animation').style.display = 'none';
+                        checkoutButton.disabled = false;
+
+                        alert("Payment Failed");
+                        console.error(result.error.message);
+                    } else {
+                        const paymentIntentId = result.paymentIntent.id;
+                        const processResponse = await fetch('@Url.Action("ProcessPayment", "Payments")', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify({ paymentIntentId }),
+                        });
+
+                        const processResult = await processResponse.json();
+
+                        if (processResult.success) {
+                            // Hide the loading animation and enable the button on successful payment
+                            document.getElementById('loading-animation').style.display = 'none';
+                            checkoutButton.disabled = false;
+
+                            var myDiv = document.getElementById("SuccessClass");
+                            var myGen = document.getElementById("Gen");
+                            myGen.style.display = "none";
+                        
+                            
+                            myDiv.style.display = "block"; // or "inline", "flex", etc. depending on your layout
+                            
+
+
+
+
+
+
+
+                           // window.location.href = '@Url.Action("PaymentSuccessfull", "Payments")';
+                        } else {
+                            // Hide the loading animation and enable the button on payment error
+                            document.getElementById('loading-animation').style.display = 'none';
+                            checkoutButton.disabled = false;
+
+                            var myDiv = document.getElementById("ErrorClass");
+                            var myGen = document.getElementById("Gen");
+                            myGen.style.display = "none";
+
+
+                            myDiv.style.display = "block";
+
+
+
+                           // window.location.href = '@Url.Action("PaymentError", "Payments")';
+                        }
+                    }
+                } catch (error) {
+                    // Hide the loading animation and enable the button on error
+                    document.getElementById('loading-animation').style.display = 'none';
+                    checkoutButton.disabled = false;
+
+                    console.error('An error occurred:', error);
+                }
+            });
+        });
+    </script>
+}
+
+<style>
+    #payment-form {
+        min-width: 380px !important;
+    }
+
+</style>
+
+<div id="Gen">
+<div class="container">
+    <div class="card">
+        <div class="card-body">
+            <h2 class="card-title">Make Payment</h2>
+            <p class="card-text">Make a payment of $1 using the fastest payment gateway, Stripe.</p>
+
+            <div id="card-element" class="form-group">
+                <!-- The card element will be inserted here -->
+            </div>
+
+            <!-- Add a loading animation element -->
+            <div id="loading-animation" style="display: none;">
+                <p>Loading...</p>
+                <!-- You can customize the loading animation here -->
+            </div>
+
+            <button id="checkout-button" class="btn btn-primary btn-lg mt-3">
+                <i class="fas fa-credit-card"></i> <!-- Font Awesome icon for credit card -->
+                Pay Now
+            </button>
+        </div>
+    </div>
+</div>
+</div>
+<div id="SuccessClass" style="display: none;>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card text-center shadow">
+                    <div class="card-body">
+                        <i class="fas fa-check-circle text-success fa-5x mb-3"></i>
+                        <h2 class="card-title text-success">Payment Successful</h2>
+                        <p class="card-text">Thank you for your payment! Your transaction was successful.</p>
+                        <p class="card-text">An email with your mentor's information has been sent to your inbox.</p>
+                        <a href="#" class="btn btn-primary"><i class="fas fa-home"></i> Go to Home</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div id="ErrorClass" style="display: none;>
+    <div class="container">
+        <div class="row justify-content-center mt-5">
+            <div class="col-md-8">
+                <div class="card text-center">
+                    <div class="card-body">
+                        <i class="fas fa-exclamation-circle text-danger fa-5x mb-3"></i>
+                        <h2 class="card-title text-danger">Payment Error</h2>
+                        <p class="card-text">Sorry, there was an error processing your payment.</p>
+                        <p class="card-text">Please try again later or contact support.</p>
+                        <a href="#" class="btn btn-primary"><i class="fas fa-home"></i> Go to Home</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>

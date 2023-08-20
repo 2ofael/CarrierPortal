@@ -74,6 +74,7 @@ namespace CarrierPortal.Controllers
                 if (paymentIntent.Status == "succeeded")
                 {
                     SendInfo();
+                   // RedirectToAction(nameof(PaymentSuccessfull));
                     // Payment already succeeded, return a JSON response
                     // _emailService.SendEmailAsync(TempEmail,"Mentor Info", RequestedActor.ActorName );
                     return Json(new { success = true });
@@ -86,18 +87,21 @@ namespace CarrierPortal.Controllers
                     if (paymentIntent.Status == "succeeded")
                     {
                         SendInfo();
+                      // return RedirectToAction(nameof(PaymentSuccessfull));
                       //_emailService.SendEmailAsync("tofrom@gmail.com", "hello", "<h1>Ok</h1>");
                         // Payment successfully confirmed, return a JSON response
                         return Json(new { success = true });
                     }
                     else
                     {
+                       // RedirectToAction(nameof(PaymentError));
                         // Payment confirmation failed, return a JSON response
                         return Json(new { success = false });
                     }
                 }
                 else
                 {
+                 //  return RedirectToAction(nameof(PaymentError));
                     // Payment failed, return a JSON response
                     return Json(new { success = false });
                 }
@@ -134,13 +138,13 @@ namespace CarrierPortal.Controllers
             return emailTemplate;
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult PaymentSuccessfull()
         {
             return View();
         }
 
-        [HttpGet]
+        [HttpPost]
         public IActionResult PaymentError()
         {
             return View();
