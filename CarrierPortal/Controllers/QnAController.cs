@@ -100,9 +100,10 @@ namespace CarrierPortal.Controllers
             
               
                 await _qnaRepository.CreateQuestionAsync(newQuestion);
-                return RedirectToAction(nameof(Index));
+                TempData["isCreated"] = true;
+                return RedirectToAction(nameof(Details), new {id= newQuestion.Id });
             }
-
+            TempData["isCreated"] = false;
             return View(question);
         }
 
@@ -140,6 +141,7 @@ namespace CarrierPortal.Controllers
                 PrevQuestion.Content = question.Content;
 
                 await _qnaRepository.UpdateQuestionAsync(PrevQuestion);
+                TempData["isEdited"] = true;
                 return RedirectToAction(nameof(Details),new {id = id});
             }
 
@@ -177,6 +179,7 @@ namespace CarrierPortal.Controllers
             }
 
             await _qnaRepository.DeleteQuestionAsync(question);
+            TempData["isDeleted"] = true;
             return RedirectToAction(nameof(Index));
         }
 

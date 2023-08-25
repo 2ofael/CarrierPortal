@@ -5,11 +5,11 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col">Title</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone</th>
-            <th scope="col">Applied Date</th>
-            <th scope="col">CV/Resume</th>
+            <th scope="col"><i class="fas fa-heading"></i> Title</th>
+            <th scope="col"><i class="fas fa-envelope"></i> Email</th>
+            <th scope="col"><i class="fas fa-phone"></i> Phone</th>
+            <th scope="col"><i class="fas fa-calendar-alt"></i> Applied Date</th>
+            <th scope="col"><i class="fas fa-file"></i> CV/Resume</th>
         </tr>
     </thead>
     <tbody>
@@ -23,11 +23,13 @@
                 <td>
                     @if (!string.IsNullOrEmpty(applicant.Resume.FilePath))
                     {
-                        <a href="@Url.Action("DownloadResume", "Job", new { resumeId = applicant.Resume.Id })" target="_blank" class="btn btn-link">Open CV/Resume</a>
+                        <a href="@Url.Action("DownloadResume", "Job", new { resumeId = applicant.Resume.Id })" target="_blank" class="btn btn-link">
+                            <i class="fas fa-file-pdf"></i> Open CV/Resume
+                        </a>
                     }
                     else
                     {
-                        <span class="text-muted">No CV/Resume</span>
+                        <span class="text-muted"><i class="fas fa-exclamation-circle"></i> No CV/Resume</span>
                     }
                 </td>
             </tr>

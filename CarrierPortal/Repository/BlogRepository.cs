@@ -20,7 +20,7 @@ namespace CarrierPortal.Repository
 
         public async Task<BlogPost> GetPostByIdAsync(int id)
         {
-            return await _dbContext.BlogPosts.Include(b=>b.Loved).FirstOrDefaultAsync (p => p.Id == id);
+            return await _dbContext.BlogPosts.Include(b=>b.Loved).Include(b=>b.ApplicationUser).Include(b=>b.ApplicationUser.Mentor).FirstOrDefaultAsync (p => p.Id == id);
         }
 
         public async Task CreatePostAsync(BlogPost post)

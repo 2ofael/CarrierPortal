@@ -12,6 +12,34 @@
 <h2 class="mb-4">Job Details</h2>
 
 <div class="card">
+    
+    @if (TempData["isJobCreated"] != null)
+    {
+        bool isJobCreated = (bool)TempData["isJobCreated"];
+        string alertType = isJobCreated ? "success" : "danger";
+        string alertMessage = isJobCreated ? "Job created successfully!" : "Failed to create job.";
+
+        <div class="alert alert-@alertType alert-dismissible fade show" role="alert">
+            @alertMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    @if (TempData["isEdited"] != null)
+    {
+        bool isEdited = (bool)TempData["isEdited"];
+        string alertType = isEdited ? "success" : "danger";
+        string alertMessage = isEdited ? "Job edited successfully!" : "Failed to edit Job.";
+
+        <div class="alert alert-@alertType alert-dismissible fade show" role="alert">
+            @alertMessage
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+
+
+
     @if (TempData["ApplySuccess"] != null)
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
@@ -22,7 +50,7 @@
     <div class="card-body">
         <h4 class="card-title"><i class="fas fa-file-alt"></i> Title: @Model.Title</h4>
         <p class="card-text"><i class="fas fa-info-circle"></i> Description: @Model.Description</p>
-        <p class="card-text"><i class="fas fa-dollar-sign"></i> Salary: @Model.Salary</p>
+        <p class="card-text"><i class="fas fa-dollar-sign"></i> Salary:@Model.Salary }</p>
         <p class="card-text"><i class="fas fa-map-marker-alt"></i> Location: @Model.Location</p>
         <p class="card-text"><i class="fas fa-calendar-alt"></i> Posted Date: @Model.PostedDate</p>
 

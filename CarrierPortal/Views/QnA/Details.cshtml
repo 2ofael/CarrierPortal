@@ -6,6 +6,21 @@
 }
 
 <h1>Question Details</h1>
+@if (TempData["isCreated"] != null && (bool)TempData["isCreated"])
+{
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <i class="fas fa-check-circle"></i> <strong>Success!</strong> Your item has been created.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+@if (TempData["isEdited"] != null && (bool)TempData["isEdited"])
+{
+    <div class="alert alert-info alert-dismissible fade show" role="alert">
+        <i class="fas fa-pencil-alt"></i> <strong>Success!</strong> Your item has been edited.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
+
 
 <div class="card">
     <div class="card-body">

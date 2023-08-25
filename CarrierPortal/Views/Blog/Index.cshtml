@@ -4,15 +4,28 @@
     ViewData["Title"] = "All Blogs";
 }
 
-<h1>All Blogs</h1>
+<h1><i class="fas fa-blog"></i> All Blogs</h1>
+
+@if (TempData["isDeleted"] != null && (bool)TempData["isDeleted"])
+{
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <i class="fas fa-trash-alt"></i> <strong>Success!</strong> Your item has been deleted.
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}
 
 <div class="row">
     <div class="col-md-12">
-        <form asp-action="Index" method="get" class="form-inline mb-3">
-            <div class="form-group">
-                <input type="text" name="searchTerm" class="form-control mr-2" placeholder="Search..." value="@ViewBag.SearchTerm" />
+        <form asp-action="Index" method="get" class="form-inline mt-1">
+            <div class="form-group mb-2">
+                <label class="sr-only">Search</label>
+                <div class="input-group custom-search-box">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search..." value="@ViewBag.SearchTerm" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
+                    </div>
+                </div>
             </div>
-            <button type="submit" class="btn btn-primary">Search</button>
         </form>
     </div>
 </div>
@@ -23,14 +36,16 @@
         <div class="col-md-12">
             <div class="card mb-3">
                 <div class="card-body">
-                    <h3 class="card-title">@blogPost.Title</h3>
+                    <h3 class="card-title"><i class="fas fa-heading"></i> @blogPost.Title</h3>
                     <div class="card-text">@Html.Raw(TruncateText(blogPost.Content, 200))</div>
                 </div>
                 <div class="card-footer bg-secondary text-light">
-                    Posted: @blogPost.CreatedAt.ToString("MMM dd, yyyy")
+                    <i class="far fa-calendar"></i> Posted: @blogPost.CreatedAt.ToString("MMM dd, yyyy")
                 </div>
                 <div class="card-body">
-                    <a href="@Url.Action("Details", new { id = blogPost.Id })" class="btn btn-primary">Read More</a>
+                    <a href="@Url.Action("Details", new { id = blogPost.Id })" class="btn btn-primary">
+                        <i class="fas fa-arrow-circle-right"></i> Read More
+                    </a>
                 </div>
             </div>
         </div>
@@ -43,7 +58,7 @@
             <ul class="pagination">
                 @if (Model.HasPreviousPage)
                 {
-                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })"><i class="fas fa-chevron-left"></i> Previous</a></li>
                 }
 
                 @for (int i = 1; i <= Model.TotalPages; i++)
@@ -53,7 +68,7 @@
 
                 @if (Model.HasNextPage)
                 {
-                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next <i class="fas fa-chevron-right"></i></a></li>
                 }
             </ul>
         </nav>

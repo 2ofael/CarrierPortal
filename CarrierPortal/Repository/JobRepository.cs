@@ -25,10 +25,11 @@ namespace CarrierPortal.Repository
             return await _dbContext.Jobs.FindAsync(jobId);
         }
 
-        public async Task CreateJobAsync(Job job)
+        public async Task<int> CreateJobAsync(Job job)
         {
             _dbContext.Jobs.Add(job);
             await _dbContext.SaveChangesAsync();
+            return job.Id;
         }
 
         public async Task UpdateJobAsync(Job job)

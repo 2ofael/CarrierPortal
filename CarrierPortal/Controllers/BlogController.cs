@@ -84,8 +84,9 @@ namespace CarrierPortal.Controllers
 
                 // Save the new blog post
                 await _blogRepository.CreatePostAsync(blogPost);
+                TempData["isCreated"] = true;
 
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction(nameof(Details), new {id = blogPost.Id});
             }
 
             return View(blogPost);
@@ -125,6 +126,7 @@ namespace CarrierPortal.Controllers
                 PrevBlog.Content = blogPost.Content;
 
                 await _blogRepository.UpdatePostAsync(PrevBlog);
+                TempData["isEdited"] = true;
                 return RedirectToAction(nameof(Details), new { id = blogPost.Id });
             }
             return View(blogPost);
@@ -143,7 +145,7 @@ namespace CarrierPortal.Controllers
             {
                 return NotFound();
             }
-
+     
             return View(blogPost);
         }
 
@@ -153,6 +155,7 @@ namespace CarrierPortal.Controllers
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
             await _blogRepository.DeletePostAsync(id);
+            TempData["isDeleted"] = true;
             return RedirectToAction(nameof(Index));
         }
 

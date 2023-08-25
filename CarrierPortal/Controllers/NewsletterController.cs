@@ -28,7 +28,7 @@ namespace CarrierPortal.Controllers
         public async  Task<IActionResult> Subscribe()
         {
             var currentUser = await _userManager.GetUserAsync(User);
-            var IsSubscribed = _dbContext.NewsletterSubscriptions.Any(u=>u.Email==currentUser.Email);
+            bool IsSubscribed =  _dbContext.NewsletterSubscriptions.Any(u=>u.Email==currentUser.Email);
 
 
 
@@ -48,7 +48,7 @@ namespace CarrierPortal.Controllers
             _dbContext.NewsletterSubscriptions.Add(subscription);
             await _dbContext.SaveChangesAsync();
             return RedirectToAction("Subscribe");
-            return View();
+
             // Redirect to a success page or show a success message
          
         }
@@ -69,7 +69,7 @@ namespace CarrierPortal.Controllers
             }
 
             // Redirect to a success page or show a success message
-            return RedirectToAction("UnsubscribeSuccess");
+            return RedirectToAction("Subscribe");
         }
 
         // GET: /newsletter/success
@@ -116,6 +116,11 @@ namespace CarrierPortal.Controllers
             return View();
             // Redirect to a success page or show a success message
            
+        }
+        [HttpPost]
+        public IActionResult SendSuccess()
+        {
+            return View();
         }
 
 

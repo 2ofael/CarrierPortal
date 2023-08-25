@@ -5,7 +5,7 @@ namespace CarrierPortal.Repository
     public interface IJobRepository
     {
         Task CreateApplicantAsync(Applicant applicant);
-        Task CreateJobAsync(Job job);
+        Task<int> CreateJobAsync(Job job);
         Task CreateResumeAsync(Resume resume);
         Task DeleteApplicantAsync(Applicant applicant);
         Task DeleteJobAsync(Job job);

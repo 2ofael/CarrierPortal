@@ -2,37 +2,35 @@
 
 @{
     ViewData["Title"] = "Subscribe";
-   
 }
 
-@*@section Styles {
-   
-    <style>
-        .center-content {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-    </style>
-}*@
-
-<div class="center-content">
-    @if (Model)
-    {
-        <h2>You are subscribed!</h2>
-        <button class="btn btn-danger" id="unsubscribeBtn" style="display:none;">Unsubscribe</button>
-    }
-    else
-    {
-        <h2>Subscribe to our Newsletter</h2>
-        <form method="post" asp-action="Subscribed" >
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-primary">Subscribe</button>
-        </form>
-        <form method="post" asp-action="unsubscribe">
-            @Html.AntiForgeryToken()
-            <button type="submit" class="btn btn-danger" id="unsubscribeBtn" style="display:none;">Unsubscribe</button>
-        </form>
-    }
+<div class="container">
+    <div class="row justify-content-center align-items-center">
+        <div class="col-md-6 m-5">
+            <div class="card text-center">
+                <div class="card-body">
+                    @if (Model)
+                    {
+                        <h2><i class="fas fa-check-circle text-success"></i> You are subscribed!</h2>
+                        <form method="post" asp-action="unsubscribe">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-danger">
+                                <i class="fas fa-times"></i> Unsubscribe
+                            </button>
+                        </form>
+                    }
+                    else
+                    {
+                        <h2><i class="fas fa-envelope"></i> Subscribe to our Newsletter</h2>
+                        <form method="post" asp-action="Subscribed">
+                            @Html.AntiForgeryToken()
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-paper-plane"></i> Subscribe
+                            </button>
+                        </form>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
 </div>

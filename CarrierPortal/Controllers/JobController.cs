@@ -210,10 +210,11 @@ namespace CarrierPortal.Controllers
 
                 job.PostedDate = DateTime.Now;
 
-                await _jobRepository.CreateJobAsync(job);
-                return RedirectToAction("Index", "Job");
+                int Id =  await _jobRepository.CreateJobAsync(job);
+                TempData["isJobCreated"] = true;
+                return RedirectToAction(nameof(Details), new {id = Id });
             }
-
+            TempData["isJobCreated"] = false;
             return View(job);
         }
 
@@ -239,7 +240,8 @@ namespace CarrierPortal.Controllers
                 existingJob.Description = job.Description;
 
                 await _jobRepository.UpdateJobAsync(existingJob);
-                return RedirectToAction("Index");
+                TempData["isEdited"] = true;
+                return RedirectToAction(nameof(Details), new {id=id});
             }
 
             return View(job);
@@ -262,6 +264,7 @@ namespace CarrierPortal.Controllers
                 return NotFound();
 
             await _jobRepository.DeleteJobAsync(job);
+            TempData["IsDeleted"] = true;
             return RedirectToAction("Index");
         }
 
