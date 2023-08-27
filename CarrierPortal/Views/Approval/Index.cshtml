@@ -1,58 +1,72 @@
-﻿
+﻿@inject UserManager<ApplicationUser> userManager;
 
-    <div class="container mt-4">
-        <h1 class="text-center">@ViewData["Title"]</h1>
+<div class="container mt-4">
+    <h1 class="text-center">@ViewData["Title"]</h1>
 
-        <div class="row mt-4">
-            <div class="col-md-4 mb-4">
-                <div class="card bg-info text-white">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-users"></i> Users</h5>
-                        <p class="card-text">Total users: 1000</p>
-                    </div>
+    <div class="row mt-4">
+  
+        <div class="col-md-4 mb-4">
+            <a asp-action="ApproveMentor" asp-controller="Approval" class="text-decoration-none">
+            <div class="card bg-info text-white">
+                
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-user-check"></i> Approve Mentors</h5>
+                    <p class="card-text">Total users: 1000</p>
+                </div>
+               
+            </div>
+               </a>
+        </div>
+        
+        <div class="col-md-4 mb-4">
+              <a asp-action="ApproveBlog" asp-controller="Approval" class="text-decoration-none">
+            <div class="card bg-success text-white">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-check-square"></i> Approve Blogs</h5>
+                    <p class="card-text">Total sales: $50,000</p>
                 </div>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-success text-white">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-chart-line"></i> Sales</h5>
-                        <p class="card-text">Total sales: $50,000</p>
-                    </div>
+            </a>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-warning text-white">
+                 <a asp-action="ApproveQnA" asp-controller="Approval" class="text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-question-circle"></i> Approve QnA</h5>
+                    <p class="card-text">Total orders: 250</p>
                 </div>
+                </a>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-warning text-white">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-shopping-cart"></i> Orders</h5>
-                        <p class="card-text">Total orders: 250</p>
-                    </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white">
+                  <a asp-action="ApproveJob" asp-controller="Approval" class="text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-comments"></i> Approve Jobs</h5>
+                    <p class="card-text">Unread messages: 20</p>
                 </div>
+                </a>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-primary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-comments"></i> Messages</h5>
-                        <p class="card-text">Unread messages: 20</p>
-                    </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-danger text-white">
+                  <a asp-action="ApproveBlog" asp-controller="Approval" class="text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-bell"></i> Roles</h5>
+                    <p class="card-text">New notifications: 5</p>
                 </div>
+                </a>
             </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-danger text-white">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-bell"></i> Notifications</h5>
-                        <p class="card-text">New notifications: 5</p>
-                    </div>
+        </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-secondary text-white">
+                  <a asp-action="ApproveBlog" asp-controller="Approval" class="text-decoration-none">
+                <div class="card-body">
+                    <h5 class="card-title"><i class="fas fa-cogs"></i> NewsLetter</h5>
+                    <p class="card-text">Manage settings here</p>
                 </div>
-            </div>
-            <div class="col-md-4 mb-4">
-                <div class="card bg-secondary text-white">
-                    <div class="card-body">
-                        <h5 class="card-title"><i class="fas fa-cogs"></i> Settings</h5>
-                        <p class="card-text">Manage settings here</p>
-                    </div>
-                </div>
+                </a>
             </div>
         </div>
     </div>
-
-
+</div>

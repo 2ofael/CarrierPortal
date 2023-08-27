@@ -241,17 +241,17 @@ namespace CarrierPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> ApproveQuestion(string Id)
         {
-            var job = await _qnaRepository.GetQuestionByIdAsync(Id);
-            if (job == null)
+            var question = await _qnaRepository.GetQuestionByIdAsync(Id);
+            if (question == null)
             {
                 return NotFound();
             }
 
-            job.IsApproved = true;
-            await _qnaRepository.UpdateQuestionAsync(job);
+            question.IsApproved = true;
+            await _qnaRepository.UpdateQuestionAsync(question);
 
             // Redirect back to the ActorsList action after approval
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = Id });
         }
 
 

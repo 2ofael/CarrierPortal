@@ -172,7 +172,7 @@ namespace CarrierPortal.Controllers
             await _qnaRepository.UpdateAnswerAsync(ans);
 
             // Redirect back to the ActorsList action after approval
-            return RedirectToAction(nameof(Question),nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = Id });  
          
         }
 

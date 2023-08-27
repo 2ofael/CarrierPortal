@@ -12,7 +12,6 @@
 
 
 
-
 .love-icon {
     color: #ccc; /* Default color for the love icon */
     text-decoration: none;
@@ -56,3 +55,6 @@
     }
 }
 
+a {
+    text-decoration: none !important;
+}

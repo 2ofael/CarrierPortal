@@ -25,6 +25,9 @@
                 </button>
                 <div class="collapse navbar-collapse" id="navbarColor01">
                     <ul class="navbar-nav me-auto">
+
+
+
                         <li class="nav-item mx-2">
                             <a class="nav-link" asp-controller="Home" asp-action="Index">
                                 <i class="fas fa-home"></i> Home
@@ -118,41 +121,31 @@
                 <ul class="list-group" m-10>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Search" asp-controller="Job" class="text-decoration-none">
-                            <i class="fas fa-search"></i> Search
+                        <a asp-action="index" asp-controller="Approval" class="text-decoration-none">
+                            <i class="fas fa-check-circle"></i> Approval
                         </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Create" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fa-solid fa-pen-nib"></i> Write Blog
+                        <a asp-action="ListUsers" asp-controller="Administration" class="text-decoration-none">
+                            <i class="fas fa-users"></i> User List
                         </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fas fa-list"></i> All Blogs
+                        <a asp-action="ListRoles" asp-controller="Administration" class="text-decoration-none">
+                            <i class="fas fa-user-tag"></i> Roles List
                         </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fas fa-user"></i> All Posted By You
+                        <a asp-action="CreateRole" asp-controller="Administration" class="text-decoration-none">
+                            <i class="fas fa-plus-circle"></i> Create Role
                         </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fas fa-user"></i>Applied By You
-                        </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
-                    </li>
 
-                </ul>
+                   </ul>
             </div>
 
         </div>

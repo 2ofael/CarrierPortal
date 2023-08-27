@@ -72,9 +72,20 @@ namespace CarrierPortal.Controllers
         [HttpGet]
         public async Task<IActionResult> ViewProfile(string actorId)
         {
+            if (ModelState.IsValid)
+            {
+                var actor = await _actorRepository.GetActorById(actorId);
 
-            var actor = await _actorRepository.GetActorById(actorId);
-            return View(actor);
+                if(actor==null)
+                {
+                    return NotFound();
+                }
+
+
+                return View(actor);
+            }
+
+            return NotFound();
 
         }
 
@@ -116,11 +127,12 @@ namespace CarrierPortal.Controllers
                         Gender = mentorApplication.Gender,
                         Email = mentorApplication.Email,
                         Phone = mentorApplication.Phone,
+                        isSubscribed = true,
 
 
 
 
-                        ProfilePhoto = _photoService.SavePhoto(mentorApplication.ProfilePhoto, "Photo"),
+                    ProfilePhoto = _photoService.SavePhoto(mentorApplication.ProfilePhoto, "Photo"),
                         cv = _photoService.SavePhoto(mentorApplication.cv, "CV"),
                         Certificates = _photoService.SavePhoto(mentorApplication.Certificates, "Certificates")
 
@@ -149,6 +161,8 @@ namespace CarrierPortal.Controllers
                     CurrMentor.Gender = mentorApplication.Gender;
                     CurrMentor.Email = mentorApplication.Email;
                     CurrMentor.Phone = mentorApplication.Phone;
+                    CurrMentor.isSubscribed = true;
+                    CurrMentor.isMentor = false;
 
 
 
@@ -181,10 +195,11 @@ namespace CarrierPortal.Controllers
             }
 
             actor.isMentor = true;
+          
             await _actorRepository.UpdateActor(actor);
 
             // Redirect back to the ActorsList action after approval
-            return RedirectToAction("ActorsList");
+            return RedirectToAction(nameof(ViewProfile),new {actorId = actor.ActorId });
         }
 
 

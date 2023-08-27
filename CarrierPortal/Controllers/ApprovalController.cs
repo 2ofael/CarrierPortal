@@ -3,16 +3,26 @@ using CarrierPortal.Models;
 using CarrierPortal.Repository;
 using Microsoft.AspNetCore.Mvc;
 
+
 namespace CarrierPortal.Controllers
 {
     public class ApprovalController : Controller
     {
         private readonly IActorRepository _actorRepository;
-      
+        private readonly IBlogRepository _blogRepository;
+        private readonly IJobRepository _jobRepository;
+        private readonly IQnARepository _qnaRepository;
 
-        public ApprovalController(IActorRepository actorRepository)
+        public ApprovalController(IActorRepository actorRepository,
+            IBlogRepository blogRepository,
+            IJobRepository jobRepository,
+            IQnARepository qnARepository
+            )
         {
             _actorRepository = actorRepository;
+            _blogRepository = blogRepository;
+            _jobRepository = jobRepository;
+            _qnaRepository = qnARepository;
         }
 
         public IActionResult Index()
@@ -20,22 +30,99 @@ namespace CarrierPortal.Controllers
             return View();
         }
      
-       
-
-        [HttpPost]
-        public async Task<IActionResult> ApproveActor(string actorId)
+       public async Task<IActionResult> ApproveMentor(int page = 1)
         {
-            var actor = await _actorRepository.GetActorById(actorId);
-            if (actor == null)
+            List<Actor> actors = (await _actorRepository.GetAllActors()).Where(m=>m.isSubscribed == true && m.isMentor == false).ToList();
+
+            var pageSize = 10; // Number of items per page
+            var totalItems = actors.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
             {
-                return NotFound();
+                page = 1;
             }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+            var paginatedList = new PaginatedList<Actor>(actors, page, pageSize, totalItems, totalPages);
 
-            actor.isMentor = true;
-            await _actorRepository.UpdateActor(actor);
+            return View(paginatedList);
 
-            return Ok(); // Return an HTTP 200 response
         }
+
+
+
+        public async Task<IActionResult> ApproveBlog(int page = 1)
+        {
+            List<BlogPost> blogs = (await _blogRepository.GetAllPostsAsync()).Where(b => b.IsApproved == false).ToList();
+
+            var pageSize = 10; // Number of items per page
+            var totalItems = blogs.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+            var paginatedList = new PaginatedList<BlogPost>(blogs, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
+
+        }
+
+        public async Task<IActionResult> ApproveQnA(int page = 1)
+        {
+            List<Question> questions = (await _qnaRepository.GetAllQuestionsAsync()).Where(b => b.IsApproved == false).ToList();
+
+            var pageSize = 10; // Number of items per page
+            var totalItems = questions.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+            var paginatedList = new PaginatedList<Question>(questions, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
+
+        }
+
+        public async Task<IActionResult> ApproveJob(int page = 1)
+        {
+            List<Job> jobs = (await _jobRepository.GetAllJobsAsync()).Where(b => b.IsApproved == false).ToList();
+
+            var pageSize = 10; // Number of items per page
+            var totalItems = jobs.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+            var paginatedList = new PaginatedList<Job>(jobs, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
+
+        }
+
+
+
+
 
 
 

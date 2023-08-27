@@ -1,0 +1,114 @@
+﻿
+@model PaginatedList<Job>
+
+@{
+    ViewData["Title"] = "Job Index";
+}
+
+<div class="row">
+@*    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="form-inline mb-3">
+            <div class="form-group">
+                <input type="text" name="searchTerm" class="form-control mr-2" placeholder="Search..." value="@ViewBag.SearchTerm" />
+            </div>
+            <button type="submit" class="btn btn-primary">Search</button>
+        </form>
+    </div>*@
+    <div class="col-md-12">
+        <form asp-action="Index" method="get" class="form-inline mt-1">
+            <div class="form-group mb-2">
+                <label class="sr-only">Search</label>
+                <div class="input-group custom-search-box">
+                    <input type="text" name="searchTerm" class="form-control" placeholder="Search..." value="@ViewBag.SearchTerm" />
+                    <div class="input-group-append">
+                        <button type="submit" class="btn btn-primary">Search</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
+
+</div>
+
+<div class="container">
+    <h1>Job Listings</h1>
+    <div class="row">
+        @if (TempData["IsDeleted"] != null)
+        {
+            bool isDeleted = (bool)TempData["IsDeleted"];
+            string alertType = isDeleted ? "success" : "danger";
+            string alertMessage = isDeleted ? "Item deleted successfully!" : "Failed to delete item.";
+
+            <div class="alert alert-@alertType alert-dismissible fade show" role="alert">
+                @alertMessage
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        }
+
+        @foreach (var job in Model.Items)
+        {
+            <div class="col-md-4">
+                <a href="@Url.Action("Details", "Job", new { id = job.Id })" class="text-decoration-none">
+                    <div class="card card bg-light mb-3">
+                        <div class="card-header">
+                            <h5 class="card-title">
+                                <i class="fas fa-briefcase"></i> @job.Title
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <p class="card-text">
+                                <i class="fas fa-file-alt"></i> @TruncateText(job.Description,10)
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-money-bill"></i> Salary: @job.Salary
+                            </p>
+                            <p class="card-text">
+                                <i class="fas fa-map-marker-alt"></i> Location: @job.Location
+                            </p>
+                        </div>
+                        <div class="card-footer bg-info">
+                            <p class="text-white">
+                                <i class="fas fa-calendar"></i> Posted Date: @job.PostedDate.ToShortDateString()
+                            </p>
+                        </div>
+                    </div>
+                </a>
+            </div>
+        }
+    </div>
+
+    <nav aria-label="Job pagination">
+        <ul class="pagination">
+            <li class="page-item @(Model.HasPreviousPage ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("Index", "Job", new { page = Model.PageIndex - 1 })">
+                    <i class="fas fa-chevron-left"></i> Previous
+                </a>
+            </li>
+            @for (int i = 1; i <= Model.TotalPages; i++)
+            {
+                <li class="page-item @(i == Model.PageIndex ? "active" : "")">
+                    <a class="page-link" href="@Url.Action("Index", "Job", new { page = i })">@i</a>
+                </li>
+            }
+            <li class="page-item @(Model.HasNextPage ? "" : "disabled")">
+                <a class="page-link" href="@Url.Action("Index", "Job", new { page = Model.PageIndex + 1 })">
+                    Next <i class="fas fa-chevron-right"></i>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>
+
+@functions {
+    string TruncateText(string text, int maxLength)
+    {
+        if (text.Length <= maxLength)
+        {
+            return text;
+        }
+        else
+        {
+            return text.Substring(0, maxLength) + "...";
+        }
+    }
+}

@@ -1,0 +1,56 @@
+﻿@model PaginatedList<Actor>
+<div class="row">
+
+
+
+</div>
+<div class="container">
+    <div class="row">
+        @foreach (var actor in Model.Items)
+        {
+            <div class="col-md-6 mb-4">
+                <div class="card">
+                    <div class="row g-0">
+                        <div class="col-md-4">
+                            <img src="~/Photo/@actor.ProfilePhoto" alt="Profile Photo" class="card-img">
+                        </div>
+                        <div class="col-md-8">
+                            <div class="card-body">
+                                <h5 class="card-title">@actor.ActorName</h5>
+                                <p class="card-text">Skills: @actor.Skills</p>
+                                <p class="card-text">Academic Qualification: @actor.AcademicQualification</p>
+                                <p class="card-text">About: @actor.About</p>
+                                <p class="card-text">Age: @actor.age</p>
+                                <a asp-action="ViewProfile" asp-controller="Mentor" asp-route-actorId="@actor.ActorId" class="btn btn-primary">View Profile</a>
+
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+<div class="row mt-3">
+    <div class="col-md-12">
+        <nav>
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action("ApproveMentor", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })">Previous</a></li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")"><a class="page-link" href="@Url.Action("ApproveMentor", new { page = i, searchTerm = ViewBag.SearchTerm })">@i</a></li>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action("ApproveMentor", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>

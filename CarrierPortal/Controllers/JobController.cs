@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Security.Cryptography;
 
 namespace CarrierPortal.Controllers
 {
@@ -307,7 +308,7 @@ namespace CarrierPortal.Controllers
             await _jobRepository.UpdateJobAsync(job);
 
             // Redirect back to the ActorsList action after approval
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(Details), new { id = Id });
         }
         public async Task<IActionResult> Filter(string searchTerm="", int page = 1)
         {
