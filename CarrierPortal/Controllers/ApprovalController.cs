@@ -2,7 +2,7 @@
 using CarrierPortal.Models;
 using CarrierPortal.Repository;
 using Microsoft.AspNetCore.Mvc;
-
+using Org.BouncyCastle.Asn1.Anssi;
 
 namespace CarrierPortal.Controllers
 {
@@ -12,17 +12,20 @@ namespace CarrierPortal.Controllers
         private readonly IBlogRepository _blogRepository;
         private readonly IJobRepository _jobRepository;
         private readonly IQnARepository _qnaRepository;
+        private readonly AppDbContext _appDbContext;
 
         public ApprovalController(IActorRepository actorRepository,
             IBlogRepository blogRepository,
             IJobRepository jobRepository,
-            IQnARepository qnARepository
+            IQnARepository qnARepository,
+            AppDbContext appDbContext
             )
         {
             _actorRepository = actorRepository;
             _blogRepository = blogRepository;
             _jobRepository = jobRepository;
             _qnaRepository = qnARepository;
+            _appDbContext = appDbContext;
         }
 
         public IActionResult Index()
@@ -119,6 +122,29 @@ namespace CarrierPortal.Controllers
             return View(paginatedList);
 
         }
+
+        public async Task<IActionResult> ApproveAnswer(int page = 1)
+        {
+            List<Answer> answer = _appDbContext.Answers.Where(b => b.IsApproved == false).ToList();
+
+            var pageSize = 10; // Number of items per page
+            var totalItems = answer.Count();
+            var totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+            if (page < 1)
+            {
+                page = 1;
+            }
+            else if (page > totalPages)
+            {
+                page = totalPages;
+            }
+            var paginatedList = new PaginatedList<Answer>(answer, page, pageSize, totalItems, totalPages);
+
+            return View(paginatedList);
+
+        }
+
 
 
 

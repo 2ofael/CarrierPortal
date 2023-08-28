@@ -172,6 +172,7 @@ namespace CarrierPortal.Controllers
             await _qnaRepository.UpdateAnswerAsync(ans);
 
             // Redirect back to the ActorsList action after approval
+            TempData["isApprovedBlog"] = true;
             return RedirectToAction(nameof(Details), new { id = Id });  
          
         }

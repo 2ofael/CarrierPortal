@@ -1,0 +1,76 @@
+﻿@using System.Security.Claims;
+@model PaginatedList<Answer>;
+
+@{
+    ViewData["Title"] = "Question Details";
+}
+
+@if (Model.Items != null && Model.Items.Any())
+{
+    <h2>Answers</h2>
+    <div class="row">
+        @foreach (var answer in Model.Items)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card mb-3">
+                    <div class="card-body">
+                        <h4 class="card-title">Answer</h4>
+                        <p class="card-text">@TruncateText(answer.Content, 50)</p>
+                        <div class="card-footer">
+                            <div>Creation Date: @answer.CreationDate</div>
+                            <div>Votes: @answer.Votes</div>
+                            <div>Is Approved: @answer.IsApproved</div>
+                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary">View Answer</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+}
+else
+{
+    <p>No answers available.</p>
+}
+
+<div class="row mt-3">
+    <div class="col-md-12">
+        <nav>
+            <ul class="pagination">
+                @if (Model.HasPreviousPage)
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action("ApproveAnswer","Approval", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })">Previous</a></li>
+                }
+
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.PageIndex ? "active" : "")"><a class="page-link" href="@Url.Action("ApproveAnswer","Approval", new { page = i, searchTerm = ViewBag.SearchTerm })">@i</a></li>
+                }
+
+                @if (Model.HasNextPage)
+                {
+                    <li class="page-item"><a class="page-link" href="@Url.Action("ApproveAnswer","Approval", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next</a></li>
+                }
+            </ul>
+        </nav>
+    </div>
+</div>
+
+
+
+@functions {
+    string TruncateText(string text, int maxLength)
+    {
+        if (text.Length <= maxLength)
+        {
+            return text;
+        }
+        else
+        {
+            return text.Substring(0, maxLength) + "...";
+        }
+    }
+}
+@section Scripts {
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.16.0/dist/icons/bootstrap-icons.min.js"></script>
+}

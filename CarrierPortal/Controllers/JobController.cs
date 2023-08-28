@@ -306,6 +306,7 @@ namespace CarrierPortal.Controllers
 
             job.IsApproved = true;
             await _jobRepository.UpdateJobAsync(job);
+            TempData["isApproved"] = true;
 
             // Redirect back to the ActorsList action after approval
             return RedirectToAction(nameof(Details), new { id = Id });
