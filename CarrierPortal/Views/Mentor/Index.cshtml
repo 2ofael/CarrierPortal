@@ -1,14 +1,6 @@
-﻿
-@model PaginatedList<Actor>
+﻿@model PaginatedList<Actor>
+
 <div class="row">
- @*   <div class="col-md-12">
-        <form asp-action="Index" method="get" class="form-inline mb-3">
-            <div class="form-group">
-                <input type="text" name="searchTerm" class="form-control mr-2" placeholder="Search..." value="@ViewBag.SearchTerm" />
-            </div>
-            <button type="submit" class="btn btn-primary">Search</button>
-        </form>
-    </div>*@
     <div class="col-md-12">
         <form asp-action="Index" method="get" class="form-inline mt-1">
             <div class="form-group mb-2">
@@ -16,16 +8,14 @@
                 <div class="input-group custom-search-box">
                     <input type="text" name="searchTerm" class="form-control" placeholder="Search..." value="@ViewBag.SearchTerm" />
                     <div class="input-group-append">
-                        <button type="submit" class="btn btn-light">Search</button>
+                        <button type="submit" class="btn btn-light"><i class="fas fa-search"></i> Search</button>
                     </div>
                 </div>
             </div>
         </form>
     </div>
-
-
-
 </div>
+
 <div class="container">
     <div class="row">
         @foreach (var actor in Model.Items)
@@ -38,14 +28,12 @@
                         </div>
                         <div class="col-md-8">
                             <div class="card-body">
-                                <h5 class="card-title">@actor.ActorName</h5>
-                                <p class="card-text">Skills: @actor.Skills</p>
-                                <p class="card-text">Academic Qualification: @actor.AcademicQualification</p>
-                                <p class="card-text">About: @actor.About</p>
-                                <p class="card-text">Age: @actor.age</p>
-                                <a asp-action="ViewProfile" asp-route-actorId="@actor.ActorId" class="btn btn-primary">View Profile</a>
-                                
-                            
+                                <h5 class="card-title"><i class="fas fa-user"></i> @actor.ActorName</h5>
+                                <p class="card-text"><i class="fas fa-tools"></i> Skills: @actor.Skills</p>
+                                <p class="card-text"><i class="fas fa-graduation-cap"></i> Academic Qualification: @actor.AcademicQualification</p>
+                                <p class="card-text"><i class="fas fa-info-circle"></i> About: @actor.About</p>
+                                <p class="card-text"><i class="fas fa-birthday-cake"></i> Age: @actor.age</p>
+                                <a asp-action="ViewProfile" asp-route-actorId="@actor.ActorId" class="btn btn-primary"><i class="fas fa-eye"></i> View Profile</a>
                             </div>
                         </div>
                     </div>
@@ -54,13 +42,14 @@
         }
     </div>
 </div>
+
 <div class="row mt-3">
     <div class="col-md-12">
         <nav>
             <ul class="pagination">
                 @if (Model.HasPreviousPage)
                 {
-                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })">Previous</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex - 1, searchTerm = ViewBag.SearchTerm })"><i class="fas fa-chevron-left"></i> Previous</a></li>
                 }
 
                 @for (int i = 1; i <= Model.TotalPages; i++)
@@ -70,9 +59,13 @@
 
                 @if (Model.HasNextPage)
                 {
-                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next</a></li>
+                    <li class="page-item"><a class="page-link" href="@Url.Action("Index", new { page = Model.PageIndex + 1, searchTerm = ViewBag.SearchTerm })">Next <i class="fas fa-chevron-right"></i></a></li>
                 }
             </ul>
         </nav>
     </div>
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+}

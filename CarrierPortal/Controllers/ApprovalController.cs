@@ -30,6 +30,19 @@ namespace CarrierPortal.Controllers
 
         public IActionResult Index()
         {
+            ViewData["NotApprovedMentors"] = _appDbContext.Actors.Where(m => m.isSubscribed == true && m.isMentor == false).Count();
+
+            ViewData["NotApprovedBlogs"] = _appDbContext.BlogPosts.Where(b => b.IsApproved == false).Count();
+
+            ViewData["NotApprovedJobs"] = _appDbContext.Jobs.Where(b => b.IsApproved == false).Count();
+
+            ViewData["NotApprovedQuestions"] = _appDbContext.Questions.Where(b => b.IsApproved == false).Count();
+
+            ViewData["NotApprovedAnswers"] = _appDbContext.Answers.Where(b => b.IsApproved == false).Count();
+
+
+
+
             return View();
         }
      

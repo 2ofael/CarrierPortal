@@ -33,20 +33,25 @@
     <a asp-action="Index" asp-controller="QnA" class="btn btn-secondary mt-3">Back to Answers</a>
 </div>*@
 
-
 @using System.Security.Claims;
 @model Answer
 
 <div class="container">
-    <h1>Answer Details</h1>
-
+    <h1><i class="fas fa-info-circle"></i> Answer Details</h1>
+    @if (TempData["isApproved"] != null && (bool)TempData["isApproved"])
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <strong>Success!</strong> Approved has been Successfully.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Answer</h4>
-            <div class="card-text">Content: @Model.Content</div>
-            <div class="card-text">Creation Date: @Model.CreationDate</div>
-            <div class="card-text">Votes: @Model.Votes</div>
-            <div class="card-text">Is Approved: @Model.IsApproved</div>
+            <h4 class="card-title"><i class="fas fa-comment"></i> Answer</h4>
+            <div class="card-text"><i class="fas fa-file-alt"></i> Content: @Model.Content</div>
+            <div class="card-text"><i class="far fa-calendar"></i> Creation Date: @Model.CreationDate</div>
+            <div class="card-text"><i class="fas fa-thumbs-up"></i> Votes: @Model.Votes</div>
+            <div class="card-text"><i class="fas fa-check"></i> Is Approved: @Model.IsApproved</div>
         </div>
     </div>
 
@@ -59,11 +64,11 @@
             if (answerVote == null)
             {
                 <form asp-action="UpvoteAnswer" asp-controller="QnA" asp-route-answerId="@Model.Id">
-                    <button type="submit" class="btn btn-outline-success"><i class="bi bi-arrow-up"></i> Upvote</button>
+                    <button type="submit" class="btn btn-outline-success"><i class="fas fa-arrow-up"></i> Upvote</button>
                 </form>
 
                 <form asp-action="DownvoteAnswer" asp-controller="QnA" asp-route-answerId="@Model.Id">
-                    <button type="submit" class="btn btn-outline-danger"><i class="bi bi-arrow-down"></i> Downvote</button>
+                    <button type="submit" class="btn btn-outline-danger"><i class="fas fa-arrow-down"></i> Downvote</button>
                 </form>
             }
             else
@@ -71,14 +76,14 @@
                 var isUpvote = answerVote.IsUpvote;
                 var voteText = isUpvote ? "Upvoted" : "Downvoted";
                 var buttonColor = isUpvote ? "btn-success" : "btn-danger";
-                var buttonIcon = isUpvote ? "bi-arrow-up" : "bi-arrow-down";
+                var buttonIcon = isUpvote ? "fas fa-arrow-up" : "fas fa-arrow-down";
 
-                <button type="button" class="btn @buttonColor" disabled><i class="bi @buttonIcon"></i> @voteText</button>
+                <button type="button" class="btn @buttonColor" disabled><i class="@buttonIcon"></i> @voteText</button>
             }
         }
     </div>
 
-    <a asp-action="Index" asp-controller="QnA" class="btn btn-secondary mt-3">Back to Answers</a>
+    <a asp-action="Index" asp-controller="QnA" class="btn btn-secondary mt-3"><i class="fas fa-arrow-left"></i> Back to Answers</a>
 
     @if (User.IsInRole("Admin") && !Model.IsApproved)
     {
@@ -96,5 +101,8 @@
             <button type="submit" class="btn btn-danger m-1" data-action="delete"><i class="fas fa-trash"></i> Delete</button>
         </form>
     }
-
 </div>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+}

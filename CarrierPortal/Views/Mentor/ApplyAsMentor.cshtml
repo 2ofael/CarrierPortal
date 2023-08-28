@@ -1,20 +1,19 @@
-﻿
-@model MentorApplication;
+﻿@model MentorApplication;
 @{
     ViewData["Title"] = "Mentor Application";
 }
 
-<h1>Mentor Application</h1>
+<h1><i class="fas fa-user"></i> Mentor Application</h1>
 
 <form method="post" enctype="multipart/form-data">
     <div class="form-group">
-        <label asp-for="ActorName"></label>
+        <label><i class="fas fa-user"></i> Actor Name</label>
         <input asp-for="ActorName" class="form-control" />
         <span asp-validation-for="ActorName" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Gender"></label>
+        <label><i class="fas fa-venus-mars"></i> Gender</label>
         <select asp-for="Gender" class="form-control">
             <option value="Male">Male</option>
             <option value="Female">Female</option>
@@ -23,93 +22,77 @@
         <span asp-validation-for="Gender" class="text-danger"></span>
     </div>
 
-
     <div class="form-group">
-        <label asp-for="Email"></label>
+        <label><i class="fas fa-envelope"></i> Email</label>
         <input asp-for="Email" class="form-control" />
         <span asp-validation-for="Email" class="text-danger"></span>
     </div>
 
-
-
     <div class="form-group">
-        <label asp-for="Phone"></label>
+        <label><i class="fas fa-phone"></i> Phone</label>
         <input asp-for="Phone" class="form-control" />
         <span asp-validation-for="Phone" class="text-danger"></span>
     </div>
 
-
-
     <div class="form-group">
-        <label asp-for="Skills"></label>
+        <label><i class="fas fa-tools"></i> Skills</label>
         <input asp-for="Skills" class="form-control" />
         <span asp-validation-for="Skills" class="text-danger"></span>
     </div>
 
-
-
     <div class="form-group">
-
-
-        <label asp-for="DateOfBirth"></label>
+        <label><i class="fas fa-birthday-cake"></i> Date of Birth</label>
         <input asp-for="DateOfBirth" class="form-control" />
         <span asp-validation-for="DateOfBirth" class="text-danger"></span>
     </div>
 
-
     <div class="form-group">
-        <label asp-for="AcademicQualification"></label>
+        <label><i class="fas fa-graduation-cap"></i> Academic Qualification</label>
         <input asp-for="AcademicQualification" class="form-control" />
         <span asp-validation-for="AcademicQualification" class="text-danger"></span>
     </div>
 
-
     <div class="form-group">
-        <label asp-for="CurrentProfession"></label>
+        <label><i class="fas fa-briefcase"></i> Current Profession</label>
         <input asp-for="CurrentProfession" class="form-control" />
         <span asp-validation-for="CurrentProfession" class="text-danger"></span>
     </div>
 
-
-
-
     <div class="form-group">
-        <label asp-for="Address"></label>
+        <label><i class="fas fa-map-marker-alt"></i> Address</label>
         <input asp-for="Address" class="form-control" />
         <span asp-validation-for="Address" class="text-danger"></span>
     </div>
 
-
-
     <div class="form-group">
-        <label asp-for="About"></label>
+        <label><i class="fas fa-info-circle"></i> About</label>
         <input asp-for="About" class="form-control" />
         <span asp-validation-for="About" class="text-danger"></span>
     </div>
 
-
-    <!-- Add other input fields for Phone, Skills, Gender, age, AcademicQualification, CurrentProfession, Address, About -->
-
     <div class="form-group">
-        
-        <label asp-for="cv"></label>
+        <label><i class="fas fa-file-alt"></i> CV</label>
         <br />
         <input asp-for="cv" type="file" class="form-control-file" />
         <span asp-validation-for="cv" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="ProfilePhoto"></label><br />
+        <label><i class="fas fa-camera"></i> Profile Photo</label><br />
         <input asp-for="ProfilePhoto" type="file" class="form-control-file" />
         <span asp-validation-for="ProfilePhoto" class="text-danger"></span>
     </div>
 
     <div class="form-group">
-        <label asp-for="Certificates"></label>
+        <label><i class="fas fa-certificate"></i> Certificates</label>
         <br />
         <input asp-for="Certificates" type="file" class="form-control-file" multiple />
         <span asp-validation-for="Certificates" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
+    <button type="submit" class="btn btn-primary"><i class="fas fa-check"></i> Submit</button>
 </form>
+
+@section Scripts {
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+}

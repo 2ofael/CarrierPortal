@@ -11,7 +11,7 @@
                 
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-user-check"></i> Approve Mentors</h5>
-                    <p class="card-text">Total users: 1000</p>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedMentors"]</p>
                 </div>
                
             </div>
@@ -23,7 +23,7 @@
             <div class="card bg-success text-white">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-check-square"></i> Approve Blogs</h5>
-                    <p class="card-text">Total sales: $50,000</p>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedBlogs"]</p>
                 </div>
             </div>
             </a>
@@ -33,7 +33,7 @@
                  <a asp-action="ApproveQnA" asp-controller="Approval" class="text-decoration-none">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-question-circle"></i> Approve QnA</h5>
-                    <p class="card-text">Total orders: 250</p>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedQuestions"]</p>
                 </div>
                 </a>
             </div>
@@ -43,7 +43,7 @@
                   <a asp-action="ApproveJob" asp-controller="Approval" class="text-decoration-none">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-comments"></i> Approve Jobs</h5>
-                    <p class="card-text">Unread messages: 20</p>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedJobs"]</p>
                 </div>
                 </a>
             </div>
@@ -53,7 +53,7 @@
                   <a asp-action="ApproveAnswer" asp-controller="Approval" class="text-decoration-none">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-bell"></i> Approve Answer</h5>
-                    <p class="card-text">New notifications: 5</p>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedAnswer"]</p>
                 </div>
                 </a>
             </div>

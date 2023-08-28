@@ -172,7 +172,7 @@ namespace CarrierPortal.Controllers
             await _blogRepository.UpdatePostAsync(ans);
 
             // Redirect back to the ActorsList action after approval
-            TempData["isApprovedBlog"] = true;
+            TempData["isApproved"] = true;
             return RedirectToAction( nameof(Details), new {id = Id});
 
         }

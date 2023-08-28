@@ -197,7 +197,7 @@ namespace CarrierPortal.Controllers
             actor.isMentor = true;
           
             await _actorRepository.UpdateActor(actor);
-
+            TempData["isApproved"] = true;
             // Redirect back to the ActorsList action after approval
             return RedirectToAction(nameof(ViewProfile),new {actorId = actor.ActorId });
         }

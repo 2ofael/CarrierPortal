@@ -249,7 +249,7 @@ namespace CarrierPortal.Controllers
 
             question.IsApproved = true;
             await _qnaRepository.UpdateQuestionAsync(question);
-
+            TempData["isApproved"] = true;
             // Redirect back to the ActorsList action after approval
             return RedirectToAction(nameof(Details), new { id = Id });
         }

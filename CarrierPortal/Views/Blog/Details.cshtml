@@ -6,6 +6,13 @@
 }
 
 <div class="container">
+    @if (TempData["isApproved"] != null && (bool)TempData["isApproved"])
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            <i class="fas fa-check-circle"></i> <strong>Success!</strong> Approven has been Successfully.
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
     @if (TempData["isCreated"] != null && (bool)TempData["isCreated"])
     {
         <div class="alert alert-success alert-dismissible fade show" role="alert">
