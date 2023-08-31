@@ -17,7 +17,7 @@ namespace CarrierPortal.Repository
 
         public async Task<List<Job>> GetAllJobsAsync()
         {
-            return await _dbContext.Jobs.ToListAsync();
+            return await _dbContext.Jobs.Include(j=>j.Applicants).ToListAsync();
         }
 
         public async Task<Job> GetJobByIdAsync(int jobId)

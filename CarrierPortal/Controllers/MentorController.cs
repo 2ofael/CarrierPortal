@@ -26,7 +26,7 @@ namespace CarrierPortal.Controllers
         private readonly AppDbContext appDbContext;
         private readonly IActorRepository _actorRepository;
 
-        public MentorController(IActorRepository actorRepository, AppDbContext appDbContext, UserManager<ApplicationUser>userManager, IGenericRepository<Actor> repository, IPhotoService photoService,IPhotoListService photoListService)
+        public MentorController( IActorRepository actorRepository, AppDbContext appDbContext, UserManager<ApplicationUser>userManager, IGenericRepository<Actor> repository, IPhotoService photoService,IPhotoListService photoListService)
         {
             _repository = repository;
             _photoService = photoService;
@@ -337,8 +337,17 @@ namespace CarrierPortal.Controllers
 
         }
 
+        public async Task<IActionResult> ViewYourProfile()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var CurrentUser = await _userManager.Users
+           .Include(u => u.Mentor) // Include the mentor property
+           .FirstOrDefaultAsync(u => u.Id == userId);
 
-        
+            return RedirectToAction("ViewProfile",new { actorId = CurrentUser.Mentor.ActorId });
+        }
+
+      
 
 
     }

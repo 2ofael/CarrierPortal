@@ -38,26 +38,28 @@
                 </a>
             </div>
         </div>
-        <div class="col-md-4 mb-4">
-            <div class="card bg-primary text-white">
-                  <a asp-action="ApproveJob" asp-controller="Approval" class="text-decoration-none">
-                <div class="card-body">
-                    <h5 class="card-title"><i class="fas fa-comments"></i> Approve Jobs</h5>
-                        <p class="card-text">Waiting: @ViewData["NotApprovedJobs"]</p>
-                </div>
-                </a>
-            </div>
-        </div>
+  
         <div class="col-md-4 mb-4">
             <div class="card bg-danger text-white">
                   <a asp-action="ApproveAnswer" asp-controller="Approval" class="text-decoration-none">
                 <div class="card-body">
                     <h5 class="card-title"><i class="fas fa-bell"></i> Approve Answer</h5>
-                        <p class="card-text">Waiting: @ViewData["NotApprovedAnswer"]</p>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedAnswers"]</p>
                 </div>
                 </a>
             </div>
         </div>
+        <div class="col-md-4 mb-4">
+            <div class="card bg-primary text-white">
+                <a asp-action="ApproveJob" asp-controller="Approval" class="text-decoration-none">
+                    <div class="card-body">
+                        <h5 class="card-title"><i class="fas fa-comments"></i> Approve Jobs</h5>
+                        <p class="card-text">Waiting: @ViewData["NotApprovedJobs"]</p>
+                    </div>
+                </a>
+            </div>
+        </div>
+
         <div class="col-md-4 mb-4">
             <div class="card bg-secondary text-white">
                   <a asp-action="ApproveBlog" asp-controller="Approval" class="text-decoration-none">

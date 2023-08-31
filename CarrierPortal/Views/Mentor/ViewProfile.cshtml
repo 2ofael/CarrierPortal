@@ -29,7 +29,7 @@
                     <p class="card-text"><i class="fas fa-venus-mars"></i> Gender: @Model.Gender</p>
                     <p class="card-text"><i class="fas fa-briefcase"></i> Current Profession: @Model.CurrentProfession</p>
                     <p class="card-text"><i class="fas fa-map-marker-alt"></i> Address: @Model.Address</p>
-                    <a  class="btn btn-info" asp-action="Index" asp-controller="Payments" asp-route-mentorId="@Model.ActorId"><i class="fas fa-envelope"></i> View Email Or Phone</a>
+                   
                     <h4><i class="fas fa-heart"></i> Vote @Model.Loved.Count()</h4>
                     <div class="btn-group" role="group" aria-label="Vote Buttons">
                         @if (User.Identity.IsAuthenticated)
@@ -44,36 +44,68 @@
                                 </button>
                             </form>
                         }
-                        @if (User.IsInRole("Admin") && !Model.isMentor)
-                        {
-                            @if (!string.IsNullOrEmpty(Model.Certificates))
-                            {
-                                <h3 class="mt-4"><i class="fas fa-certificate"></i> Certificates</h3>
-                                <div>
-                                    <a href="~/Certificates/@Model.Certificates" download><i class="fas fa-download"></i> Download Certificate</a>
-                                </div>
-                            }
-
-                            @if (!string.IsNullOrEmpty(Model.cv))
-                            {
-                                <h3 class="mt-4"><i class="fas fa-file-alt"></i> CV</h3>
-                                <div>
-                                    <a href="~/CV/@Model.cv" download><i class="fas fa-download"></i> Download CV</a>
-                                </div>
-                            }
-
-                            <form method="post" asp-action="ApproveActor">
-                                @Html.AntiForgeryToken()
-                                <input type="hidden" name="actorId" value="@Model.ActorId" />
-                                <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Approve Actor</button>
-                            </form>
-                        }
+                      
                     </div>
+
+                    <a class="btn btn-info" asp-action="Index" asp-controller="Payments" asp-route-mentorId="@Model.ActorId"><i class="fas fa-envelope"></i> View Email Or Phone</a>
+
                 </div>
             </div>
         </div>
     </div>
 </div>
+
+@if (User.IsInRole("Admin") && !Model.isMentor)
+{
+   @* @if (!string.IsNullOrEmpty(Model.Certificates))
+    {
+        <h3 class="mt-4"><i class="fas fa-certificate"></i> Certificates</h3>
+        <div>
+            <a href="~/Certificates/@Model.Certificates" download><i class="fas fa-download"></i> Download Certificate</a>
+        </div>
+    }
+
+    @if (!string.IsNullOrEmpty(Model.cv))
+    {
+        <h3 class="mt-4"><i class="fas fa-file-alt"></i> CV</h3>
+        <div>
+            <a href="~/CV/@Model.cv" download><i class="fas fa-download"></i> Download CV</a>
+        </div>
+    }
+
+    <form method="post" asp-action="ApproveActor">
+        @Html.AntiForgeryToken()
+        <input type="hidden" name="actorId" value="@Model.ActorId" />
+        <button type="submit" class="btn btn-success "><i class="fas fa-check"></i> Approve Actor</button>
+    </form>*@
+    <div class="card m-4">
+        <div class="card-body">
+            @if (!string.IsNullOrEmpty(Model.Certificates))
+            {
+                <h3 class="card-title mt-4"><i class="fas fa-certificate"></i> Certificates</h3>
+                <div>
+                    <a href="~/Certificates/@Model.Certificates" download><i class="fas fa-download"></i> Download Certificate</a>
+                </div>
+            }
+
+            @if (!string.IsNullOrEmpty(Model.cv))
+            {
+                <h3 class="card-title mt-4"><i class="fas fa-file-alt"></i> CV</h3>
+                <div>
+                    <a href="~/CV/@Model.cv" download><i class="fas fa-download"></i> Download CV</a>
+                </div>
+            }
+
+            <form method="post" asp-action="ApproveActor">
+                @Html.AntiForgeryToken()
+                <input type="hidden" name="actorId" value="@Model.ActorId" />
+                <button type="submit" class="btn btn-success mt-4"><i class="fas fa-check"></i> Approve Actor</button>
+            </form>
+        </div>
+    </div>
+
+
+}
 
 @section Scripts {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>

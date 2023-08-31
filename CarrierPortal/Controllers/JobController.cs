@@ -2,14 +2,17 @@
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
+using System.Security.Claims;
 using System.Security.Cryptography;
 
 namespace CarrierPortal.Controllers
 {
+   
     public class JobController : Controller
     {
         private readonly IJobRepository _jobRepository;
@@ -390,6 +393,27 @@ namespace CarrierPortal.Controllers
 
             return View(new JobAndPagination { Paginations = paginatedList , Filter = jobFilter });
         }
+
+
+        public async Task<IActionResult> AllJobPostedByYou()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jobsByUser = (await _jobRepository.GetAllJobsAsync()).Where(j=>j.PostedByUserId==userId).ToList();  
+
+
+
+            return View(jobsByUser);
+        }
+        public async Task<IActionResult> AppliedByYou()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var jobsAppliedByUser = (await _jobRepository.GetAllJobsAsync()).Where(j => j.Applicants.Any(a=>a.ApplicantUserId==userId)).ToList();
+
+
+
+            return View(jobsAppliedByUser);
+        }
+
 
     }
 }

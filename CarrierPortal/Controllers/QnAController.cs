@@ -365,7 +365,13 @@ namespace CarrierPortal.Controllers
         }
 
 
-
+        public async Task<IActionResult> QuestionAskedByYou()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var questionsAskedByUser = (await _qnaRepository.GetAllQuestionsAsync()).Where(q => q.UserId == userId).ToList();
+          
+            return View(questionsAskedByUser);
+        }
 
 
 
