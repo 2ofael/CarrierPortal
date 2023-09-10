@@ -48,13 +48,19 @@
 
                 if (votedQuestion == null)
                 {
-                    <form asp-action="UpvoteQuestion" asp-route-questionId="@Model.Id">
-                        <button type="submit" class="btn btn-outline-success"><i class="fas fa-arrow-up"></i> Upvote (@Model.Votes)</button>
-                    </form>
+                    <div class="row">
+                        <div class="col-md-3">
+                            <form asp-action="UpvoteQuestion" asp-route-questionId="@Model.Id">
+                                <button type="submit" class="btn btn-outline-success m-2"><i class="fas fa-arrow-up"></i> Upvote (@Model.Votes)</button>
+                            </form>
+                        </div>
+                        <div class="col-md-3">
+                            <form asp-action="DownvoteQuestion" asp-route-questionId="@Model.Id">
+                                <button type="submit" class="btn btn-outline-danger m-2"><i class="fas fa-arrow-down"></i> Downvote (@Model.Votes)</button>
+                            </form>
+                        </div>
+                    </div>
 
-                    <form asp-action="DownvoteQuestion" asp-route-questionId="@Model.Id">
-                        <button type="submit" class="btn btn-outline-danger"><i class="fas fa-arrow-down"></i> Downvote (@Model.Votes)</button>
-                    </form>
                 }
                 else
                 {
@@ -63,12 +69,41 @@
                     var buttonColor = isUpvote ? "btn-success" : "btn-danger";
                     var buttonIcon = isUpvote ? "fas fa-arrow-up" : "fas fa-arrow-down";
 
-                    <button type="button" class="btn @buttonColor" disabled><i class="@buttonIcon"></i> @voteText (@Model.Votes)</button>
+                    <button type="button" class="btn md-2 @buttonColor" disabled><i class="@buttonIcon"></i> @voteText (@Model.Votes)</button>
                 }
             }
         </div>
+
+        
     </div>
 </div>
+@if (User.IsInRole("Mentor"))
+{
+    <a href="@Url.Action("Create", "Answer", new { questionId = Model.Id })" class="btn btn-primary mt-2"><i class="fas fa-pencil-alt"></i> Answer</a>
+}
+@if (User.Identity.IsAuthenticated)
+{
+    <div class="row mt-4">
+        <div class="col-md-3">
+            @if (User.IsInRole("Admin") && !Model.IsApproved)
+            {
+                <form method="post" asp-action="ApproveQuestion">
+                    @Html.AntiForgeryToken()
+                    <input type="hidden" asp-for="Id" value="@Model.Id" />
+                    <button type="submit" class="btn btn-success"><i class="fas fa-check"></i> Approve</button>
+                </form>
+            }
+        </div>
+        <div class="col-md-3">
+            @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
+            {
+                <a href="@Url.Action("Edit", "QnA", new { id = Model.Id })" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit</a>
+                <a href="@Url.Action("Delete", "QnA", new { id = Model.Id })" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
+            }
+        </div>
+    </div>
+}
+
 
 @if (Model.Answers != null && Model.Answers.Any())
 {
@@ -85,7 +120,7 @@
                             <div><i class="far fa-calendar"></i> Creation Date: @answer.CreationDate</div>
                             <div><i class="fas fa-thumbs-up"></i> Votes: @answer.Votes</div>
                             <div><i class="fas fa-check"></i> Is Approved: @answer.IsApproved</div>
-                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary"><i class="far fa-eye"></i> View Answer</a>
+                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary m-2"><i class="far fa-eye"></i> View Answer</a>
                         </div>
                     </div>
                 </div>
@@ -98,26 +133,6 @@ else
     <p>No answers available.</p>
 }
 
-@if (User.Identity.IsAuthenticated)
-{
-    <div class="mt-4">
-        <a href="@Url.Action("Create", "Answer", new { questionId = Model.Id })" class="btn btn-primary"><i class="fas fa-pencil-alt"></i> Answer</a>
-
-        @if (User.IsInRole("Admin") && !Model.IsApproved)
-        {
-            <form method="post" asp-action="ApproveQuestion">
-                @Html.AntiForgeryToken()
-                <input type="hidden" asp-for="Id" value="@Model.Id" />
-                <button type="submit" class="btn btn-success m-1"><i class="fas fa-check"></i> Approve</button>
-            </form>
-        }
-        @if (User.Identity.IsAuthenticated && (User.IsInRole("Admin") || Model.UserId == User.FindFirstValue(ClaimTypes.NameIdentifier)))
-        {
-            <a href="@Url.Action("Edit", "QnA", new { id = Model.Id })" class="btn btn-secondary"><i class="fas fa-edit"></i> Edit</a>
-            <a href="@Url.Action("Delete", "QnA", new { id = Model.Id })" class="btn btn-danger"><i class="fas fa-trash-alt"></i> Delete</a>
-        }
-    </div>
-}
 
 @functions {
     string TruncateText(string text, int maxLength)
@@ -131,7 +146,4 @@ else
             return text.Substring(0, maxLength) + "...";
         }
     }
-}
-@section Scripts {
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
 }

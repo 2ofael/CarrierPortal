@@ -299,6 +299,14 @@ namespace CarrierPortal.Controllers
             return RedirectToAction("Details", new { id = postId });
         }
 
+        public async Task<IActionResult> PostedByUser()
+        {
+            string userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            List<BlogPost> blogsPostedByUser = (await _blogRepository.GetAllPostsAsync()).Where(b=>b.ApplicationUserId==userId).ToList();
+
+            return View(blogsPostedByUser);
+        }
+
 
     }
 }

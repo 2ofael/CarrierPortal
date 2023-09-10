@@ -1,6 +1,7 @@
 ﻿using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using Microsoft.EntityFrameworkCore;
+using System.Runtime.CompilerServices;
 
 namespace CarrierPortal.Repository
 {
@@ -145,6 +146,10 @@ namespace CarrierPortal.Repository
             return _context.AnswerVotes.Any(v => v.UserId == userId && v.AnswerId == answerId);
         }
 
+        public async Task<List<Answer>> GetAllAnswersAsync()
+        {
+            return await _context.Answers.ToListAsync(); 
+        }
 
     }
 }

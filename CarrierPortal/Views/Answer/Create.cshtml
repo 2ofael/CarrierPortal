@@ -1,16 +1,17 @@
 ﻿@model AnswerViewModel
 
-<h1>Create Answer</h1>
+<h1><i class="fas fa-pencil-alt"></i> Create Answer</h1>
 
 <form asp-action="Create" method="post">
     <input type="hidden" asp-for="QuestionId" />
 
     <div class="form-group">
-        <label asp-for="Content">Content</label>
+        <label for="Content"><i class="fas fa-comment"></i> Content</label>
         <textarea class="form-control" asp-for="Content"></textarea>
         <span asp-validation-for="Content" class="text-danger"></span>
     </div>
 
-    <button type="submit" class="btn btn-primary">Submit</button>
-    <a asp-controller="QnA" asp-action="Details" asp-route-id="@Model.QuestionId" class="btn btn-secondary">Cancel</a>
+    <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-check"></i> Submit</button>
+    <a asp-controller="QnA" asp-action="Details" asp-route-id="@Model.QuestionId" class="btn btn-secondary mt-2"><i class="fas fa-times"></i> Cancel</a>
 </form>
+

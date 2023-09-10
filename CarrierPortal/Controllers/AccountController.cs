@@ -220,6 +220,12 @@ namespace CarrierPortal.Controllers
         [AllowAnonymous]
         public IActionResult Register()
         {
+            if (User.Identity.IsAuthenticated)
+            {
+
+                return RedirectToAction("Index", "Home");
+            }
+
             return View();
         }
 
@@ -257,6 +263,11 @@ namespace CarrierPortal.Controllers
 
                 if (result.Succeeded)
                 {
+
+
+                    var rolesToAdd = new List<string> { "Blog", "MentorShip", "QnA", "Job" };
+                    await userManager.AddToRolesAsync(user, rolesToAdd);
+
                     var token = await userManager.GenerateEmailConfirmationTokenAsync(user);
 
                     var confirmationLink = Url.Action("ConfirmEmail", "Account",
@@ -273,10 +284,10 @@ namespace CarrierPortal.Controllers
 
                     logger.Log(LogLevel.Warning, confirmationLink);
 
-                    if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
-                    {
-                        return RedirectToAction("ListUsers", "Administration");
-                    }
+                    //if (signInManager.IsSignedIn(User) && User.IsInRole("Admin"))
+                    //{
+                    //    return RedirectToAction("ListUsers", "Administration");
+                    //}
 
                     ViewBag.ErrorTitle = "Registration successful";
                     ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
@@ -339,7 +350,11 @@ namespace CarrierPortal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login()
         {
-         
+            if (User.Identity.IsAuthenticated)
+            {
+
+                return RedirectToAction("Index", "Home");
+            }
 
             return View();
         }
@@ -350,7 +365,9 @@ namespace CarrierPortal.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            
+
+          
+
             if (ModelState.IsValid)
             {
                 var user = await userManager.FindByEmailAsync(model.Email);

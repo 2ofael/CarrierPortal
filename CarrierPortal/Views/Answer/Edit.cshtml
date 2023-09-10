@@ -1,17 +1,18 @@
-﻿@model AnswerViewModel // Replace with your project's AnswerViewModel namespace
+﻿@model AnswerViewModel
 
 <div class="container">
-    <h1>Edit Answer</h1>
+    <h1><i class="fas fa-edit"></i> Edit Answer</h1>
 
     <form asp-action="Edit" asp-controller="Answer">
         <input type="hidden" asp-for="Id" />
 
         <div class="form-group">
-            <label for="Content">Content</label>
+            <label for="Content"><i class="fas fa-comment"></i> Content</label>
             <textarea class="form-control" id="Content" name="Content" rows="5" required>@Model.Content</textarea>
         </div>
 
-        <button type="submit" class="btn btn-primary">Save Changes</button>
-        <a asp-action="Details" asp-controller="Answer" asp-route-id="@Model.Id" class="btn btn-secondary">Cancel</a>
+        <button type="submit" class="btn btn-primary mt-2"><i class="fas fa-save"></i> Save Changes</button>
+        <a asp-action="Details" asp-controller="Answer" asp-route-id="@Model.Id" class="btn btn-secondary mt-2"><i class="fas fa-times"></i> Cancel</a>
     </form>
 </div>
+

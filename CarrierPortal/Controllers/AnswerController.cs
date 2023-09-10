@@ -42,9 +42,10 @@ namespace CarrierPortal.Controllers
                     IsApproved = false,
                     Votes = 0
                 };
-
+                TempData["isCreated"] = true;
                 await _qnaRepository.CreateAnswerAsync(newAnswer);
-                return RedirectToAction("Details", "QnA", new { id = answer.QuestionId });
+                return RedirectToAction("Details", "Answer", new { id = answer.Id });
+                
             }
 
             return View(answer);
@@ -116,6 +117,7 @@ namespace CarrierPortal.Controllers
                 existingAnswer.Content = answer.Content;
 
                 await _qnaRepository.UpdateAnswerAsync(existingAnswer);
+                TempData["isEdited"] = true;
                 return RedirectToAction("Details", "Answer", new { id = existingAnswer.Id });
             }
 
@@ -155,6 +157,7 @@ namespace CarrierPortal.Controllers
             string questionId = answer.QuestionId;
 
             await _qnaRepository.DeleteAnswerAsync(answer);
+            TempData["isDeleted"] = true;
             return RedirectToAction("Details", "QnA", new { id = questionId });
         }
 

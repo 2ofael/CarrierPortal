@@ -142,6 +142,7 @@ namespace CarrierPortal.Controllers
 
 
                    await _actorRepository.AddActor(newMentor);
+                    await _userManager.AddToRoleAsync(CurrentUser, "Mentor");
 
                 }
                 else
@@ -172,6 +173,11 @@ namespace CarrierPortal.Controllers
                     CurrMentor.Certificates = _photoService.SavePhoto(mentorApplication.Certificates, "Certificates");
 
                    await _actorRepository.UpdateActor(CurrMentor);
+
+                    if (!(await _userManager.IsInRoleAsync(CurrentUser, "Mentor")))
+                    {
+                        await _userManager.AddToRoleAsync(CurrentUser, "Mentor");
+                    }
 
 
                 }

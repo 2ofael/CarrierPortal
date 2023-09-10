@@ -9,6 +9,7 @@ namespace CarrierPortal.Repository
         Task DeleteAnswerAsync(Answer answer);
         Task DeleteQuestionAsync(Question question);
         Task<List<Question>> GetAllQuestionsAsync();
+        Task<List<Answer>> GetAllAnswersAsync();
         Task<Answer> GetAnswerByIdAsync(string answerId);
         Task<List<Answer>> GetAnswersForQuestionAsync(string questionId);
         Task<Question> GetQuestionByIdAsync(string questionId);

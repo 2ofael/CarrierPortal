@@ -122,12 +122,7 @@
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Create" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fa-solid fa-pen-nib"></i> Write Blog
-                        </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
-                    </li>
+                  
 
                     <li class="list-group-item d-flex justify-content-between align-items-center">
                         <a asp-action="Index" asp-controller="Blog" class="text-decoration-none">
@@ -136,19 +131,25 @@
                         <span class="badge bg-primary rounded-pill">1</span>
                     </li>
 
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fas fa-user"></i> All Posted By You
-                        </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
-                    </li>
 
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
-                        <a asp-action="Index" asp-controller="Blog" class="text-decoration-none">
-                            <i class="fas fa-user"></i>Applied By You
-                        </a>
-                        <span class="badge bg-primary rounded-pill">1</span>
-                    </li>
+                    @if (User.IsInRole("Mentor"))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a asp-action="Create" asp-controller="Blog" class="text-decoration-none">
+                                <i class="fa-solid fa-pen-nib"></i> Write Carrier Blog
+                            </a>
+                            <span class="badge bg-primary rounded-pill">1</span>
+                        </li>
+
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a asp-action="PostedByUser" asp-controller="Blog" class="text-decoration-none">
+                                <i class="fas fa-user"></i> All Posted By You
+                            </a>
+                            <span class="badge bg-primary rounded-pill">1</span>
+                        </li>
+                    }
+
 
                 </ul>
             </div>

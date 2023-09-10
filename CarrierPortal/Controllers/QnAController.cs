@@ -322,7 +322,7 @@ namespace CarrierPortal.Controllers
                 await _qnaRepository.CreateAnswerVoteAsync(vote);
             }
 
-            return RedirectToAction("QuestionDetails", new { questionId = answer.QuestionId });
+            return RedirectToAction("Details","Answer", new { Id = answer.Id });
         }
 
         [HttpPost]
@@ -344,8 +344,9 @@ namespace CarrierPortal.Controllers
                 var vote = new AnswerVote { AnswerId = answerId, UserId = userId, IsUpvote = false };
                 await _qnaRepository.CreateAnswerVoteAsync(vote);
             }
+            return RedirectToAction("Details", "Answer", new { Id = answer.Id });
 
-            return RedirectToAction("QuestionDetails", new { questionId = answer.QuestionId });
+           // return RedirectToAction("QuestionDetails", new { questionId = answer.QuestionId });
         }
 
         private bool HasUserVotedQuestion(string userId, string questionId)
@@ -375,6 +376,13 @@ namespace CarrierPortal.Controllers
 
 
 
+        public async Task<IActionResult> AnsweredByUser()
+        {
+            var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var answeredByUser =  (await _qnaRepository.GetAllAnswersAsync()).Where(a => a.UserId == userId).ToList();
+
+            return View(answeredByUser);
+        }
 
 
 
