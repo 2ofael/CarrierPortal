@@ -1,4 +1,5 @@
 ﻿using CarrierPortal.AppViewModel;
+using CarrierPortal.EmailTemplates;
 using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
@@ -25,8 +26,9 @@ namespace CarrierPortal.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppDbContext appDbContext;
         private readonly IActorRepository _actorRepository;
+        private readonly ActionMessageSender _ActionMessageSender;
 
-        public MentorController( IActorRepository actorRepository, AppDbContext appDbContext, UserManager<ApplicationUser>userManager, IGenericRepository<Actor> repository, IPhotoService photoService,IPhotoListService photoListService)
+        public MentorController(ActionMessageSender actionMessageSender, IActorRepository actorRepository, AppDbContext appDbContext, UserManager<ApplicationUser>userManager, IGenericRepository<Actor> repository, IPhotoService photoService,IPhotoListService photoListService)
         {
             _repository = repository;
             _photoService = photoService;
@@ -34,6 +36,7 @@ namespace CarrierPortal.Controllers
             _userManager = userManager;
             this.appDbContext = appDbContext;
             _actorRepository = actorRepository;
+            _ActionMessageSender = actionMessageSender;
             
         }
 
@@ -205,6 +208,11 @@ namespace CarrierPortal.Controllers
             await _actorRepository.UpdateActor(actor);
             TempData["isApproved"] = true;
             // Redirect back to the ActorsList action after approval
+
+            var url = Url.Action("Details", "Mentor", new { id = actorId }, Request.Scheme);
+
+
+            await _ActionMessageSender.SendActionMessage(actorId, url);
             return RedirectToAction(nameof(ViewProfile),new {actorId = actor.ActorId });
         }
 

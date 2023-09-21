@@ -1,3 +1,4 @@
+using CarrierPortal.EmailTemplates;
 using CarrierPortal.Models;
 using CarrierPortal.Repository;
 using CarrierPortal.Services.EmailServices;
@@ -36,6 +37,7 @@ builder.Services.AddScoped<IQnARepository, QnARepository>();
 builder.Services.AddScoped<IJobRepository, JobRepository>();
 builder.Services.AddScoped<IEmailService, EmailService>();
 builder.Services.AddScoped<IBlogRepository, BlogRepository>();
+builder.Services.AddScoped<ActionMessageSender, ActionMessageSender>();
 
 builder.Services.AddCors(options =>
 {

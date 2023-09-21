@@ -30,26 +30,40 @@
                             </a>
                         </li>
 
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" asp-controller="Mentor" asp-action="Index">
-                                <i class="fa-solid fa-chalkboard-user"></i> Mentors
-                            </a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" asp-controller="Job" asp-action="Index">
-                                <i class="fas fa-briefcase"></i> Job
-                            </a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" asp-controller="QnA" asp-action="Index">
-                                <i class="fas fa-question"></i> Q & A
-                            </a>
-                        </li>
-                        <li class="nav-item mx-2">
-                            <a class="nav-link" asp-controller="Blog" asp-action="Index">
-                                <i class="fas fa-blog"></i> Blogs
-                            </a>
-                        </li>
+
+                        @if (User.IsInRole("MentorShip"))
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="Mentor" asp-action="Index">
+                                    <i class="fa-solid fa-chalkboard-user"></i> Mentors
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Job"))
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="Job" asp-action="Index">
+                                    <i class="fas fa-briefcase"></i> Job
+                                </a>
+                            </li>
+                        }
+
+                        @if (User.IsInRole("QnA"))
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="QnA" asp-action="Index">
+                                    <i class="fas fa-question"></i> Q & A
+                                </a>
+                            </li>
+                        }
+                        @if (User.IsInRole("Blog"))
+                        {
+                            <li class="nav-item mx-2">
+                                <a class="nav-link" asp-controller="Blog" asp-action="Index">
+                                    <i class="fas fa-blog"></i> Blogs
+                                </a>
+                            </li>
+                        }
                         <li class="nav-item mx-2">
                             <a class="nav-link" asp-controller="Newsletter" asp-action="Subscribe">
                                 <i class="fas fa-newspaper"></i> Newsletter
@@ -107,61 +121,63 @@
 
 
     <div class="row">
-        <div class="col-2 m-10">
+        <div class="col-3 mt-2 m-10">
             <div class="container" style="height: 100vh; overflow-y: auto;">
-                <ul class="list-group" m-10>
+                <ul class="list-group mb-4">
                     <li>
                         <form asp-controller="Job" asp-action="Filter" method="post">
 
-                            <div class="form-group">
-                                <label>Title</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-heading"></i> Title</label>
                                 <input class="form-control" asp-for="@Model.Filter.Title" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Description</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-file-alt"></i> Description</label>
                                 <input class="form-control" asp-for="@Model.Filter.Description" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Min Salary</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-dollar-sign"></i> Min Salary</label>
                                 <input type="number" class="form-control" asp-for="@Model.Filter.MinSalary" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Max Salary</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-dollar-sign"></i> Max Salary</label>
                                 <input type="number" class="form-control" asp-for="@Model.Filter.MaxSalary" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Location</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-map-marker-alt"></i> Location</label>
                                 <input class="form-control" asp-for="@Model.Filter.Location" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Posted After Date</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-calendar-alt"></i> Posted After Date</label>
                                 <input type="date" class="form-control" asp-for="@Model.Filter.PostedAfterDate" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Min Applicants</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-users"></i> Min Applicants</label>
                                 <input type="number" class="form-control" asp-for="@Model.Filter.MinApplicants" />
                             </div>
 
-                            <div class="form-group">
-                                <label>Max Applicants</label>
+                            <div class="form-group mx-1">
+                                <label><i class="fas fa-users"></i> Max Applicants</label>
                                 <input type="number" class="form-control" asp-for="@Model.Filter.MaxApplicants" />
                             </div>
 
-                            <button type="submit" class="btn btn-primary">Apply Filter</button>
+                            <button type="submit" class="btn btn-primary mx-1"><i class="fas fa-filter"></i> Apply Filter</button>
 
                         </form>
-                </li>
+                    </li>
                 </ul>
+
+
             </div>
 
         </div>
-        <div class="col-10">
+        <div class="col-9">
 
             <div class="container" style="height: 100vh; overflow-y: auto;">
                 <main role="main" class="pb-3">

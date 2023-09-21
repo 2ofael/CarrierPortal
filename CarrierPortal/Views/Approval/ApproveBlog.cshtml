@@ -4,7 +4,7 @@
     ViewData["Title"] = "All Blogs";
 }
 
-<h1><i class="fas fa-blog"></i> All Blogs</h1>
+<h1><i class="fas fa-blog"></i> All Pending Blogs</h1>
 
 @if (TempData["isDeleted"] != null && (bool)TempData["isDeleted"])
 {
@@ -14,21 +14,6 @@
     </div>
 }
 
-<div class="row">
-    <div class="col-md-12">
-        <form asp-action="Index" method="get" class="form-inline mt-1">
-            <div class="form-group mb-2">
-                <label class="sr-only">Search</label>
-                <div class="input-group custom-search-box">
-                    <input type="text" name="searchTerm" class="form-control" placeholder="Search..." value="@ViewBag.SearchTerm" />
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary"><i class="fas fa-search"></i> Search</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
-</div>
 
 <div class="row">
     @foreach (var blogPost in Model.Items)

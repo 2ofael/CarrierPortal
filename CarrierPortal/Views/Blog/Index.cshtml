@@ -33,8 +33,9 @@
 <div class="row">
     @foreach (var blogPost in Model.Items)
     {
-        <div class="col-md-12">
-            <div class="card mb-3">
+        
+            <div class="col-md-12">
+                <div class="card mb-3">
                 <div class="card-body">
                     <h3 class="card-title"><i class="fas fa-heading"></i> @blogPost.Title</h3>
                     <div class="card-text">@Html.Raw(TruncateText(blogPost.Content, 200))</div>
@@ -49,6 +50,7 @@
                 </div>
             </div>
         </div>
+        
     }
 </div>
 

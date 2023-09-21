@@ -1,4 +1,5 @@
-﻿using CarrierPortal.Models.DataModel;
+﻿using CarrierPortal.EmailTemplates;
+using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
 using Microsoft.AspNetCore.Mvc;
@@ -9,10 +10,12 @@ namespace CarrierPortal.Controllers
     public class AnswerController : Controller
     {
         private readonly IQnARepository _qnaRepository;
+        private readonly ActionMessageSender _ActionMessageSender;
 
-        public AnswerController(IQnARepository qnaRepository)
+        public AnswerController(IQnARepository qnaRepository, ActionMessageSender actionMessageSender)
         {
             _qnaRepository = qnaRepository;
+            _ActionMessageSender = actionMessageSender;
         }
 
         // GET: Answer/Create
@@ -44,7 +47,7 @@ namespace CarrierPortal.Controllers
                 };
                 TempData["isCreated"] = true;
                 await _qnaRepository.CreateAnswerAsync(newAnswer);
-                return RedirectToAction("Details", "Answer", new { id = answer.Id });
+                return RedirectToAction("Details", "Answer", new { id = newAnswer.Id });
                 
             }
 
@@ -115,6 +118,7 @@ namespace CarrierPortal.Controllers
                 }
 
                 existingAnswer.Content = answer.Content;
+                existingAnswer.IsApproved = false;
 
                 await _qnaRepository.UpdateAnswerAsync(existingAnswer);
                 TempData["isEdited"] = true;
@@ -176,6 +180,10 @@ namespace CarrierPortal.Controllers
 
             // Redirect back to the ActorsList action after approval
             TempData["isApproved"] = true;
+            var url = Url.Action("Details", "Answer", new { id = Id }, Request.Scheme);
+
+
+            await _ActionMessageSender.SendActionMessage(ans.UserId , url);
             return RedirectToAction(nameof(Details), new { id = Id });  
          
         }

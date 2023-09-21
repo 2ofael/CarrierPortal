@@ -41,6 +41,17 @@
                     <p class="card-text">@Html.Raw(Model.Content)</p>
                     <p class="card-text"><i class="far fa-calendar"></i> Posted: @Model.CreatedAt.ToString("MMM dd, yyyy")</p>
                     <h5 class="card-text">Author: @Model.ApplicationUser.Mentor.ActorName <a asp-controller="Mentor" asp-action="ViewProfile" asp-route-actorId="@Model.ApplicationUser.Mentor.UserId"><i class="fa-solid fa-link"></i></a></h5>
+                    @if (Model.IsApproved)
+                    {
+                        <h6><i class="fas fa-check-circle text-success"></i> Approved</h6>
+
+                    }
+                    else
+                    {
+                        <h6><i class="fas fa-times-circle text-danger"></i> Not Approved </h6>
+
+                    }
+
                     <div class="mt-4">
                         <h4><i class="fas fa-heart"></i> Vote @Model.Loved.Count()</h4>
                         <div class="btn-group" role="group" aria-label="Vote Buttons">

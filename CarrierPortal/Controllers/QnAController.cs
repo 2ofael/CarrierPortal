@@ -1,4 +1,5 @@
-﻿using CarrierPortal.Models;
+﻿using CarrierPortal.EmailTemplates;
+using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
@@ -12,10 +13,12 @@ namespace CarrierPortal.Controllers
     public class QnAController : Controller
     {
         private readonly IQnARepository _qnaRepository;
+        private readonly ActionMessageSender _ActionMessageSender;
 
-        public QnAController(IQnARepository qnaRepository)
+        public QnAController(IQnARepository qnaRepository,ActionMessageSender actionMessageSender)
         {
             _qnaRepository = qnaRepository;
+            _ActionMessageSender = actionMessageSender;
         }
 
         // GET: Questions
@@ -44,6 +47,7 @@ namespace CarrierPortal.Controllers
             }
 
             var QnAPosts = await _qnaRepository.GetPostsAsync(searchTerm, page, pageSize);
+            
 
             // Create a PaginatedList instance
             var paginatedList = new PaginatedList<Question>(QnAPosts, page, pageSize, totalItems, totalPages);
@@ -139,6 +143,7 @@ namespace CarrierPortal.Controllers
                 var PrevQuestion =await _qnaRepository.GetQuestionByIdAsync(id);
                 PrevQuestion.Title = question.Title;
                 PrevQuestion.Content = question.Content;
+                PrevQuestion.IsApproved = false;
 
                 await _qnaRepository.UpdateQuestionAsync(PrevQuestion);
                 TempData["isEdited"] = true;
@@ -251,6 +256,12 @@ namespace CarrierPortal.Controllers
             await _qnaRepository.UpdateQuestionAsync(question);
             TempData["isApproved"] = true;
             // Redirect back to the ActorsList action after approval
+            var url = Url.Action("Details", "QnA", new { id = Id },Request.Scheme);
+
+
+           await _ActionMessageSender.SendActionMessage(question.UserId, url);
+
+
             return RedirectToAction(nameof(Details), new { id = Id });
         }
 

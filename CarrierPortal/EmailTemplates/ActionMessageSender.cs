@@ -2,6 +2,7 @@
 using CarrierPortal.Services.EmailServices;
 using Microsoft.AspNetCore.Identity;
 using NuGet.Protocol.Plugins;
+using System.Security.Policy;
 
 namespace CarrierPortal.EmailTemplates
 {
@@ -28,9 +29,20 @@ namespace CarrierPortal.EmailTemplates
         //}
 
 
+        public async Task<bool> SendActionMessage(string userId, string url)
+        {
+            var user = await _userManager.FindByIdAsync(userId);
+            var emailBody = GetActionEmailBody(user.UserName, url.ToString());
+            await  _emailSerivice.SendEmailAsync(user.Email, "Your Content Approval", emailBody.ToString());
+            return true;
+        }
+
+
+
+
         private string GetActionEmailBody(string userName, string URL)
         {
-            var emailTemplate = System.IO.File.ReadAllText("/Action.html");
+            var emailTemplate = System.IO.File.ReadAllText("EmailTemplates/Action.html");
             emailTemplate = emailTemplate.Replace("{UserName}", userName);
             emailTemplate = emailTemplate.Replace("{URL}", URL);
             return emailTemplate;

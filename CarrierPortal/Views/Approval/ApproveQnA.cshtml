@@ -7,25 +7,14 @@
     <button type="submit" class="btn btn-primary">Search</button>
     </form>
     </div>*@
-    <div class="col-md-12">
-        <form asp-action="Index" method="get" class="form-inline mt-1">
-            <div class="form-group mb-2">
-                <label class="sr-only">Search</label>
-                <div class="input-group custom-search-box">
-                    <input type="text" name="searchTerm" class="form-control" placeholder="Search..." value="@ViewBag.SearchTerm" />
-                    <div class="input-group-append">
-                        <button type="submit" class="btn btn-primary">Search</button>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </div>
 
 
 </div>
-<p>
+
+<h1><i class="fa-solid fa-question"></i> All Pending Questions</h1>
+@*<p>
     <a asp-action="Create"><i class="fas fa-question-circle"></i> Ask a Question</a>
-</p>
+</p>*@
 @if (TempData["isDeleted"] != null && (bool)TempData["isDeleted"])
 {
     <div class="alert alert-danger alert-dismissible fade show" role="alert">
@@ -33,7 +22,7 @@
         <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
     </div>
 }
-<div class="row">
+<div class="row mt-2">
     @foreach (var question in Model.Items)
     {
         <div class="col-md-12 mb-4">

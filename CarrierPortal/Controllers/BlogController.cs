@@ -8,16 +8,19 @@ using System.Security.Claims;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using CarrierPortal.EmailTemplates;
 
 namespace CarrierPortal.Controllers
 {
     public class BlogController : Controller
     {
         private readonly IBlogRepository _blogRepository;
+        private readonly ActionMessageSender _ActionMessageSender;
 
-        public BlogController(IBlogRepository blogRepository)
+        public BlogController(IBlogRepository blogRepository, ActionMessageSender actionMessageSender)
         {
             _blogRepository = blogRepository;
+            _ActionMessageSender = actionMessageSender;
         }
 
         public async Task<IActionResult> Index(string searchTerm, int page = 1)
@@ -124,6 +127,7 @@ namespace CarrierPortal.Controllers
                 var PrevBlog = await _blogRepository.GetPostByIdAsync(blogPost.Id);
                 PrevBlog.Title = blogPost.Title;
                 PrevBlog.Content = blogPost.Content;
+                PrevBlog.IsApproved = false;
 
                 await _blogRepository.UpdatePostAsync(PrevBlog);
                 TempData["isEdited"] = true;
@@ -162,17 +166,22 @@ namespace CarrierPortal.Controllers
         [HttpPost]
         public async Task<IActionResult> ApproveBlog(int Id)
         {
-            var ans = await _blogRepository.GetPostByIdAsync(Id);
-            if (ans == null)
+            var blog = await _blogRepository.GetPostByIdAsync(Id);
+            if (blog == null)
             {
                 return NotFound();
             }
 
-            ans.IsApproved = true;
-            await _blogRepository.UpdatePostAsync(ans);
+            blog.IsApproved = true;
+            await _blogRepository.UpdatePostAsync(blog);
 
             // Redirect back to the ActorsList action after approval
             TempData["isApproved"] = true;
+
+            var url = Url.Action("Details", "Blog", new { id = Id }, Request.Scheme);
+
+
+            await _ActionMessageSender.SendActionMessage(blog.ApplicationUserId , url);
             return RedirectToAction( nameof(Details), new {id = Id});
 
         }

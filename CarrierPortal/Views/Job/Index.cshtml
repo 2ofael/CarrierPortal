@@ -110,8 +110,9 @@
 
         @foreach (var job in Model.Items)
         {
-            <div class="col-md-4">
-                <a href="@Url.Action("Details", "Job", new { id = job.Id })" class="text-decoration-none">
+           
+                <div class="col-md-4">
+                    <a href="@Url.Action("Details", "Job", new { id = job.Id })" class="text-decoration-none">
                     <div class="card card bg-light mb-3">
                         <div class="card-header">
                             <h5 class="card-title">
@@ -137,6 +138,7 @@
                     </div>
                 </a>
             </div>
+            
         }
     </div>
 

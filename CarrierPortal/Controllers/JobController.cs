@@ -1,4 +1,5 @@
-﻿using CarrierPortal.Models;
+﻿using CarrierPortal.EmailTemplates;
+using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
@@ -18,12 +19,14 @@ namespace CarrierPortal.Controllers
         private readonly IJobRepository _jobRepository;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly AppDbContext _appDbContext;
+        private readonly ActionMessageSender _ActionMessageSender;
 
-        public JobController(AppDbContext appDbContext, IJobRepository jobRepository, UserManager<ApplicationUser> userManager)
+        public JobController(ActionMessageSender actionMessageSender, AppDbContext appDbContext, IJobRepository jobRepository, UserManager<ApplicationUser> userManager)
         {
             _jobRepository = jobRepository;
             _userManager = userManager;
             _appDbContext = appDbContext;
+            _ActionMessageSender = actionMessageSender;
         }
 
         // Job Actions
@@ -242,7 +245,7 @@ namespace CarrierPortal.Controllers
 
                 existingJob.Title = job.Title;
                 existingJob.Description = job.Description;
-
+                existingJob.IsApproved = false;
                 await _jobRepository.UpdateJobAsync(existingJob);
                 TempData["isEdited"] = true;
                 return RedirectToAction(nameof(Details), new {id=id});
@@ -310,7 +313,10 @@ namespace CarrierPortal.Controllers
             job.IsApproved = true;
             await _jobRepository.UpdateJobAsync(job);
             TempData["isApproved"] = true;
+            var url = Url.Action("Details", "Job", new { id = Id }, Request.Scheme);
 
+
+            await _ActionMessageSender.SendActionMessage(job.PostedByUserId, url);
             // Redirect back to the ActorsList action after approval
             return RedirectToAction(nameof(Details), new { id = Id });
         }

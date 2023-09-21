@@ -67,7 +67,17 @@
             <div class="card-text"><i class="fas fa-file-alt"></i> Content: @Model.Content</div>
             <div class="card-text"><i class="far fa-calendar"></i> Creation Date: @Model.CreationDate</div>
             <div class="card-text"><i class="fas fa-thumbs-up"></i> Votes: @Model.Votes</div>
-            <div class="card-text"><i class="fas fa-check"></i> Is Approved: @Model.IsApproved</div>
+           @* <div class="card-text"><i class="fas fa-check"></i> Is Approved: @Model.IsApproved</div>*@
+            @if (Model.IsApproved)
+            {
+                <h6><i class="fas fa-check-circle text-success"></i> Approved</h6>
+
+            }
+            else
+            {
+                <h6><i class="fas fa-times-circle text-danger"></i> Not Approved </h6>
+
+            }
         </div>
         <form method="get" asp-action="Details" asp-controller="QnA" asp-route-Id="@Model.QuestionId">
             <button type="submit" class="btn btn-secondary"><i class="fas fa-arrow-left"></i> Back to Question</button>
