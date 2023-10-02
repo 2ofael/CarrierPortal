@@ -72,8 +72,8 @@ namespace CarrierPortal.Controllers
 
 
 
-        [HttpGet]
-        public async Task<IActionResult> ViewProfile(string actorId)
+        [Route("/Mentor/ViewProfile/{actorId}")]
+        public async Task<IActionResult> ViewProfile( string actorId)
         {
             if (ModelState.IsValid)
             {
@@ -198,6 +198,9 @@ namespace CarrierPortal.Controllers
         public async Task<IActionResult> ApproveActor(string actorId)
         {
             var actor = await _actorRepository.GetActorById(actorId);
+
+          
+
             if (actor == null)
             {
                 return NotFound();
@@ -209,11 +212,11 @@ namespace CarrierPortal.Controllers
             TempData["isApproved"] = true;
             // Redirect back to the ActorsList action after approval
 
-            var url = Url.Action("Details", "Mentor", new { id = actorId }, Request.Scheme);
+            var url = Url.Action("ViewProfile", "Mentor", new { actorId = actorId }, Request.Scheme);
 
 
-            await _ActionMessageSender.SendActionMessage(actorId, url);
-            return RedirectToAction(nameof(ViewProfile),new {actorId = actor.ActorId });
+            await _ActionMessageSender.SendActionMessage(actor.UserId, url);
+            return RedirectToAction(nameof(ViewProfile),new {actorId = actorId });
         }
 
 

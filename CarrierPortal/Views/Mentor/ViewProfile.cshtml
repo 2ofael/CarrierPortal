@@ -29,7 +29,19 @@
                     <p class="card-text"><i class="fas fa-venus-mars"></i> Gender: @Model.Gender</p>
                     <p class="card-text"><i class="fas fa-briefcase"></i> Current Profession: @Model.CurrentProfession</p>
                     <p class="card-text"><i class="fas fa-map-marker-alt"></i> Address: @Model.Address</p>
-                   
+
+                    @if (Model.isMentor)
+                    {
+                        <h6><i class="fas fa-check-circle text-success"></i> Approved</h6>
+
+                    }
+                    else
+                    {
+                        <h6><i class="fas fa-times-circle text-danger"></i> Approval Pending</h6>
+
+                    }
+
+
                     <h4><i class="fas fa-heart"></i> Vote @Model.Loved.Count()</h4>
                     <div class="btn-group" role="group" aria-label="Vote Buttons">
                         @if (User.Identity.IsAuthenticated)
@@ -46,9 +58,11 @@
                         }
                       
                     </div>
-
-                    <a class="btn btn-info" asp-action="Index" asp-controller="Payments" asp-route-mentorId="@Model.ActorId"><i class="fas fa-envelope"></i> View Email Or Phone</a>
-
+                
+                    @if (Model.isMentor)
+                    {
+                        <a class="btn btn-info" asp-action="Index" asp-controller="Payments" asp-route-mentorId="@Model.ActorId"><i class="fas fa-envelope"></i> View Email Or Phone</a>
+                    }
                 </div>
             </div>
         </div>
