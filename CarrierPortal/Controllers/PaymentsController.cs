@@ -143,6 +143,8 @@ namespace CarrierPortal.Controllers
                                          .Replace("{AcademicQualification}", mentor.AcademicQualification)
                                          .Replace("{Email}", mentor.Email)
                                          .Replace("{Phone}", mentor.Phone);
+            if (mentor.isMentor == false)
+                emailTemplate = String.Empty;
 
             return emailTemplate;
         }

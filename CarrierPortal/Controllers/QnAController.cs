@@ -287,7 +287,7 @@ namespace CarrierPortal.Controllers
                 await _qnaRepository.CreateQuestionVoteAsync(vote);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Details), new { id = questionId });
         }
 
         [HttpPost]
@@ -310,7 +310,7 @@ namespace CarrierPortal.Controllers
                 await _qnaRepository.CreateQuestionVoteAsync(vote);
             }
 
-            return RedirectToAction("Index");
+            return RedirectToAction(nameof(Details), new { id = questionId });
         }
 
         [HttpPost]
@@ -394,8 +394,6 @@ namespace CarrierPortal.Controllers
 
             return View(answeredByUser);
         }
-
-
 
 
 

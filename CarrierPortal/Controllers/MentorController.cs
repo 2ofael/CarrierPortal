@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Build.ObjectModelRemoting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using System.Numerics;
 using System.Security.Claims;
@@ -154,7 +155,7 @@ namespace CarrierPortal.Controllers
 
                   var  CurrMentor =await _actorRepository.GetActorById(CurrentUser.Mentor.ActorId);
 
-                    //CurrMentor.ActorId = Guid.NewGuid().ToString(),
+                    //CurrMentor.mentorId = Guid.NewGuid().ToString(),
                     CurrMentor.ActorName = mentorApplication.ActorName;
                     CurrMentor.About = mentorApplication.About;
                     CurrMentor.Address = mentorApplication.Address;
@@ -364,7 +365,39 @@ namespace CarrierPortal.Controllers
             return RedirectToAction("ViewProfile",new { actorId = CurrentUser.Mentor.ActorId });
         }
 
-      
+        public async Task<IActionResult> PostPone(string mentorId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+
+            var mentor = await _actorRepository.GetActorById(mentorId);
+
+            mentor.isMentor = false;
+
+            await _actorRepository.UpdateActor(mentor);
+
+            return RedirectToAction("ViewProfile", new {actorId = mentorId});
+        }
+
+
+
+
+        public async Task<IActionResult> EnableMentoring(string mentorId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+
+            var mentor = await _actorRepository.GetActorById(mentorId);
+
+            mentor.isMentor = true;
+
+            await _actorRepository.UpdateActor(mentor);
+            return RedirectToAction("ViewProfile", new { actorId = mentorId });
+        }
 
 
     }
