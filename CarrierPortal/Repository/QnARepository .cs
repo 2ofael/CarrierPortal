@@ -41,7 +41,9 @@ namespace CarrierPortal.Repository
         {
             return await _context.Answers
                 .Include(a => a.User)
+                .Include(a=>a.User.Mentor)
                 .Include(a=>a.AnswerVotes)
+                
                 .FirstOrDefaultAsync(a => a.Id == answerId);
         }
 

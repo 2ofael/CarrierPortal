@@ -19,6 +19,7 @@ namespace CarrierPortal.Models
                 .WithMany(u => u.Questions)
                 .HasForeignKey(q => q.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
+           
 
             modelBuilder.Entity<Answer>()
                 .HasOne(a => a.User)
@@ -26,11 +27,19 @@ namespace CarrierPortal.Models
                 .HasForeignKey(a => a.UserId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            modelBuilder.Entity<Answer>()
-                .HasOne(a => a.Question)
-                .WithMany(q => q.Answers)
-                .HasForeignKey(a => a.QuestionId)
-                .OnDelete(DeleteBehavior.NoAction);
+            //modelBuilder.Entity<Answer>()
+            //    .HasOne(a => a.Question)
+            //    .WithMany(q => q.Answers)
+            //    .HasForeignKey(a => a.QuestionId)
+            //    .OnDelete(DeleteBehavior.NotAction);
+
+            modelBuilder.Entity<Question>()
+                .HasMany(q => q.Answers)
+                .WithOne(a => a.Question)
+                .HasForeignKey(a=>a.QuestionId)
+                .OnDelete(DeleteBehavior.Cascade);
+
+
 
             modelBuilder.Entity<Job>()
                 .HasMany(j => j.Applicants)

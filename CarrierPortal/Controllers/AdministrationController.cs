@@ -234,27 +234,33 @@ namespace CarrierPortal.Controllers
         public async Task<IActionResult> DeleteUser(string id)
         {
             var user = await userManager.FindByIdAsync(id);
-
-            if (user == null)
+            try
             {
-                ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
-                return View("NotFound");
+                if (user == null)
+                {
+                    ViewBag.ErrorMessage = $"User with Id = {id} cannot be found";
+                    return View("NotFound");
+                }
+                else
+                {
+                    var result = await userManager.DeleteAsync(user);
+
+                    if (result.Succeeded)
+                    {
+                        return RedirectToAction("ListUsers");
+                    }
+
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError("", error.Description);
+                    }
+
+                    return View("ListUsers");
+                }
             }
-            else
+            catch(Exception ex)
             {
-                var result = await userManager.DeleteAsync(user);
-
-                if (result.Succeeded)
-                {
-                    return RedirectToAction("ListUsers");
-                }
-
-                foreach (var error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-
-                return View("ListUsers");
+                return View("UserError");
             }
         }
 

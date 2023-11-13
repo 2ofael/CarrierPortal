@@ -1,26 +1,41 @@
-﻿using CarrierPortal.EmailTemplates;
+﻿
+
+using CarrierPortal.EmailTemplates;
+using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
+using CarrierPortal.Services.EmailServices;
 using CarrierPortal.ViewModels;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Security.Cryptography;
 
 namespace CarrierPortal.Controllers
 {
     public class AnswerController : Controller
     {
+     
         private readonly IQnARepository _qnaRepository;
         private readonly ActionMessageSender _ActionMessageSender;
+        private readonly IEmailService _emailService;
 
-        public AnswerController(IQnARepository qnaRepository, ActionMessageSender actionMessageSender)
+        public AnswerController(IQnARepository qnaRepository,
+            ActionMessageSender actionMessageSender, IEmailService emailService
+            
+         )
         {
+           
             _qnaRepository = qnaRepository;
             _ActionMessageSender = actionMessageSender;
+            _emailService = emailService;
+            
         }
 
         // GET: Answer/Create
         public IActionResult Create(string questionId)
         {
+            
             var viewModel = new AnswerViewModel
             {
                 QuestionId = questionId
@@ -45,8 +60,15 @@ namespace CarrierPortal.Controllers
                     IsApproved = false,
                     Votes = 0
                 };
+
+
                 TempData["isCreated"] = true;
                 await _qnaRepository.CreateAnswerAsync(newAnswer);
+                string userEmail = (await _qnaRepository.GetQuestionByIdAsync(answer.QuestionId)).User.Email;
+                var url = Url.Action("Details", "Answer", new { id = answer.Id }, Request.Scheme);
+          
+                await _emailService.SendEmailAsync(userEmail, "You have new Answer", url);
+
                 return RedirectToAction("Details", "Answer", new { id = newAnswer.Id });
                 
             }
@@ -64,6 +86,7 @@ namespace CarrierPortal.Controllers
 
 
             var answer = await _qnaRepository.GetAnswerByIdAsync(id);
+      
 
             if (answer == null)
             {

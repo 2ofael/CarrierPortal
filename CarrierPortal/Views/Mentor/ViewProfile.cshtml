@@ -64,23 +64,26 @@
                         <a class="btn btn-info" asp-action="Index" asp-controller="Payments" asp-route-mentorId="@Model.ActorId"><i class="fas fa-envelope"></i> View Email Or Phone</a>
                       
                     }
-                    @if (Model.isMentor)
-                    {
 
-                        <a class="btn btn-secondary" asp-action="PostPone" asp-controller="Mentor" asp-route-mentorId="@Model.ActorId">
-                            <i class="fas fa-envelope"></i>
-                            postpone Mentoring
-                        </a>
-                    }
-                    else if(User.IsInRole("Mentor") && Model.isMentor == false)
+                    @if (Model.UserId == User.FindFirst(ClaimTypes.NameIdentifier)?.Value)
                     {
-                        <a class="btn btn-secondary" asp-action="EnableMentoring" asp-controller="Mentor" asp-route-mentorId="@Model.ActorId">
-                            <i class="fas fa-envelope"></i>
-                            Enable Mentoring
-                        </a>
-                        
-                    }
+                        @if (Model.isMentor)
+                        {
 
+                            <a class="btn btn-secondary" asp-action="PostPone" asp-controller="Mentor" asp-route-mentorId="@Model.ActorId">
+                                <i class="fas fa-envelope"></i>
+                                postpone Mentoring
+                            </a>
+                        }
+                        else if (User.IsInRole("Mentor") && Model.isMentor == false)
+                        {
+                            <a class="btn btn-secondary" asp-action="EnableMentoring" asp-controller="Mentor" asp-route-mentorId="@Model.ActorId">
+                                <i class="fas fa-envelope"></i>
+                                Enable Mentoring
+                            </a>
+
+                        }
+                    }
 
 
                 </div>
