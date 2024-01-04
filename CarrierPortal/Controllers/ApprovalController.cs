@@ -3,9 +3,11 @@ using CarrierPortal.Models;
 using CarrierPortal.Repository;
 using Microsoft.AspNetCore.Mvc;
 using Org.BouncyCastle.Asn1.Anssi;
+using Microsoft.AspNetCore.Authorization;
 
 namespace CarrierPortal.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class ApprovalController : Controller
     {
         private readonly IActorRepository _actorRepository;

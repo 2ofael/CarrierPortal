@@ -1,4 +1,5 @@
 ﻿using CarrierPortal.EmailTemplates;
+using CarrierPortal.Extensions;
 using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
@@ -10,10 +11,11 @@ using Microsoft.EntityFrameworkCore;
 using System;
 using System.Security.Claims;
 using System.Security.Cryptography;
+using System.Text.Json.Serialization;
 
 namespace CarrierPortal.Controllers
 {
-   
+    [Authorize(Roles = "Job")]
     public class JobController : Controller
     {
         private readonly IJobRepository _jobRepository;
@@ -231,10 +233,16 @@ namespace CarrierPortal.Controllers
             if (job == null)
                 return NotFound();
 
+            if (!UserHelper.IsCurrentUserOrAdmin(job.PostedByUserId,User))
+            {
+                return BadRequest();
+            }
+
             return View(job);
         }
 
         [HttpPost]
+        
         public async Task<IActionResult> Edit(int id, Job job)
         {
             if (job.Title != null && job.Description != null)
@@ -243,9 +251,16 @@ namespace CarrierPortal.Controllers
                 if (existingJob == null)
                     return NotFound();
 
+
                 existingJob.Title = job.Title;
                 existingJob.Description = job.Description;
                 existingJob.IsApproved = false;
+
+                if (!UserHelper.IsCurrentUserOrAdmin(existingJob.PostedByUserId, User))
+                {
+                    return BadRequest();
+                }
+
                 await _jobRepository.UpdateJobAsync(existingJob);
                 TempData["isEdited"] = true;
                 return RedirectToAction(nameof(Details), new {id=id});
@@ -259,7 +274,10 @@ namespace CarrierPortal.Controllers
             var job = await _jobRepository.GetJobByIdAsync(id);
             if (job == null)
                 return NotFound();
-
+            if (!UserHelper.IsCurrentUserOrAdmin(job.PostedByUserId, User))
+            {
+                return BadRequest();
+            }
             return View(job);
         }
 
@@ -269,6 +287,11 @@ namespace CarrierPortal.Controllers
             var job = await _jobRepository.GetJobByIdAsync(id);
             if (job == null)
                 return NotFound();
+
+            if (!UserHelper.IsCurrentUserOrAdmin(job.PostedByUserId, User))
+            {
+                return BadRequest();
+            }
 
             await _jobRepository.DeleteJobAsync(job);
             TempData["IsDeleted"] = true;
@@ -301,10 +324,12 @@ namespace CarrierPortal.Controllers
             return File(fileBytes, "application/pdf", resume.FileName);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> ApproveJob(int Id)
         {
             var job = await _jobRepository.GetJobByIdAsync(Id);
+
             if (job == null)
             {
                 return NotFound();
@@ -316,7 +341,13 @@ namespace CarrierPortal.Controllers
             var url = Url.Action("Details", "Job", new { id = Id }, Request.Scheme);
 
 
-            await _ActionMessageSender.SendActionMessage(job.PostedByUserId, url);
+            Response.OnCompleted(async () =>
+            {
+                // Code inside this block will be executed after the response has been sent
+                await _ActionMessageSender.SendActionMessage(job.PostedByUserId, url);
+            });
+
+         //   await _ActionMessageSender.SendActionMessage(job.PostedByUserId, url);
             // Redirect back to the ActorsList action after approval
             return RedirectToAction(nameof(Details), new { id = Id });
         }

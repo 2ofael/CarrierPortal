@@ -4,12 +4,14 @@ using CarrierPortal.Repository;
 using CarrierPortal.Services.EmailServices;
 using CarrierPortal.ViewModels;
 using Microsoft.AspNetCore.Authentication.Google;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Stripe;
 
 namespace CarrierPortal.Controllers
 {
+    [Authorize]
     public class PaymentsController : Controller
     {
        // public static string TempEmail;

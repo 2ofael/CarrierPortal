@@ -1,8 +1,10 @@
 ﻿using CarrierPortal.EmailTemplates;
+using CarrierPortal.Extensions;
 using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.VisualBasic;
 using System.Linq;
@@ -10,6 +12,7 @@ using System.Security.Claims;
 
 namespace CarrierPortal.Controllers
 {
+    [Authorize(Roles ="QnA")]
     public class QnAController : Controller
     {
         private readonly IQnARepository _qnaRepository;
@@ -124,6 +127,10 @@ namespace CarrierPortal.Controllers
             {
                 return NotFound();
             }
+            if (!UserHelper.IsCurrentUserOrAdmin(question.UserId, User))
+            {
+                return BadRequest();
+            }
 
             return View(question);
         }
@@ -144,6 +151,11 @@ namespace CarrierPortal.Controllers
                 PrevQuestion.Title = question.Title;
                 PrevQuestion.Content = question.Content;
                 PrevQuestion.IsApproved = false;
+
+                if (!UserHelper.IsCurrentUserOrAdmin(PrevQuestion.UserId, User))
+                {
+                    return BadRequest();
+                }
 
                 await _qnaRepository.UpdateQuestionAsync(PrevQuestion);
                 TempData["isEdited"] = true;
@@ -168,6 +180,11 @@ namespace CarrierPortal.Controllers
                 return NotFound();
             }
 
+            if (!UserHelper.IsCurrentUserOrAdmin(question.UserId, User))
+            {
+                return BadRequest();
+            }
+
             return View(question);
         }
 
@@ -181,6 +198,11 @@ namespace CarrierPortal.Controllers
             if (question == null)
             {
                 return NotFound();
+            }
+
+            if (!UserHelper.IsCurrentUserOrAdmin(question.UserId, User))
+            {
+                return BadRequest();
             }
 
             await _qnaRepository.DeleteQuestionAsync(question);
@@ -240,9 +262,9 @@ namespace CarrierPortal.Controllers
         //    return View(question);
         //}
 
-      
 
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> ApproveQuestion(string Id)
         {
@@ -258,8 +280,10 @@ namespace CarrierPortal.Controllers
             // Redirect back to the ActorsList action after approval
             var url = Url.Action("Details", "QnA", new { id = Id },Request.Scheme);
 
-
-           await _ActionMessageSender.SendActionMessage(question.UserId, url);
+            Response.OnCompleted(async () =>
+            {
+               await _ActionMessageSender.SendActionMessage(question.UserId, url);
+            });
 
 
             return RedirectToAction(nameof(Details), new { id = Id });

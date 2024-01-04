@@ -8,7 +8,7 @@ using System.Security.Claims;
 
 namespace CarrierPortal.Controllers
 {
-    
+    [Authorize(Roles ="Admin")]
     public class AdministrationController : Controller
     {
         private readonly RoleManager<IdentityRole> roleManager;

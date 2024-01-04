@@ -2,12 +2,14 @@
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Services.EmailServices;
 using CarrierPortal.Services.PhotoServices;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
 namespace CarrierPortal.Controllers
 {
+    [Authorize]
     public class NewsletterController : Controller
     {
         private readonly UserManager<ApplicationUser> _userManager;

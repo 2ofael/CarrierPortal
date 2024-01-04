@@ -275,7 +275,7 @@ namespace CarrierPortal.Controllers
 
 
                     var emailBody = GetConfirmationEmailBody(user.UserName, confirmationLink);
-                    await emailService.SendEmailAsync(user.Email, "Email Confirmation", emailBody);
+                    emailService.SendEmailAsync(user.Email, "Email Confirmation", emailBody);
 
 
                     // var to = new List<string>();
@@ -289,8 +289,8 @@ namespace CarrierPortal.Controllers
                     //    return RedirectToAction("ListUsers", "Administration");
                     //}
 
-                    ViewBag.ErrorTitle = "Registration successful";
-                    ViewBag.ErrorMessage = "Before you can Login, please confirm your " +
+                    ViewBag.ErrorTitle = "  Registration successful";
+                    ViewBag.ErrorMessage = "  Before you can Login, please confirm your " +
                         "email, by clicking on the confirmation link we have emailed you";
                     return View("Error");
                 }

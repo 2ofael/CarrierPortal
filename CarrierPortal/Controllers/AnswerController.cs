@@ -1,11 +1,13 @@
 ﻿
 
 using CarrierPortal.EmailTemplates;
+using CarrierPortal.Extensions;
 using CarrierPortal.Models;
 using CarrierPortal.Models.DataModel;
 using CarrierPortal.Repository;
 using CarrierPortal.Services.EmailServices;
 using CarrierPortal.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
@@ -13,6 +15,7 @@ using System.Security.Cryptography;
 
 namespace CarrierPortal.Controllers
 {
+   
     public class AnswerController : Controller
     {
      
@@ -33,6 +36,7 @@ namespace CarrierPortal.Controllers
         }
 
         // GET: Answer/Create
+        [Authorize(Roles = "Mentor")]
         public IActionResult Create(string questionId)
         {
             
@@ -65,9 +69,11 @@ namespace CarrierPortal.Controllers
                 TempData["isCreated"] = true;
                 await _qnaRepository.CreateAnswerAsync(newAnswer);
                 string userEmail = (await _qnaRepository.GetQuestionByIdAsync(answer.QuestionId)).User.Email;
-                var url = Url.Action("Details", "Answer", new { id = answer.Id }, Request.Scheme);
-          
-                await _emailService.SendEmailAsync(userEmail, "You have new Answer", url);
+                var url = Url.Action("Details", "Answer", new { id = newAnswer.Id }, Request.Scheme);
+                string body = $"<h2>Your new answer <a href=\"{url}\">Link</a></h2>";
+
+
+                _emailService.SendEmailAsync(userEmail, "You have new Answer", body);
 
                 return RedirectToAction("Details", "Answer", new { id = newAnswer.Id });
                 
@@ -97,7 +103,7 @@ namespace CarrierPortal.Controllers
         }
 
 
-
+        [Authorize(Roles = "Mentor")]
         public async Task<IActionResult> Edit(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -143,15 +149,22 @@ namespace CarrierPortal.Controllers
                 existingAnswer.Content = answer.Content;
                 existingAnswer.IsApproved = false;
 
+                if(!UserHelper.IsCurrentUserOrAdmin(existingAnswer.Id, User))
+                {
+                    return BadRequest();
+                }
+
                 await _qnaRepository.UpdateAnswerAsync(existingAnswer);
                 TempData["isEdited"] = true;
                 return RedirectToAction("Details", "Answer", new { id = existingAnswer.Id });
             }
 
+
             return View(answer);
         }
 
         //// GET: Answer/Delete/5
+        [Authorize(Roles = "Mentor")]
         public async Task<IActionResult> Delete(string id)
         {
             if (string.IsNullOrEmpty(id))
@@ -160,6 +173,11 @@ namespace CarrierPortal.Controllers
             }
 
             var answer = await _qnaRepository.GetAnswerByIdAsync(id);
+
+            if (!UserHelper.IsCurrentUserOrAdmin(answer.UserId, User))
+            {
+                return BadRequest();
+            }
 
             if (answer == null)
             {
@@ -183,12 +201,17 @@ namespace CarrierPortal.Controllers
 
             string questionId = answer.QuestionId;
 
+            if (!UserHelper.IsCurrentUserOrAdmin(answer.UserId, User))
+            {
+                return BadRequest();
+            }
+
             await _qnaRepository.DeleteAnswerAsync(answer);
             TempData["isDeleted"] = true;
             return RedirectToAction("Details", "QnA", new { id = questionId });
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> ApproveAnswer(string Id)
         {
@@ -205,8 +228,10 @@ namespace CarrierPortal.Controllers
             TempData["isApproved"] = true;
             var url = Url.Action("Details", "Answer", new { id = Id }, Request.Scheme);
 
-
-            await _ActionMessageSender.SendActionMessage(ans.UserId , url);
+            Response.OnCompleted(async () =>
+            {
+                _ActionMessageSender.SendActionMessage(ans.UserId, url);
+            });
             return RedirectToAction(nameof(Details), new { id = Id });  
          
         }

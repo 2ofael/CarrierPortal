@@ -12,6 +12,7 @@ using CarrierPortal.EmailTemplates;
 
 namespace CarrierPortal.Controllers
 {
+    [Authorize(Roles ="Blog")]
     public class BlogController : Controller
     {
         private readonly IBlogRepository _blogRepository;
@@ -67,12 +68,14 @@ namespace CarrierPortal.Controllers
         }
 
         // GET: BlogPosts/Create
+        [Authorize(Roles = "Mentor")]
         public IActionResult Create()
         {
             return View();
         }
 
         // POST: BlogPosts/Create
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Title,Content")] BlogPost blogPost)
@@ -95,6 +98,7 @@ namespace CarrierPortal.Controllers
             return View(blogPost);
         }
         // GET: BlogPosts/Edit/5
+        [Authorize(Roles = "Mentor")]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -112,6 +116,7 @@ namespace CarrierPortal.Controllers
         }
 
         // POST: BlogPosts/Edit/5
+        [Authorize(Roles = "Mentor")]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Title,Content,CreatedAt")] BlogPost blogPost)
@@ -137,6 +142,7 @@ namespace CarrierPortal.Controllers
         }
 
         // GET: BlogPosts/Delete/5
+        [Authorize(Roles = "Mentor")]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -162,7 +168,7 @@ namespace CarrierPortal.Controllers
             TempData["isDeleted"] = true;
             return RedirectToAction(nameof(Index));
         }
-
+        [Authorize(Roles ="Admin")]
         [HttpPost]
         public async Task<IActionResult> ApproveBlog(int Id)
         {
@@ -180,8 +186,10 @@ namespace CarrierPortal.Controllers
 
             var url = Url.Action("Details", "Blog", new { id = Id }, Request.Scheme);
 
-
-            await _ActionMessageSender.SendActionMessage(blog.ApplicationUserId , url);
+            Response.OnCompleted(async () =>
+            {
+                await _ActionMessageSender.SendActionMessage(blog.ApplicationUserId, url);
+            });
             return RedirectToAction( nameof(Details), new {id = Id});
 
         }

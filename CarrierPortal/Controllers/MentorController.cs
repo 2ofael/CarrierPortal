@@ -6,6 +6,7 @@ using CarrierPortal.Repository;
 using CarrierPortal.Services.PhotoServices;
 using CarrierPortal.ViewModels;
 using MailKit.Search;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
@@ -19,6 +20,7 @@ using System.Security.Claims;
 
 namespace CarrierPortal.Controllers
 {
+    [Authorize(Roles ="MentorShip")]
     public class MentorController : Controller
     {
         private readonly IGenericRepository<Actor> _repository;
@@ -194,7 +196,7 @@ namespace CarrierPortal.Controllers
             return View();
         }
 
-
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public async Task<IActionResult> ApproveActor(string actorId)
         {
@@ -215,8 +217,10 @@ namespace CarrierPortal.Controllers
 
             var url = Url.Action("ViewProfile", "Mentor", new { actorId = actorId }, Request.Scheme);
 
-
-            await _ActionMessageSender.SendActionMessage(actor.UserId, url);
+            Response.OnCompleted(async () =>
+            {
+                await _ActionMessageSender.SendActionMessage(actor.UserId, url);
+            });
             return RedirectToAction(nameof(ViewProfile),new {actorId = actorId });
         }
 
