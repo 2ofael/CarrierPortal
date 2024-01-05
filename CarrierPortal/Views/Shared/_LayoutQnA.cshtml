@@ -163,6 +163,24 @@
                            
                         </li>
                     }
+                    @if (User.IsInRole("Admin"))
+                    {
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a asp-action="ApproveQnA" asp-controller="Approval" class="text-decoration-none">
+                                <i class="fa-solid fa-person-circle-check"></i> Approval Question
+                            </a>
+
+                        </li>
+
+                        <li class="list-group-item d-flex justify-content-between align-items-center">
+                            <a asp-action="ApproveAnswer" asp-controller="Approval" class="text-decoration-none">
+                                <i class="fa-solid fa-person-circle-check"></i> Approval Answer
+                            </a>
+
+                        </li>
+
+                    }
+
                 </ul>
             </div>
 

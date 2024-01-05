@@ -19,8 +19,17 @@
                         <div class="card-footer">
                             <div>Creation Date: @answer.CreationDate</div>
                             <div>Votes: @answer.Votes</div>
-                            <div>Is Approved: @answer.IsApproved</div>
-                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary">View Answer</a>
+                            @if (answer.IsApproved)
+                            {
+                                <h6><i class="fas fa-check-circle text-success"></i> Approved</h6>
+
+                            }
+                            else
+                            {
+                                <h6><i class="fas fa-times-circle text-danger"></i> Not Approved </h6>
+
+                            }
+                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary m-3">View Answer</a>
                         </div>
                     </div>
                 </div>

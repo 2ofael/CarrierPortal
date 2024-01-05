@@ -95,13 +95,13 @@
             {
                 <div class="row">
                     <div class="col-md-6">
-                        <form asp-action="UpvoteQuestion" asp-route-questionId="@Model.Id">
-                            <button type="submit" class="btn btn-outline-success m-2"><i class="fas fa-arrow-up"></i> Upvote (@Model.Votes)</button>
+                        <form asp-controller="QnA" asp-action="UpvoteQuestion" asp-route-questionId="@Model.Id">
+                            <button type="submit" class="btn btn-outline-success m-2"><i class="fas fa-arrow-up"></i> Upvote</button>
                         </form>
                     </div>
                     <div class="col-md-6">
-                        <form asp-action="DownvoteQuestion" asp-route-questionId="@Model.Id">
-                            <button type="submit" class="btn btn-outline-danger m-2"><i class="fas fa-arrow-down"></i> Downvote (@Model.Votes)</button>
+                        <form   asp-controller="QnA" asp-action="DownvoteQuestion" asp-route-questionId="@Model.Id">
+                            <button type="submit" class="btn btn-outline-danger m-2"><i class="fas fa-arrow-down"></i> Downvote</button>
                         </form>
                     </div>
                 </div>

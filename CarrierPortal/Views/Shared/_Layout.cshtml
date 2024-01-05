@@ -65,12 +65,14 @@
                         </li>
                          }
 
-                      
+                       @if(User.Identity.IsAuthenticated)
+                        {
                             <li class="nav-item mx-2">
                                 <a class="nav-link" asp-controller="Newsletter" asp-action="Subscribe">
                                     <i class="fas fa-newspaper"></i> Newsletter
                                 </a>
                             </li>
+                        }
 
                         
 

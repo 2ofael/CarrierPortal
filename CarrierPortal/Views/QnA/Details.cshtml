@@ -35,10 +35,12 @@
         <h5 class="card-title"><i class="fas fa-question-circle"></i> @Model.Title</h5>
         <p class="card-text"><i class="fas fa-file-alt"></i> @Model.Content</p>
 
+
         <p class="card-text">
             <small class="text-muted"><i class="fas fa-user"></i> Posted By: @Model.User.UserName</small>
             <br />
             <small class="text-muted"><i class="far fa-calendar"></i> Posted On: @Model.CreationDate.ToString("yyyy-MM-dd")</small>
+            <div class="card-text"><i class="fas fa-thumbs-up"></i> Votes: @Model.Votes</div>
         </p>
 
        
@@ -66,12 +68,12 @@
                     <div class="row">
                         <div class="col-md-3">
                             <form asp-action="UpvoteQuestion" asp-route-questionId="@Model.Id">
-                                <button type="submit" class="btn btn-outline-success m-2"><i class="fas fa-arrow-up"></i> Upvote (@Model.Votes)</button>
+                                <button type="submit" class="btn btn-outline-success m-2"><i class="fas fa-arrow-up"></i> Upvote</button>
                             </form>
                         </div>
                         <div class="col-md-3">
                             <form asp-action="DownvoteQuestion" asp-route-questionId="@Model.Id">
-                                <button type="submit" class="btn btn-outline-danger m-2"><i class="fas fa-arrow-down"></i> Downvote (@Model.Votes)</button>
+                                <button type="submit" class="btn btn-outline-danger m-2"><i class="fas fa-arrow-down"></i> Downvote</button>
                             </form>
                         </div>
                     </div>
@@ -135,8 +137,17 @@
                         <div class="card-footer">
                             <div><i class="far fa-calendar"></i> Creation Date: @answer.CreationDate</div>
                             <div><i class="fas fa-thumbs-up"></i> Votes: @answer.Votes</div>
-                            <div><i class="fas fa-check"></i> Is Approved: @answer.IsApproved</div>
-                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary m-2"><i class="far fa-eye"></i> View Answer</a>
+                            @if (Model.IsApproved)
+                            {
+                                <h6><i class="fas fa-check-circle text-success"></i> Approved</h6>
+
+                            }
+                            else
+                            {
+                                <h6><i class="fas fa-times-circle text-danger"></i> Not Approved </h6>
+
+                            }
+                            <a asp-action="Details" asp-controller="Answer" asp-route-id="@answer.Id" class="btn btn-primary m-3"><i class="far fa-eye"></i> View Answer</a>
                         </div>
                     </div>
                 </div>

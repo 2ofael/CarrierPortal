@@ -13,6 +13,7 @@
         </tr>
     </thead>
     <tbody>
+
         @foreach (var applicant in Model)
         {
             <tr>
@@ -36,3 +37,7 @@
         }
     </tbody>
 </table>
+@if(Model.Count() ==0 )
+{
+    <h1>There are No applicants</h1>
+}

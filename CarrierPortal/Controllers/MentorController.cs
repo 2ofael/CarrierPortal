@@ -326,7 +326,7 @@ namespace CarrierPortal.Controllers
             if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
                 filteredActors = filteredActors.Where(a => a.AcademicQualification.ToLower() == mentorFilter.AcademicQualification.ToLower());
 
-            if (mentorFilter.age != null && mentorFilter.EndAge != null)
+            if (mentorFilter.age !=null && mentorFilter.EndAge != null && mentorFilter.EndAge !=0)
             {
 
                 DateTime currentDate = DateTime.Now;
