@@ -5,7 +5,7 @@
 <table class="table table-striped">
     <thead>
         <tr>
-            <th scope="col"><i class="fas fa-heading"></i> Title</th>
+            @*<th scope="col"><i class="fas fa-heading"></i> Title</th>*@
             <th scope="col"><i class="fas fa-envelope"></i> Email</th>
             <th scope="col"><i class="fas fa-phone"></i> Phone</th>
             <th scope="col"><i class="fas fa-calendar-alt"></i> Applied Date</th>
@@ -17,10 +17,10 @@
         @foreach (var applicant in Model)
         {
             <tr>
-                <td>@applicant.Name</td>
-                <td>@applicant.Email</td>
-                <td>@applicant.Phone</td>
-                <td>@applicant.AppliedDate.ToString("yyyy-MM-dd")</td>
+            @*    <td>@applicant.Name</td>*@
+                <td class="m-2">@applicant.Email</td>
+                <td class="m-2">@applicant.Phone</td>
+                <td class="m-2">@applicant.AppliedDate.ToString("yyyy-MM-dd")</td>
                 <td>
                     @if (!string.IsNullOrEmpty(applicant.Resume.FilePath))
                     {

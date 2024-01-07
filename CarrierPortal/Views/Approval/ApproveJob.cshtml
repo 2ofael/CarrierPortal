@@ -76,6 +76,10 @@
             </div>
         }
     </div>
+    @if (Model.Items.Count() == 0)
+    {
+        <h1>No Jobs For Approval</h1>
+    }
 
     <nav aria-label="Job pagination">
         <ul class="pagination">

@@ -104,7 +104,7 @@ namespace CarrierPortal.Controllers
                 foreach(string email in allEmails)
                 {
 
-                    await _emailService.SendEmailAsync(email, "Carrier News of the month",
+                    await _emailService.SendEmailAsync(email, "Career News of the month",
 
                         "File attached", FileName
                         );
@@ -119,7 +119,7 @@ namespace CarrierPortal.Controllers
             // Redirect to a success page or show a success message
            
         }
-        [HttpPost]
+        [HttpGet]
         public IActionResult SendSuccess()
         {
             return View();
