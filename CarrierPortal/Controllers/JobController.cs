@@ -306,6 +306,12 @@ namespace CarrierPortal.Controllers
                 return NotFound();
             }
 
+            string currentUserId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            if (job.PostedByUserId != currentUserId)
+            {
+                return NotFound();
+            }
+
             var applicants = (await _jobRepository.GetAllApplicantsAsync()).Where(a => a.JobId == job.Id).ToList();
             
             return View(applicants);
