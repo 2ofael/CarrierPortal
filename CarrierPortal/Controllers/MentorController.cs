@@ -233,17 +233,45 @@ namespace CarrierPortal.Controllers
         }
 
 
+        //[HttpPost]
+        //public async Task<IActionResult> LovePost(string ActorId)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Implement a method to get the current logged-in user's Id
+        //    var post = await _actorRepository.GetActorById(ActorId);
+        //    var isLoved = post.Loved.Select(l => l.UserNameIdentifier == userId).FirstOrDefault();
+        //    if (post != null)
+        //    {
+        //        if (isLoved)
+        //        {
+        //            var curLoved = post.Loved.Select(l => l).Where(l => l.UserNameIdentifier == userId).FirstOrDefault();
+        //            post.Loved.Remove(curLoved); // Remove the user's Id from the Loved list
+        //            post.Votes--; // Decrease the total number of votes/loves for the post
+        //        }
+        //        else
+        //        {
+        //            post.Loved.Add(new ActorLoved { UserNameIdentifier = userId }); // Add the user's Id to the Loved list
+        //            post.Votes++; // Increment the total number of votes/loves for the post
+        //        }
+
+        //        await _actorRepository.UpdateActor(post);
+        //    }
+
+        //    return RedirectToAction("ViewProfile", new { actorId = ActorId });
+        //}
+
         [HttpPost]
         public async Task<IActionResult> LovePost(string ActorId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Implement a method to get the current logged-in user's Id
             var post = await _actorRepository.GetActorById(ActorId);
-            var isLoved = post.Loved.Select(l => l.UserNameIdentifier == userId).FirstOrDefault();
+
             if (post != null)
             {
+                var isLoved = post.Loved.Any(l => l.UserNameIdentifier == userId);
+
                 if (isLoved)
                 {
-                    var curLoved = post.Loved.Select(l => l).Where(l => l.UserNameIdentifier == userId).FirstOrDefault();
+                    var curLoved = post.Loved.FirstOrDefault(l => l.UserNameIdentifier == userId);
                     post.Loved.Remove(curLoved); // Remove the user's Id from the Loved list
                     post.Votes--; // Decrease the total number of votes/loves for the post
                 }
@@ -258,6 +286,7 @@ namespace CarrierPortal.Controllers
 
             return RedirectToAction("ViewProfile", new { actorId = ActorId });
         }
+
 
 
 

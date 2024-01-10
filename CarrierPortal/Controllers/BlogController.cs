@@ -290,31 +290,60 @@ namespace CarrierPortal.Controllers
         //}
 
 
+        //[HttpPost]
+        //public async Task<IActionResult> LovePost(int postId)
+        //{
+        //    var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Implement a method to get the current logged-in user's Id
+        //    var post = await _blogRepository.GetPostByIdAsync(postId);
+        //    var isLoved = post.Loved.Select(l => l.UserNameIdentifier == userId).FirstOrDefault();
+        //    if (post != null)
+        //    {
+        //        if (isLoved)
+        //        {
+        //            var curLoved = post.Loved.Select(l => l).Where(l => l.UserNameIdentifier == userId).FirstOrDefault();
+        //            post.Loved.Remove(curLoved); // Remove the user's Id from the Loved list
+        //            post.Votes--; // Decrease the total number of votes/loves for the post
+        //        }
+        //        else
+        //        {
+        //            post.Loved.Add(new Love { UserNameIdentifier= userId}); // Add the user's Id to the Loved list
+        //            post.Votes++; // Increment the total number of votes/loves for the post
+        //        }
+
+        //       await  _blogRepository.UpdatePostAsync(post);
+        //    }
+
+        //    return RedirectToAction("Details", new { id = postId });
+        //}
+
         [HttpPost]
         public async Task<IActionResult> LovePost(int postId)
         {
             var userId = User.FindFirstValue(ClaimTypes.NameIdentifier); // Implement a method to get the current logged-in user's Id
             var post = await _blogRepository.GetPostByIdAsync(postId);
-            var isLoved = post.Loved.Select(l => l.UserNameIdentifier == userId).FirstOrDefault();
+
             if (post != null)
             {
+                var isLoved = post.Loved.Any(l => l.UserNameIdentifier == userId);
+
                 if (isLoved)
                 {
-                    var curLoved = post.Loved.Select(l => l).Where(l => l.UserNameIdentifier == userId).FirstOrDefault();
+                    var curLoved = post.Loved.FirstOrDefault(l => l.UserNameIdentifier == userId);
                     post.Loved.Remove(curLoved); // Remove the user's Id from the Loved list
                     post.Votes--; // Decrease the total number of votes/loves for the post
                 }
                 else
                 {
-                    post.Loved.Add(new Love { UserNameIdentifier= userId}); // Add the user's Id to the Loved list
+                    post.Loved.Add(new Love { UserNameIdentifier = userId }); // Add the user's Id to the Loved list
                     post.Votes++; // Increment the total number of votes/loves for the post
                 }
 
-               await  _blogRepository.UpdatePostAsync(post);
+                await _blogRepository.UpdatePostAsync(post);
             }
 
             return RedirectToAction("Details", new { id = postId });
         }
+
 
         public async Task<IActionResult> PostedByUser()
         {
