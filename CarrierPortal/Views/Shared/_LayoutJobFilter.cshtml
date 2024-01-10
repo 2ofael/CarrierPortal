@@ -77,6 +77,12 @@
                                 </a>
                             </li>
                         }
+
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-controller="Help" asp-action="Index">
+                                <i class="fa-solid fa-circle-info"></i> Help
+                            </a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         @if (signInManager.IsSignedIn(User))
@@ -167,7 +173,7 @@
                                 <input type="number" class="form-control" asp-for="@Model.Filter.MaxApplicants" />
                             </div>
 
-                            <button type="submit" class="btn btn-primary mx-1 mb-2"><i class="fas fa-filter"></i> Apply Filter</button>
+                            <button type="submit" class="btn btn-primary mx-1 m-2"><i class="fas fa-filter"></i> Apply Filter</button>
 
                         </form>
                     </li>

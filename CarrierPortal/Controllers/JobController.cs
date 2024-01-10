@@ -379,8 +379,10 @@ namespace CarrierPortal.Controllers
         }
 
         [HttpPost]
-        public IActionResult Filter(JobFilterModel jobFilter, int page = 1)
+        public IActionResult Filter(JobAndPagination jobFilterAndData, int page = 1)
         {
+            JobFilterModel jobFilter = jobFilterAndData.Filter;
+         
             const int pageSize = 10; // Number of items per page
 
             IQueryable<Job> filteredActors = _appDbContext.Jobs.Include(j=>j.Applicants); // Assuming you have an Actor DbSet in ApplicationDbContext

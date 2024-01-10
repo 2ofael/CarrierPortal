@@ -81,6 +81,11 @@
                                 </a>
                             </li>
                         }
+                        <li class="nav-item mx-2">
+                            <a class="nav-link" asp-controller="Help" asp-action="Index">
+                                <i class="fa-solid fa-circle-info"></i> Help
+                            </a>
+                        </li>
                     </ul>
                     <ul class="navbar-nav ml-auto">
                         @if (signInManager.IsSignedIn(User))
@@ -103,6 +108,7 @@
                                 <a asp-action="login" asp-controller="account" class="nav-link">Login</a>
                             </li>
                         }
+                 
 
                     </ul>
                 </div>
@@ -129,12 +135,12 @@
             <div class="container" style="height: 100vh; overflow-y: auto;">
                 <ul class="list-group mt-2">
 
-                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                @*    <li class="list-group-item d-flex justify-content-between align-items-center">
                         <a asp-action="Search" asp-controller="Job" class="text-decoration-none">
                             <i class="fas fa-search"></i> Search
                         </a>
                 
-                    </li>
+                    </li>*@
 
                   
 

@@ -15,7 +15,8 @@
         @foreach (var job in Model.Paginations.Items)
         {
             <div class="col-md-4">
-                <a href="@Url.Action("Details", "Job", new { id = job.Id })" class="text-decoration-none">
+               @* <a href="@Url.Action("Details", "Job", new { id = job.Id })" class="text-decoration-none">*@
+                <a href="@Url.Action("Details", "Job", new { id = job.Id })" target="_blank" class="text-decoration-none">
                     <div class="card card bg-light mb-3">
                         <div class="card-header">
                             <h5 class="card-title">
@@ -47,18 +48,18 @@
     <nav aria-label="Job pagination">
         <ul class="pagination">
             <li class="page-item @(Model.Paginations.HasPreviousPage ? "" : "disabled")">
-                <a class="page-link" href="@Url.Action("Index", "Job", new { page = Model.Paginations.PageIndex - 1 })">
+                <a class="page-link" href="@Url.Action("Filter", "Job", new { page = Model.Paginations.PageIndex - 1 })">
                     <i class="fas fa-chevron-left"></i> Previous
                 </a>
             </li>
             @for (int i = 1; i <= Model.Paginations.TotalPages; i++)
             {
                 <li class="page-item @(i == Model.Paginations.PageIndex ? "active" : "")">
-                    <a class="page-link" href="@Url.Action("Index", "Job", new { page = i })">@i</a>
+                    <a class="page-link" href="@Url.Action("Filter", "Job", new { page = i })">@i</a>
                 </li>
             }
             <li class="page-item @(Model.Paginations.HasNextPage ? "" : "disabled")">
-                <a class="page-link" href="@Url.Action("Index", "Job", new { page = Model.Paginations.PageIndex + 1 })">
+                <a class="page-link" href="@Url.Action("Filter", "Job", new { page = Model.Paginations.PageIndex + 1 })">
                     Next <i class="fas fa-chevron-right"></i>
                 </a>
             </li>

@@ -15,6 +15,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
+using System.Linq.Expressions;
 using System.Numerics;
 using System.Security.Claims;
 
@@ -40,6 +41,8 @@ namespace CarrierPortal.Controllers
             this.appDbContext = appDbContext;
             _actorRepository = actorRepository;
             _ActionMessageSender = actionMessageSender;
+
+           
             
         }
 
@@ -78,19 +81,22 @@ namespace CarrierPortal.Controllers
         [Route("/Mentor/ViewProfile/{actorId}")]
         public async Task<IActionResult> ViewProfile( string actorId)
         {
-            if (ModelState.IsValid)
-            {
-                var actor = await _actorRepository.GetActorById(actorId);
-
-                if(actor==null)
+            
+                if (ModelState.IsValid)
                 {
-                    return NotFound();
+                    var actor = await _actorRepository.GetActorById(actorId);
+
+                    if (actor == null)
+                    {
+                        return NotFound();
+                    }
+
+
+                    return View(actor);
                 }
-
-
-                return View(actor);
-            }
-
+            
+            
+          
             return NotFound();
 
         }
@@ -149,6 +155,7 @@ namespace CarrierPortal.Controllers
 
                    await _actorRepository.AddActor(newMentor);
                     await _userManager.AddToRoleAsync(CurrentUser, "Mentor");
+                    TempData["isApplied"] = true;
 
                 }
                 else
@@ -184,7 +191,7 @@ namespace CarrierPortal.Controllers
                     {
                         await _userManager.AddToRoleAsync(CurrentUser, "Mentor");
                     }
-
+                    TempData["isApplied"] = true;
 
                 }
 
@@ -210,7 +217,8 @@ namespace CarrierPortal.Controllers
             }
 
             actor.isMentor = true;
-          
+            actor.isMantee = true;
+
             await _actorRepository.UpdateActor(actor);
             TempData["isApproved"] = true;
             // Redirect back to the ActorsList action after approval
@@ -402,6 +410,44 @@ namespace CarrierPortal.Controllers
             await _actorRepository.UpdateActor(mentor);
             return RedirectToAction("ViewProfile", new { actorId = mentorId });
         }
+
+       
+
+
+
+       [HttpPost]
+        public async Task<IActionResult> DeleteMentor(string actorId)
+        {
+            if (!ModelState.IsValid)
+            {
+                return NotFound();
+            }
+
+            try
+            {
+                var mentor = await _actorRepository.GetActorById(actorId);
+
+                if (mentor == null)
+                {
+                    return NotFound();
+                }
+
+                var userId = mentor.UserId;
+                var user = await _userManager.FindByIdAsync(userId);
+               await _userManager.DeleteAsync(user);
+                await _actorRepository.DeleteActor(mentor);
+        
+
+                return RedirectToAction("Index","Mentor");
+            }
+            catch (Exception ex)
+            {
+              
+                return View("ErrorMentor");
+            }
+        }
+
+
 
 
     }
