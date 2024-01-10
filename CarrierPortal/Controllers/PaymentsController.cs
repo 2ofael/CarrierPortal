@@ -21,14 +21,16 @@ namespace CarrierPortal.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IEmailService _emailService;
         private readonly AppDbContext _appDbContext;
+        private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public PaymentsController(AppDbContext appDbContext, IActorRepository actorRepository, UserManager<ApplicationUser> userManager, IEmailService emailService)
+        public PaymentsController(IHttpContextAccessor httpContextAccessor,AppDbContext appDbContext, IActorRepository actorRepository, UserManager<ApplicationUser> userManager, IEmailService emailService)
         {
 
             _actorRepository = actorRepository;
             _userManager = userManager;
             _emailService = emailService;
             _appDbContext = appDbContext;
+            _httpContextAccessor = httpContextAccessor;
 
         }
 
@@ -124,7 +126,8 @@ namespace CarrierPortal.Controllers
         private async void SendInfo()
         {
             string emailBody =  GenerateActorProfileEmail();
-            string tempEmail = (await _userManager.GetUserAsync(User)).Email;
+            //var currUser= await _userManager.GetUserAsync(User);
+            string tempEmail = _httpContextAccessor.HttpContext.User.Identity.Name; //currUser.Email;
             // Send the email using your email service
           await  _emailService.SendEmailAsync(tempEmail, "Your Mentor Profile", emailBody);
         }
