@@ -54,7 +54,7 @@ namespace CarrierPortal.Repository
                 b.About.Contains(searchTerm)||
                 b.ActorName.Contains(searchTerm)||
                 b.CurrentProfession.Contains(searchTerm)||
-                b.age.ToString().Contains(searchTerm)||
+              //  b.age.ToString().Contains(searchTerm)||
                 b.Address.Contains(searchTerm)||
                 b.AcademicQualification.Contains(searchTerm)
                 
@@ -89,7 +89,7 @@ namespace CarrierPortal.Repository
              b.About.Contains(searchTerm) ||
              b.ActorName.Contains(searchTerm) ||
              b.CurrentProfession.Contains(searchTerm) ||
-             b.age.ToString().Contains(searchTerm) ||
+            // b.age.ToString().Contains(searchTerm) ||
              b.Address.Contains(searchTerm) ||
              b.AcademicQualification.Contains(searchTerm));
 

@@ -113,7 +113,7 @@
 
     </div>
 
-    <div class="btn-group mb-3">
+  @*  <div class="btn-group mb-3">
         @if (canApply && !alreadyApplied)
         {
             <form asp-controller="Job" asp-action="Apply" method="post">
@@ -153,6 +153,62 @@
                 <button type="submit" class="btn btn-success m-1">Approve Job</button>
             </form>
         }
+    </div>*@
+
+
+    <div class="btn-group mb-3">
+        @if (canApply && !alreadyApplied)
+        {
+            <form asp-controller="Job" asp-action="Apply" method="post">
+                <input type="hidden" name="jobId" value="@Model.Id" />
+                <button type="submit" class="btn btn-primary m-2 btn-sm" data-action="apply">
+                    <i class="fas fa-check"></i> Apply
+                </button>
+            </form>
+        }
+        else if (alreadyApplied)
+        {
+            <div class="alert alert-info" role="alert">
+                <i class="fas fa-info-circle"></i> You have already applied for this job.
+            </div>
+        }
+
+        @if (canEdit)
+        {
+            <a asp-controller="Job" asp-action="Edit" asp-route-id="@Model.Id" class="btn btn-primary m-1 btn-sm" data-action="edit">
+                <i class="fas fa-pencil-alt"></i> Edit
+            </a>
+        }
+
+        @if (canDelete)
+        {
+            <form asp-controller="Job" asp-action="Delete" asp-route-id="@Model.Id" method="post" onsubmit="return confirm('Are you sure you want to delete this job?')">
+                <button type="submit" class="btn btn-danger m-1 btn-sm" data-action="delete">
+                    <i class="fas fa-trash"></i> Delete
+                </button>
+            </form>
+        }
+
+        @if (canViewApplicants)
+        {
+            <a asp-controller="Job" asp-action="Applicants" asp-route-id="@Model.Id" class="btn btn-secondary m-1 btn-sm" data-action="view-applicants">
+                <i class="fas fa-users"></i> View Applicants (@Model.Applicants.Count)
+            </a>
+        }
+
+        @if (User.IsInRole("Admin") && !Model.IsApproved)
+        {
+            <form method="post" asp-action="ApproveJob">
+                @Html.AntiForgeryToken()
+                <input type="hidden" asp-for="Id" value="@Model.Id" />
+                <button type="submit" class="btn btn-success m-1 btn-sm">Approve Job</button>
+            </form>
+        }
     </div>
+
+
+
+
+
 
 </div>

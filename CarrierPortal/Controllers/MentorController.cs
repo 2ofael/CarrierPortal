@@ -323,6 +323,70 @@ namespace CarrierPortal.Controllers
 
 
 
+        //[HttpPost]
+        //public IActionResult Filter(MentorFilter mentorFilter, int page = 1)
+        //{
+        //    const int pageSize = 10; // Number of items per page
+
+        //    IQueryable<Actor> filteredActors = appDbContext.Actors; // Assuming you have an Actor DbSet in ApplicationDbContext
+
+        //    // Apply filtering based on the form inputs
+        //    if (!string.IsNullOrEmpty(mentorFilter.Name))
+        //        filteredActors = filteredActors.Where(a => a.ActorName.ToLower().Contains(mentorFilter.Name.ToLower()));
+
+        //    //if (!string.IsNullOrEmpty(mentorFilter.Skills))
+        //    //    filteredActors = filteredActors.Where(a => a.Skills.Contains(mentorFilter.Skills));
+
+        //    //if (!string.IsNullOrEmpty(mentorFilter.Gender))
+        //    //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
+
+
+        //    //if (!string.IsNullOrEmpty(mentorFilter.Gender))
+        //    //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
+
+
+        //    //if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
+        //    //    filteredActors = filteredActors.Where(a => a.CurrentProfession == mentorFilter.CurrentProfession);
+
+
+        //    //if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
+        //    //    filteredActors = filteredActors.Where(a => a.AcademicQualification == mentorFilter.AcademicQualification);
+        //    if (!string.IsNullOrEmpty(mentorFilter.Skills))
+        //        filteredActors = filteredActors.Where(a => a.Skills.ToLower().Contains(mentorFilter.Skills.ToLower()));
+
+        //    if (!string.IsNullOrEmpty(mentorFilter.Gender))
+        //        filteredActors = filteredActors.Where(a => a.Gender.ToLower() == mentorFilter.Gender.ToLower());
+
+        //    if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
+        //        filteredActors = filteredActors.Where(a => a.CurrentProfession.ToLower() == mentorFilter.CurrentProfession.ToLower());
+
+        //    if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
+        //        filteredActors = filteredActors.Where(a => a.AcademicQualification.ToLower() == mentorFilter.AcademicQualification.ToLower());
+
+        //    if (mentorFilter.age !=null && mentorFilter.EndAge != null && mentorFilter.EndAge !=0)
+        //    {
+
+        //        DateTime currentDate = DateTime.Now;
+        //        DateTime maxAgeDateOfBirth = currentDate.AddYears(-mentorFilter.age);
+        //        DateTime minAgeDateOfBirth = currentDate.AddYears(-mentorFilter.EndAge);
+
+
+        //        filteredActors = filteredActors.Where(a => a.DateOfBirth >= minAgeDateOfBirth && a.DateOfBirth <= maxAgeDateOfBirth);
+
+        //    }
+
+
+
+        //    int totalItems = filteredActors.Count();
+        //    int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
+
+        //    // Apply pagination using PaginatedList<T>
+        //    List<Actor> pagedActors = filteredActors.Skip((page - 1) * pageSize).Take(pageSize).ToList();
+        //   // pagedActors = pagedActors.Where(a => a.age >= mentorFilter.age && a.age <= mentorFilter.age).ToList();
+        //    var paginatedList = new PaginatedList<Actor>(pagedActors, page, pageSize, totalItems, totalPages);
+
+        //    return View(new FilterAndPaginationModel { paginatedList= paginatedList, mentorFilter=mentorFilter});
+        //}
         [HttpPost]
         public IActionResult Filter(MentorFilter mentorFilter, int page = 1)
         {
@@ -334,59 +398,40 @@ namespace CarrierPortal.Controllers
             if (!string.IsNullOrEmpty(mentorFilter.Name))
                 filteredActors = filteredActors.Where(a => a.ActorName.ToLower().Contains(mentorFilter.Name.ToLower()));
 
-            //if (!string.IsNullOrEmpty(mentorFilter.Skills))
-            //    filteredActors = filteredActors.Where(a => a.Skills.Contains(mentorFilter.Skills));
-
-            //if (!string.IsNullOrEmpty(mentorFilter.Gender))
-            //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
-
-
-            //if (!string.IsNullOrEmpty(mentorFilter.Gender))
-            //    filteredActors = filteredActors.Where(a => a.Gender == mentorFilter.Gender);
-
-
-            //if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
-            //    filteredActors = filteredActors.Where(a => a.CurrentProfession == mentorFilter.CurrentProfession);
-
-
-            //if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
-            //    filteredActors = filteredActors.Where(a => a.AcademicQualification == mentorFilter.AcademicQualification);
             if (!string.IsNullOrEmpty(mentorFilter.Skills))
                 filteredActors = filteredActors.Where(a => a.Skills.ToLower().Contains(mentorFilter.Skills.ToLower()));
 
             if (!string.IsNullOrEmpty(mentorFilter.Gender))
-                filteredActors = filteredActors.Where(a => a.Gender.ToLower() == mentorFilter.Gender.ToLower());
+                filteredActors = filteredActors.Where(a => a.Gender.ToLower().Contains(mentorFilter.Gender.ToLower()));
 
             if (!string.IsNullOrEmpty(mentorFilter.CurrentProfession))
-                filteredActors = filteredActors.Where(a => a.CurrentProfession.ToLower() == mentorFilter.CurrentProfession.ToLower());
+                filteredActors = filteredActors.Where(a => a.CurrentProfession.ToLower().Contains(mentorFilter.CurrentProfession.ToLower()));
 
             if (!string.IsNullOrEmpty(mentorFilter.AcademicQualification))
-                filteredActors = filteredActors.Where(a => a.AcademicQualification.ToLower() == mentorFilter.AcademicQualification.ToLower());
+                filteredActors = filteredActors.Where(a => a.AcademicQualification.ToLower().Contains(mentorFilter.AcademicQualification.ToLower()));
 
-            if (mentorFilter.age !=null && mentorFilter.EndAge != null && mentorFilter.EndAge !=0)
+            if (mentorFilter.age != null && mentorFilter.EndAge != null && mentorFilter.EndAge != 0)
             {
-
                 DateTime currentDate = DateTime.Now;
                 DateTime maxAgeDateOfBirth = currentDate.AddYears(-mentorFilter.age);
                 DateTime minAgeDateOfBirth = currentDate.AddYears(-mentorFilter.EndAge);
-
-
+           
                 filteredActors = filteredActors.Where(a => a.DateOfBirth >= minAgeDateOfBirth && a.DateOfBirth <= maxAgeDateOfBirth);
-
             }
-
-
 
             int totalItems = filteredActors.Count();
             int totalPages = (int)Math.Ceiling((double)totalItems / pageSize);
 
             // Apply pagination using PaginatedList<T>
             List<Actor> pagedActors = filteredActors.Skip((page - 1) * pageSize).Take(pageSize).ToList();
-           // pagedActors = pagedActors.Where(a => a.age >= mentorFilter.age && a.age <= mentorFilter.age).ToList();
             var paginatedList = new PaginatedList<Actor>(pagedActors, page, pageSize, totalItems, totalPages);
 
-            return View(new FilterAndPaginationModel { paginatedList= paginatedList, mentorFilter=mentorFilter});
+            return View(new FilterAndPaginationModel { paginatedList = paginatedList, mentorFilter = mentorFilter });
         }
+
+
+
+
 
 
         [HttpGet]
